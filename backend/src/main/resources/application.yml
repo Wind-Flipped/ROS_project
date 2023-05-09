@@ -1,0 +1,16 @@
+server:
+  port: 9090
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.111.1:3306/ros?serverTimezone=GMT%2b8
+    username: ros
+    password: 2304
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+weixinconfig:
+  weixinappID: wx14a95473b3afe32f
+  weixinappSecret: 0e4dcbc736c56929d840cbd25e382ce3
