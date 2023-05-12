@@ -80,7 +80,7 @@ public class PointController {
 
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize) {
+                           @RequestParam Integer pageSize) {
         return Result.success(100,pointService.page(new Page<>(pageNum, pageSize)));
     }
 
