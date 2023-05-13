@@ -15,8 +15,10 @@ import java.util.HashMap;
  * 异常处理类，接收异常消息并处理，调用类中方法可获取当前是否存在异常
  * rad(表示与z轴倾角)
  * percent(表示电量百分比)
- * 安全偏离角度 SAFE_RAD = π / 8 ~ 22.5°
- * 安全电量 SAFE_POWER = 15.0 ~ 15%
+ * startTime(表示开始出发的时间，单位为毫秒)
+ * 安全偏离角度 SAFE_RAD = π / 8 ~~ 22.5°
+ * 安全电量 SAFE_POWER = 15.0 ~~ 15%
+ * 最长出发时间 LONGEST_TIME = 30 * 1000 ~~ 30 秒
  */
 public class ExceptionRecv {
     private static final HashMap<String,Publisher> publishers = new HashMap<>();
@@ -25,8 +27,10 @@ public class ExceptionRecv {
     private static RosBridge rosBridge = null;
     private static final double SAFE_RAD = 3.14 / 8;
     private static final double SAFE_POWER = 15.0;
+    private static final long LONGEST_TIME = 30 * 1000;
     private static double rad = 0.0;
     private static double power = 100.0;
+    private static long startTime = 0L;
 
     public static int run(RosBridge rosBridge2) {
         rosBridge = rosBridge2;
@@ -88,5 +92,31 @@ public class ExceptionRecv {
      */
     public static boolean getPowerState() {
         return power >= SAFE_POWER;
+    }
+
+    /**
+     * 到达指定位置等候指令时，不计时，重置 startTime 为 0
+     */
+    public static void resetStartTime() {
+        startTime = 0L;
+    }
+
+    /**
+     * 开始导航时，计时，存储开始导航时间
+     */
+    public static void setStartTime() {
+        startTime = System.currentTimeMillis();
+    }
+
+    /**
+     * 获取机器人当前导航是否已超时，startTime 为 0 时，不计为超时。
+     * @return false if is timeout
+     */
+    public static boolean isTimeoutN() {
+        if (startTime == 0) {
+            return true;
+        } else {
+            return (System.currentTimeMillis() - startTime) < LONGEST_TIME;
+        }
     }
 }

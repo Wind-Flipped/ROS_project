@@ -9,7 +9,7 @@ import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
 
 /**
- * Mapping mood,
+ * Mapping mode,
  * needs mapName to start.
  */
 public class MappingMode extends Mode {
@@ -29,7 +29,7 @@ public class MappingMode extends Mode {
             return -1;
         }
         RosGlobal.nowMode = this;
-        startMapping.publish("launch the gmapping");
+        startMapping.publish(mapName);
         return 1;
     }
 

@@ -11,8 +11,6 @@ import com.se.hw.mode.WelcomeMode;
 import com.se.hw.service.IMapService;
 import com.se.hw.service.IPointService;
 import org.springframework.web.bind.annotation.*;
-import ros.RosBridge;
-import ros.msgs.std_msgs.PrimitiveMsg;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -58,6 +56,7 @@ public class RosController {
                 if (point.getName().contains("welcome") && point.getMapId() == mapId) {
                     welcomeMode.setPoint(point);
                     if (welcomeMode.start() > 0) {
+                        RosGlobal.startClock();
                         return Result.success(200);
                     } else {
                         return Result.error(404, "Can't open the mode,please check if there's other mode opening");
@@ -72,6 +71,7 @@ public class RosController {
                 if (point.getName().contains("kitchen") && point.getMapId() == mapId) {
                     deliveryMode.setPoint(point);
                     if (deliveryMode.start() > 0) {
+                        RosGlobal.startClock();
                         return Result.success(200);
                     } else {
                         return Result.error(404, "Can't open the mode,please check if there's other mode opening");
@@ -112,6 +112,7 @@ public class RosController {
                 point.setStatus(1);
                 RosGlobal.arrive_welcome = false;
                 mode.startGuide(point);
+                RosGlobal.startClock();
                 return Result.success(200);
             }
         }
@@ -132,6 +133,7 @@ public class RosController {
         RosGlobal.arrive_kitchen = false;
         DeliveryMode deliveryMode = (DeliveryMode) RosGlobal.nowMode;
         deliveryMode.startSend(point);
+        RosGlobal.startClock();
         return Result.success(200);
     }
 
@@ -142,6 +144,7 @@ public class RosController {
         }
         DeliveryMode deliveryMode = (DeliveryMode) RosGlobal.nowMode;
         deliveryMode.startReceive();
+        RosGlobal.startClock();
         return Result.success(200);
     }
 
@@ -157,6 +160,18 @@ public class RosController {
             return Result.success(200);
         }
         return Result.error(405, "save error!");
+    }
+
+    @GetMapping("/getException")
+    public Result getException() {
+        boolean[] status = RosGlobal.getException();
+        for (boolean state : status) {
+            if (!state) {
+                // 有异常返回500，并得到相应异常类型，也可能存在多个异常。
+                return Result.success(500,status);
+            }
+        }
+        return Result.success(100);
     }
 
     @GetMapping("/getLocation")

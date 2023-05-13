@@ -71,6 +71,7 @@ public class RosGlobal {
                     }
                 }
         );
+        /*
         rosBridge.subscribe(SubscriptionRequestMsg.generate("/gesture_detect")
                         .setType("std_msgs/Float64")
                         .setThrottleRate(1)
@@ -97,6 +98,8 @@ public class RosGlobal {
                     }
                 }
         );
+
+         */
         rosBridge.subscribe(SubscriptionRequestMsg.generate("/arrive_kitchen")
                         .setType("std_msgs/String")
                         .setThrottleRate(1)
@@ -105,6 +108,7 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         arrive_kitchen = true;
+                        endClock();
                     }
                 }
         );
@@ -116,6 +120,7 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         arrive_welcome = true;
+                        endClock();
                     }
                 }
         );
@@ -123,16 +128,33 @@ public class RosGlobal {
     }
 
     /**
-     * 前端在init之后不停调用该接口，以获取当前是否存在异常
-     * @return array of status, state[0] represent gesture, state[1] represent power
+     * 前端在init之后不停调用该接口，以获取当前是否存在异常，若无任何异常，则所有布尔值都为 TRUE ；反之，相对应布尔值为 FALSE
+     * @return An array of length 3, represents exception status;
+     * state[0] represents gesture, state[1] represents power, state[2] represents timeout
      */
-    public boolean[] getException() {
-        boolean[] state = new boolean[2];
+    public static boolean[] getException() {
+        boolean[] state = new boolean[3];
         state[0] = ExceptionRecv.getGestureState();
         state[1] = ExceptionRecv.getPowerState();
+        state[2] = ExceptionRecv.isTimeoutN();
         // TODO insert other exception status
         return state;
     }
+
+    /**
+     * 私有方法，只能 ROS 端发出的消息重置计时器
+     */
+    private static void endClock() {
+        ExceptionRecv.resetStartTime();
+    }
+
+    /**
+     * 公有方法，前端发出需要导航的指令时，需要开启计时器
+     */
+    public static void startClock() {
+        ExceptionRecv.setStartTime();
+    }
+
 
     /*
     public static void test() {
