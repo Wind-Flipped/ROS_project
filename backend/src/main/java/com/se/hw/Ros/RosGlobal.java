@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.se.hw.entity.Point;
+import com.se.hw.exception.ExceptionRecv;
 import com.se.hw.mode.*;
 import ros.Publisher;
 import ros.RosBridge;
@@ -44,7 +45,8 @@ public class RosGlobal {
         modes.put(2, new WelcomeMode(rosBridge));
         modes.put(3, new DeliveryMode(rosBridge));
         modes.put(4, new PointEditMode(rosBridge));
-        // TODO add other moods
+
+        ExceptionRecv.run(rosBridge);
 
         /*
           init subscriber
@@ -118,6 +120,18 @@ public class RosGlobal {
                 }
         );
         pub_mapNameUpdate = new Publisher("/rename_map", MsgGlobal.msgString, rosBridge);
+    }
+
+    /**
+     * 前端在init之后不停调用该接口，以获取当前是否存在异常
+     * @return array of status, state[0] represent gesture, state[1] represent power
+     */
+    public boolean[] getException() {
+        boolean[] state = new boolean[2];
+        state[0] = ExceptionRecv.getGestureState();
+        state[1] = ExceptionRecv.getPowerState();
+        // TODO insert other exception status
+        return state;
     }
 
     /*

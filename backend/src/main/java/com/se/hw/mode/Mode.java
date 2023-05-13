@@ -10,7 +10,7 @@ import ros.SubscriptionRequestMsg;
 import java.util.HashMap;
 
 /**
- * Abstract class Mood
+ * Abstract class Mode
  * contains rosBridge and publisher nodes with topics.
  * We assume that each publish message node corresponds to a unique topic,
  * which we use a hash map to ensure
