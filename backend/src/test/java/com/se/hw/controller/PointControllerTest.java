@@ -25,6 +25,11 @@ public class PointControllerTest {
 @Before
 public void before() throws Exception {
     pointController = new PointController();
+    point1 = new Point();
+    point2 = new Point();
+    point3 = new Point();
+    point4 = new Point();
+    point5 = new Point();
     point1.setName("point1");
     point1.setId(1);
     point1.setMapId(1);

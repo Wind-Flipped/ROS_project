@@ -34,13 +34,14 @@ public class MapControllerTest {
 
     private MapController mapController;
 
-    private User user;
     private Map map1;
     private Map map4;
 
 @Before
 public void before() throws Exception {
     mapController = new MapController();
+    map1 = new Map();
+    map4 = new Map();
     map1.setWelcome("welcome!!!");
     map1.setPath("maps/map1lalala");
     map1.setName("map1");
