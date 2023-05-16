@@ -1,0 +1,12 @@
+<launch>
+
+  <!-- 载入 机器人 和 RoboCup@Home 的仿真场景 -->
+  <include file="$(find wpr_simulation)/launch/wpb_stage_robocup.launch"/>
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find thursday4)/maps/map.yaml"/>
+
+  <!-- keyboard_vel_ctrl -->
+  <node name="keyboard_vel_ctrl" pkg="wpr_simulation" type="keyboard_vel_ctrl" output="screen"/>
+
+</launch>
