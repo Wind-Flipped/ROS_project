@@ -1,0 +1,6 @@
+<view class="page-container" style="background: linear-gradient(to bottom, {{bg}}, #f5f5f5);">
+    <t-navbar left-arrow bind:go-back="navback" delta="{{1}}" />
+    <t-button block shape="round" t-class="button" theme="primary" size="large" bindtap="confirm">
+        <text slot="content" class="button-text" >将壁纸应用于此场景</text>
+    </t-button>
+</view>

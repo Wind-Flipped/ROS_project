@@ -1,0 +1,20 @@
+import host from './config';
+const request = async (method = 'GET', data={}, url) => {
+    return new Promise((resolve, reject) => {
+        wx.request({
+          url: host + url,
+          method,
+          data,
+          success: res => {
+              resolve(res.data);
+          },
+          fail: err => {
+              reject(err);
+          }
+        })
+    })
+}
+
+module.exports = {
+    request,
+}

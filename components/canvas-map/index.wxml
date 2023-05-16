@@ -1,0 +1,4 @@
+<view class="wrap custom-class">
+    <canvas type="2d" class="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindlongpress="handleLongpress" bindtap="handleTap">
+    </canvas>
+</view>

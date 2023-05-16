@@ -1,0 +1,36 @@
+.bottom-menu-wrap {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom);
+}
+.board-wrap {
+    border-top-left-radius: 25rpx;
+    border-top-right-radius: 25rpx;
+    background-color: #fff;
+}
+
+.board-title {
+    width: 700rpx;
+    margin: 32rpx 25rpx 10rpx 25rpx;
+    line-height: 50rpx;
+}
+
+.board-wrap .borad-title-text {
+    font-size: 36rpx;
+    font-weight: bold;
+    display: block;
+}
+
+.board-content-wrap {
+    line-height: 40rpx;
+    width: 700rpx;
+    margin: 25rpx;
+}
+
+.board-content-wrap text {
+    font-size: 30rpx;
+    color: #999;
+}
+
+.button-wrap {
+    margin: 20rpx 25rpx;
+}

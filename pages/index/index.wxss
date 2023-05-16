@@ -1,0 +1,114 @@
+.tabs-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    height: 44px;
+    z-index: 99;
+}
+
+.tabs-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.tab-item {
+    display: inline-block;
+    margin-left: 25rpx;
+    text-align: center;
+    max-width: 240rpx;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.tab-item .name {
+    font-size: 34rpx;
+    color: #999999;
+}
+
+.tab-item .active {
+    font-weight: bold;
+    color: #222222 !important;
+}
+
+.menu-wrap {
+    margin-right: 25rpx;
+    background: rgba(245, 245, 245, 0.3) !important;
+}
+
+.swiper-container {
+    margin-top: 30rpx;
+    width: 100%;
+    height: 100vh;
+}
+
+.swiper-wrap {
+    width: 100%;
+    height: 100vh;
+}
+
+.swiper-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.map-wrap {
+    width: 700rpx;
+    border-radius: 25rpx;
+    overflow: hidden;
+    background: #fff;
+    padding-bottom: 25rpx;
+}
+
+.device-wrap {
+    margin-top: 30rpx;
+    width: 700rpx;
+    border-radius: 25rpx;
+    overflow: hidden;
+    background: #fff;
+    padding-bottom: 25rpx;
+}
+
+.empty-wrap {
+    margin-top: 25rpx;
+}
+
+.empty .empty-text {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty .empty-text text {
+    font-size: 32rpx;
+    color: #999;
+}
+
+.button {
+    margin: 25rpx;
+}
+
+.popup-container {
+    width: 375rpx;
+}
+
+.popup-wrap {
+    border-radius: 30rpx;
+    overflow: hidden;
+}
+
+.popup-title {
+    word-break: break-all;
+    overflow: hidden;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical !important;
+}

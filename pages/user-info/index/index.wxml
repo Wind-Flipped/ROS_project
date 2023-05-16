@@ -1,0 +1,5 @@
+<view class="page-container">
+    <!--导航栏-->
+    <t-navbar left-arrow title="编辑资料" >
+    </t-navbar>
+    </view>

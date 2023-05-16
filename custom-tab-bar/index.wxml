@@ -1,0 +1,7 @@
+<view class="container">
+    <t-tab-bar default-value="{{0}}" value="{{value}}" bindchange="onChange"  shape="round" split="{{false}}" t-class="wrap">
+    <block wx:for="{{list}}" wx:key="index">
+        <t-tab-bar-item icon="{{item.icon}}" value="{{item.value}}" />
+    </block>
+</t-tab-bar>
+</view>
