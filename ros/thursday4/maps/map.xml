@@ -1,0 +1,32 @@
+<Waterplus>
+    <Waypoint>
+        <Name>Table1</Name>
+        <Pos_x>1.90715</Pos_x>
+        <Pos_y>0.256305</Pos_y>
+        <Pos_z>0</Pos_z>
+        <Ori_x>0</Ori_x>
+        <Ori_y>0</Ori_y>
+        <Ori_z>-0.0029389</Ori_z>
+        <Ori_w>0.999996</Ori_w>
+    </Waypoint>
+    <Waypoint>
+        <Name>Table2</Name>
+        <Pos_x>2.51135</Pos_x>
+        <Pos_y>3.23334</Pos_y>
+        <Pos_z>0</Pos_z>
+        <Ori_x>0</Ori_x>
+        <Ori_y>0</Ori_y>
+        <Ori_z>0.999999</Ori_z>
+        <Ori_w>-0.00112899</Ori_w>
+    </Waypoint>
+    <Waypoint>
+        <Name>Table3</Name>
+        <Pos_x>0.218234</Pos_x>
+        <Pos_y>1.92923</Pos_y>
+        <Pos_z>0</Pos_z>
+        <Ori_x>0</Ori_x>
+        <Ori_y>0</Ori_y>
+        <Ori_z>-0.70213</Ori_z>
+        <Ori_w>0.712049</Ori_w>
+    </Waypoint>
+</Waterplus>
