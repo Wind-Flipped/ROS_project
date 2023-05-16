@@ -39,4 +39,15 @@ public class Result {
         return this;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public Object getData() {
+        return data;
+    }
 }
