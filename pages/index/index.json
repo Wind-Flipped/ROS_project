@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "t-popup": "/miniprogram_npm/tdesign-miniprogram/popup/popup"
+  },
+  "navigationStyle": "custom"
+}

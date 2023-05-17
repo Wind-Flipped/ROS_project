@@ -1,0 +1,4 @@
+page {
+    --td-cell-bg-color: #f5f5f5;
+    --td-navbar-bg-color: #f5f5f5;
+}

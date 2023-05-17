@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+        "canvas-map": "/components/canvas-map/index"
+    },
+    "navigationBarTitleText": "站点编辑"
+}

@@ -1,0 +1,15 @@
+page {
+    --td-cell-bg-color: #f5f5f5;
+    --td-navbar-bg-color: #f5f5f5;
+}
+.button-text {
+    font-size: 30rpx;
+    color: #ffffff;
+}
+
+.button {
+    position: absolute !important;
+    bottom: 30rpx;
+    left: 30rpx;
+    width: 690rpx !important;
+}

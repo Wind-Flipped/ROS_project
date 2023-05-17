@@ -1,0 +1,13 @@
+<view class="page-container">
+    <!--导航栏-->
+    <t-navbar title="添加场景" left-arrow />
+    <t-cell-group>
+        <t-cell title="场景名称" note="{{scene.name}}" arrow="{{scene.name !== '默认场景'}}" bindclick="modifyName" />
+        <t-cell title="场景壁纸" arrow align="top" bindclick="editImg"> 
+            <view style="width: 640rpx;height: 240rpx;border-radius: 30rpx;margin-top: 30rpx;background:{{scene.bg}} ;" slot="description" catchtap="editImg" />
+        </t-cell>
+    </t-cell-group>
+    <t-button block shape="round" t-class="button" theme="primary" size="large" bindtap="add">
+        <text slot="content" class="button-text" >添加</text>
+    </t-button>
+</view>

@@ -1,0 +1,14 @@
+page {
+    --td-navbar-bg-color: transparent;
+}
+.button-text {
+    font-size: 30rpx;
+    color: #ffffff;
+}
+
+.button {
+    position: absolute !important;
+    bottom: 30rpx;
+    left: 30rpx;
+    width: 690rpx !important;
+}

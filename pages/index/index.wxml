@@ -1,0 +1,59 @@
+<view class="page-container" style="background: linear-gradient(to bottom, {{scenes[active].bg}}, #f5f5f5);">
+    <!--弹出菜单-->
+    <t-popup visible="{{showPopup}}" bind:visible-change="onVisibleChange" placement="center" t-class="popup-wrap">
+        <view class="popup-container">
+            <t-cell-group bordered="{{true}}">
+                <block wx:for="{{scenes}}" wx:key="index">
+                    <t-cell hover note="0" bordered="{{false}}" title="{{item.name}}" t-class-title="popup-title" bindclick="editScene" data-name="{{item.name}}" />
+                </block>
+            </t-cell-group>
+            <t-cell-group bordered="{{true}}" t-class="margin-top-25">
+                <t-cell title="场景管理" hover bordered="{{false}}" right-icon="setting" bindclick="navigate" data-page="scenes/index" />
+                <t-cell title="全部设备" hover bordered="{{false}}" right-icon="queue" />
+            </t-cell-group>
+        </view>
+    </t-popup>
+    <view class="navbar">
+        <t-navbar delta="{{0}}" style="--td-navbar-bg-color: transparent;opacity: {{navOpacity}};" title="{{userInfo.name}}" fixed="{{false}}" />
+    </view>
+    <!--tab导航布局-->
+    <view class="tabs-container" style="padding-top: {{windowInfo.statusBarHeight}}px;background: {{sticky ? '#f5f5f5' : 'transparent'}};">
+        <scroll-view scroll-x enhanced class="tabs-wrap">
+            <block wx:for="{{scenes}}" wx:key="index">
+                <view class="tab-item" bindtap="tabChange" data-idx="{{index}}">
+                    <text class="name {{active===index&&'active'}}">{{item.name}}</text>
+                </view>
+            </block>
+        </scroll-view>
+        <t-button t-class="menu-wrap" shape="round" icon="{{ {name:'view-list',size:'45rpx'} }}" size="small" wx:if="{{!sticky}}" bindtap="showPopup"></t-button>
+    </view>
+    <!--内容区块-->
+    <view class="swiper-container">
+        <swiper class="swiper-wrap" current="{{active}}" bindchange="swiperChange">
+            <block wx:for="{{scenes}}" wx:key="index">
+                <swiper-item class="swiper-item">
+                    <!--地图-->
+                    <view class="map-wrap flex-col justify-center align-center">
+                        <t-image wx:if="{{item.map}}" src="{{item.map}}" mode="center" width="700rpx" height="400rpx" />
+                        <t-empty wx:if="{{!item.map}}" icon="info-circle" t-class="empty-wrap" />
+                        <view class="flex-row width-100vw align-center justify-between">
+                            <t-button icon="{{ {prefix:'iconfont icon', name: 'map'} }}" t-class="button" block theme="primary" variant="outline"> {{item.map ? '重新建图' : '创建地图'}}</t-button>
+                            <t-button wx:if="{{item.map}}" icon="edit" t-class="button" block theme="primary" bind:tap="navToFlagEdit">站点编辑</t-button>
+                        </view>
+                    </view>
+                    <!--设备-->
+                    <view class="device-wrap flex-col align-center">
+                        <view class="width-100vw flex-col align-center">
+                            <t-image wx:if="{{item.device}}" src="{{robotImg}}" width="400rpx" mode="widthFix" />
+                            <t-image wx:else src="/static/image/device-empty.png" width="700rpx" height="400rpx" />
+                        </view>
+                        <view class="flex-row width-100vw align-center justify-between">
+                            <t-button wx:if="{{item.device}}" t-class="button" block theme="primary" icon="dashboard" bindtap="navigate" data-page="robot">开始工作</t-button>
+                            <t-button wx:else t-class="button" block theme="primary" icon="add">添加设备</t-button>
+                        </view>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+</view>

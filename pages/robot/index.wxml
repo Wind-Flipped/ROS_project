@@ -1,0 +1,17 @@
+<view class="page-container">
+        <canvas-map disable-long-tap="{{true}}"  />
+        <!--功能状态展示-->
+        <view class="width-100vw" >
+            <t-cell-group>
+                <t-cell title="剩余电量" hover="{{!working}}" note="{{battery}}%" >
+                </t-cell>
+                <t-cell title="工作模式" note="{{mode}}" hover="{{!working}}" arrow="{{!working}}" bind:click="switchMode" ></t-cell>
+                <t-cell wx:if="{{mode==='迎宾'}}" title="迎宾地点" note="{{welcomeAddr}}" hover="{{!working}}" arrow="{{!working}}"></t-cell>
+                <t-cell wx:if="{{mode==='送餐'}}" title="送餐起点" note="{{from}}" hover="{{!working}}" arrow="{{!working}}"></t-cell>
+                <t-cell wx:if="{{mode==='送餐'}}" title="送餐终点" note="{{to}}" hover="{{!working}}" arrow="{{!working}}"></t-cell>
+            </t-cell-group>
+        </view>
+        <view class="width-100vw flex-row align-center bottom-container">
+            <t-button theme="{{working ? 'light' : 'primary'}}" t-class="button-wrap" block bindtap="switchWorking" >{{working ? '暂停工作' : '开始工作'}}</t-button>
+        </view>
+</view>
