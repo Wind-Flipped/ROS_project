@@ -1,6 +1,10 @@
-// app.js
 App({
   onLaunch() {
+      wx.login().then(res => {
+          console.log(res.code);
+      }).catch(err => {
+          console.log(err);
+      })
   },
   globalData: {
     userInfo: null,
