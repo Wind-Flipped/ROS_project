@@ -10,7 +10,10 @@ import com.se.hw.mode.WelcomeMode;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
@@ -20,7 +23,9 @@ import java.util.List;
 * @author ¡ı‘À‰ø
 * @since <pre>5‘¬ 16, 2023</pre> 
 * @version 1.0 
-*/ 
+*/
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class RosControllerTest {
     @Autowired
     private RosController rosController;
@@ -30,6 +35,7 @@ public class RosControllerTest {
     private PointController pointController;
 
     private Point point;
+    private int mapId;
 
 @Before
 public void before() throws Exception {
@@ -37,9 +43,11 @@ public void before() throws Exception {
 //    mapController = new MapController();
 //    pointController = new PointController();
 
-    point = new Point(1,"point",1.0,1.0,0,1,1.0,1.0,1.0,1.0,1.0);
-
+    // RosGlobal.init("http://localhost:8080");
     mapController.save("map");
+    List<Map> maps = (List<Map>) mapController.findAll().getData();
+    mapId = maps.get(0).getId();
+    point = new Point(1,"point",1.0,1.0,0,mapId,1.0,1.0,1.0,1.0,1.0);
     pointController.save(point);
 
 } 
@@ -47,6 +55,8 @@ public void before() throws Exception {
 @After
 public void after() throws Exception {
     // End current mode
+    pointController.delete(1);
+    mapController.delete(mapId);
     rosController.end();
 } 
 

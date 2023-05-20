@@ -35,10 +35,13 @@ public class PointController {
         if (points != null && !points.isEmpty()) {
             return Result.error(400, "naming repetition!");
         }
-        if (pointService.save(point)) {
+        try {
+            pointService.save(point);
             return Result.success(200);
+        } catch (Exception e) {
+            return Result.error(500, "other error!");
         }
-        return Result.error(500, "other error!");
+
     }
 
     @PostMapping("/updatePoint")
@@ -46,10 +49,13 @@ public class PointController {
         if (pointService.getById(point.getId()) == null) {
             return Result.error(404, "can't find the point!");
         }
-        if (pointService.updateById(point)) {
+        try {
+            pointService.updateById(point);
             return Result.success(100);
+        } catch (Exception e) {
+            return Result.error(500, "other error");
         }
-        return Result.error(500, "other error");
+
     }
 
     @DeleteMapping("/deletePoint")
@@ -58,10 +64,10 @@ public class PointController {
         if (point == null) {
             return Result.error(404, "can't find the point!");
         }
-        if (pointService.removeById(pointId)) {
-            return Result.success(100);
-        }
-        return Result.error(500, "other error!");
+        pointService.removeById(pointId);
+        return Result.success(100);
+
+        // return Result.error(500, "other error!");
     }
 
     @GetMapping("/getAllPoints")

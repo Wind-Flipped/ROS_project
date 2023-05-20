@@ -40,6 +40,7 @@ public class MapController {
         if (maps != null && maps.size() != 0) {
             return Result.error(400, "naming repetition!");
         }
+        mapService.save(map);
         return Result.success(200);
     }
 

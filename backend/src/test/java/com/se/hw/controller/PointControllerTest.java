@@ -1,11 +1,17 @@
 package com.se.hw.controller;
 
 import com.se.hw.common.Result;
+import com.se.hw.entity.Map;
 import com.se.hw.entity.Point;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 /** 
 * PointController Tester. 
@@ -13,28 +19,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 * @author 刘运淇
 * @since <pre>5月 16, 2023</pre> 
 * @version 1.0 
-*/ 
+*/
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class PointControllerTest {
     private Point point1;
     private Point point2;
     private Point point3;
     private Point point4;
     private Point point5;
+    private Point point6;
+    private int mapId;
 
     @Autowired
     private PointController pointController;
+    @Autowired
+    private MapController mapController;
 
 @Before
 public void before() throws Exception {
     // pointController = new PointController();
+
+    mapController.save("map3");
+    List<Map> maps = (List<Map>) mapController.findAll().getData();
+    mapId = maps.get(0).getId();
     point1 = new Point();
     point2 = new Point();
     point3 = new Point();
     point4 = new Point();
     point5 = new Point();
+    point6 = new Point();
     point1.setName("point1");
     point1.setId(1);
-    point1.setMapId(1);
+    point1.setMapId(mapId);
     point1.setStatus(0);
     point1.setOriW(10.0);
     point1.setOriX(10.0);
@@ -46,7 +63,7 @@ public void before() throws Exception {
 
     point2.setName("point2");
     point2.setId(2);
-    point2.setMapId(1);
+    point2.setMapId(mapId);
     point2.setStatus(1);
     point2.setOriW(20.0);
     point2.setOriX(20.0);
@@ -72,7 +89,7 @@ public void before() throws Exception {
     // 构造正常 航点
     point4.setName("normal_point4");
     point4.setId(4);
-    point4.setMapId(1);
+    point4.setMapId(mapId);
     point4.setStatus(3);
     point4.setOriW(40.0);
     point4.setOriX(40.0);
@@ -85,7 +102,7 @@ public void before() throws Exception {
     // 构造重复id 航点
     point5.setName("duplicate_point5");
     point5.setId(1);
-    point5.setMapId(1);
+    point5.setMapId(mapId);
     point5.setStatus(3);
     point5.setOriW(40.0);
     point5.setOriX(40.0);
@@ -94,6 +111,19 @@ public void before() throws Exception {
     point5.setXAxis(4.0);
     point5.setYAxis(4.0);
     point5.setZAxis(4.0);
+
+    // 构造重复id错误外键 航点
+    point6.setName("duplicate_error_point5");
+    point6.setId(1);
+    point6.setMapId(10000);
+    point6.setStatus(3);
+    point6.setOriW(40.0);
+    point6.setOriX(40.0);
+    point6.setOriY(40.0);
+    point6.setOriZ(40.0);
+    point6.setXAxis(4.0);
+    point6.setYAxis(4.0);
+    point6.setZAxis(4.0);
 
     pointController.save(point1);
     pointController.save(point2);
@@ -104,6 +134,7 @@ public void after() throws Exception {
     for (int i = 1; i < 5; i++) {
         pointController.delete(i);
     }
+    mapController.delete(mapId);
 } 
 
 /** 
@@ -139,6 +170,8 @@ public void testUpdate() throws Exception {
     Result result3 = pointController.update(point3);
     assert result3.getCode() == 404 && result3.getMsg().equals("can't find the point!");
 
+    Result result4 = pointController.update(point6);
+    assert result4.getCode() == 500 && result4.getMsg().equals("other error");
 } 
 
 /** 
@@ -166,7 +199,13 @@ public void testDelete() throws Exception {
 */ 
 @Test
 public void testFindAll() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    Result result = pointController.findAll();
+    List<Point> points = (List<Point>) result.getData();
+    assert result.getCode() == 100 &&
+            points.size() == 2 &&
+            points.get(0).getId() == point1.getId() &&
+            points.get(1).getId() == point2.getId();
 } 
 
 /** 
@@ -176,7 +215,12 @@ public void testFindAll() throws Exception {
 */ 
 @Test
 public void testFindOne() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    Result result1 = pointController.findOne(point1.getId());
+    Point point = (Point) result1.getData();
+    assert result1.getCode() == 100 && point.getId() == point1.getId();
+    Result result2 = pointController.findOne(10000);
+    assert result2.getCode() == 404 && result2.getMsg().equals("can't find the point!");
 } 
 
 /** 
@@ -186,8 +230,9 @@ public void testFindOne() throws Exception {
 */ 
 @Test
 public void testFindPage() throws Exception { 
-//TODO: Test goes here... 
-} 
-
+//TODO: Test goes here...
+    Result result = pointController.findPage(1,1);
+    assert result.getCode() == 100;
+}
 
 } 
