@@ -10,6 +10,7 @@ import com.se.hw.mode.WelcomeMode;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -21,17 +22,20 @@ import java.util.List;
 * @version 1.0 
 */ 
 public class RosControllerTest {
+    @Autowired
     private RosController rosController;
+    @Autowired
     private MapController mapController;
+    @Autowired
     private PointController pointController;
 
     private Point point;
 
 @Before
 public void before() throws Exception {
-    rosController = new RosController();
-    mapController = new MapController();
-    pointController = new PointController();
+//    rosController = new RosController();
+//    mapController = new MapController();
+//    pointController = new PointController();
 
     point = new Point(1,"point",1.0,1.0,0,1,1.0,1.0,1.0,1.0,1.0);
 

@@ -1,8 +1,11 @@
 package com.se.hw.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.se.hw.common.Result;
 import com.se.hw.entity.Map;
 import com.se.hw.entity.User;
+import com.se.hw.service.IMapService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Before; 
@@ -21,6 +24,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Collection;
+import java.util.function.Function;
+
 /** 
 * MapController Tester. 
 * 
@@ -32,6 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 public class MapControllerTest {
 
+    @Autowired
     private MapController mapController;
 
     private Map map1;
@@ -39,7 +46,7 @@ public class MapControllerTest {
 
 @Before
 public void before() throws Exception {
-    mapController = new MapController();
+    // mapController = new MapController(mapService);
     map1 = new Map();
     map4 = new Map();
     map1.setWelcome("welcome!!!");

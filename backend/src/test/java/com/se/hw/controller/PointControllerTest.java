@@ -5,6 +5,7 @@ import com.se.hw.entity.Point;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /** 
 * PointController Tester. 
@@ -20,11 +21,12 @@ public class PointControllerTest {
     private Point point4;
     private Point point5;
 
+    @Autowired
     private PointController pointController;
 
 @Before
 public void before() throws Exception {
-    pointController = new PointController();
+    // pointController = new PointController();
     point1 = new Point();
     point2 = new Point();
     point3 = new Point();
