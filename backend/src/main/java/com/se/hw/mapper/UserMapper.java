@@ -6,11 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * 微信用户信息 Mapper 接口
  * </p>
  *
  * @author SE2304
- * @since 2023-04-27
+ * @since 2023-05-24
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {

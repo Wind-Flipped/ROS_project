@@ -15,15 +15,15 @@ import com.se.hw.entity.Map;
 
 /**
  * <p>
- * 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author SE2304
- * @since 2023-04-27
+ * @since 2023-05-24
  */
 @RestController
 @RequestMapping("/map")
-public class MapController {
+    public class MapController {
 
     @Resource
     private IMapService mapService;
@@ -82,6 +82,4 @@ public class MapController {
                            @RequestParam Integer pageSize) {
         return Result.success(200, mapService.page(new Page<>(pageNum, pageSize)));
     }
-
 }
-
