@@ -28,9 +28,19 @@ public class MappingMode extends Mode {
         if (RosGlobal.nowMode != null) {
             return -1;
         }
-        RosGlobal.nowMode = this;
-        startMapping.publish(mapName);
-        return 1;
+        int i;
+        for (i = 0; i < 5; i++) {
+            getPublisher(START_MAPPING_TOPIC).publish(mapName);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                return 1;
+            }
+        }
+        return -1;
     }
 
 }

@@ -15,7 +15,7 @@ import com.se.hw.entity.Map;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author SE2304
@@ -23,7 +23,7 @@ import com.se.hw.entity.Map;
  */
 @RestController
 @RequestMapping("/map")
-    public class MapController {
+public class MapController {
 
     @Resource
     private IMapService mapService;
@@ -32,7 +32,6 @@ import com.se.hw.entity.Map;
     public Result save(@RequestParam String mapName) {
         Map map = new Map();
         map.setName(mapName);
-        map.setPath(mapName);
         map.setWelcome("Welcome to our restaurant!");
         QueryWrapper<Map> mapQueryWrapper = new QueryWrapper<>();
         mapQueryWrapper.eq("name", mapName);
@@ -49,9 +48,7 @@ import com.se.hw.entity.Map;
         if (mapService.getById(map.getId()) == null) {
             return Result.error(404, "map doesn't exist");
         }
-        String oldName = mapService.getById(map.getId()).getName();
         mapService.saveOrUpdate(map);
-        RosGlobal.pub_mapNameUpdate.publish(oldName + " " + map.getName());
         return Result.success(200);
     }
 
@@ -81,5 +78,10 @@ import com.se.hw.entity.Map;
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         return Result.success(200, mapService.page(new Page<>(pageNum, pageSize)));
+    }
+
+    @GetMapping("/getPicture")
+    public Result getPicture() {
+        return Result.success(200, RosGlobal.mapUrl);
     }
 }

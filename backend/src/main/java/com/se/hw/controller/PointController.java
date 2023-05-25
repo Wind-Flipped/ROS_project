@@ -84,10 +84,19 @@ public class PointController {
         return Result.success(100, point);
     }
 
+    @GetMapping("/mapToPoints")
+    public Result mapToPoints(@RequestParam Integer mapId) {
+        QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("mapId", mapId);
+        List<Point> points = pointService.list(queryWrapper);
+        return Result.success(100, points);
+    }
+
+
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
-        return Result.success(100,pointService.page(new Page<>(pageNum, pageSize)));
+        return Result.success(100, pointService.page(new Page<>(pageNum, pageSize)));
     }
 
 }

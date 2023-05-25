@@ -29,8 +29,20 @@ public class WelcomeMode extends Mode {
             return -1;
         }
         RosGlobal.nowMode = this;
-        getPublisher(START_WELCOME_TOPIC).publish(welcome_point);
-        return 1;
+
+        int i;
+        for (i = 0; i < 10; i++) {
+            getPublisher(START_WELCOME_TOPIC).publish(welcome_point);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                return 1;
+            }
+        }
+        return -1;
     }
 
     public Point getPoint() {

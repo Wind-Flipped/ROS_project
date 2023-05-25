@@ -12,7 +12,7 @@ import lombok.Setter;
  * </p>
  *
  * @author SE2304
- * @since 2023-05-24
+ * @since 2023-05-25
  */
 @Getter
 @Setter
@@ -25,10 +25,11 @@ public class Map implements Serializable {
 
     private String name;
 
-    private String path;
+    private String url;
 
     private String welcome;
 
     private String rosname;
+
 
 }

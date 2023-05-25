@@ -7,6 +7,10 @@ spring:
     url: jdbc:mysql://192.168.56.1:3306/ros?serverTimezone=GMT%2b8
     username: ros
     password: 123456
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -14,3 +18,4 @@ mybatis:
 weixinconfig:
   weixinappID: wx14a95473b3afe32f
   weixinappSecret: 0e4dcbc736c56929d840cbd25e382ce3
+

@@ -7,6 +7,7 @@ import com.se.hw.common.Result;
 import com.se.hw.entity.Map;
 import com.se.hw.entity.Point;
 import com.se.hw.mode.DeliveryMode;
+import com.se.hw.mode.MappingMode;
 import com.se.hw.mode.WelcomeMode;
 import com.se.hw.service.IMapService;
 import com.se.hw.service.IPointService;
@@ -26,24 +27,17 @@ public class RosController {
     @Resource
     private IPointService pointService;
 
+    private Integer nowMapId;
+
     @PostMapping("/changeMode")
-    public Result change(@RequestParam Integer type, @RequestParam(value = "") String mapName) {
-        QueryWrapper<Map> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", mapName);
-        if (type != 1 && (mapService.list(queryWrapper).isEmpty())) {
+    public Result change(@RequestParam Integer type, @RequestParam Integer mapId, @RequestParam(value = "0") Integer pointId) {
+        Map map = mapService.getById(mapId);
+        if (map == null) {
             return Result.error(405, "the map doesn't exist");
-        } else if (type == 1 && mapService.list(queryWrapper).size() != 0) {
-            return Result.error(406, "the map already exists");
-        } else if (type == 1) {
-            Map map = new Map();
-            map.setName(mapName);
-            map.setPath(mapName);
-            map.setWelcome("Welcome to our restaurant!");
-            mapService.save(map);
         }
-        int mapId = mapService.list(queryWrapper).get(0).getId();
-        RosGlobal.modes.get(type).setMapName(mapName);
+        RosGlobal.modes.get(type).setMapName(map.getRosname());
         if (type == 1) { // mapping
+            nowMapId = mapId;
             if (RosGlobal.modes.get(type).start() > 0) {
                 return Result.success(200);
             } else {
@@ -51,34 +45,28 @@ public class RosController {
             }
         } else if (type == 2) { //welcome
             WelcomeMode welcomeMode = (WelcomeMode) RosGlobal.modes.get(type);
-            List<Point> points = pointService.list();
-            for (Point point : points) {
-                if (point.getName().contains("welcome") && point.getMapId() == mapId) {
-                    welcomeMode.setPoint(point);
-                    if (welcomeMode.start() > 0) {
-                        RosGlobal.startClock();
-                        return Result.success(200);
-                    } else {
-                        return Result.error(404, "Can't open the mode,please check if there's other mode opening");
-                    }
-                }
+            Point point = pointService.getById(pointId);
+            if (point == null) {
+                return Result.error(606, "Can't find the point!");
             }
-            return Result.error(606, "welcome point doesn't exist");
+            welcomeMode.setPoint(point);
+            if (welcomeMode.start() > 0) {
+                RosGlobal.startClock();
+                return Result.success(200);
+            }
+            return Result.error(404, "Can't open the mode,please check if there's other mode opening");
         } else if (type == 3) { //Delivery
             DeliveryMode deliveryMode = (DeliveryMode) RosGlobal.modes.get(type);
-            List<Point> points = pointService.list();
-            for (Point point : points) {
-                if (point.getName().contains("kitchen") && point.getMapId() == mapId) {
-                    deliveryMode.setPoint(point);
-                    if (deliveryMode.start() > 0) {
-                        RosGlobal.startClock();
-                        return Result.success(200);
-                    } else {
-                        return Result.error(404, "Can't open the mode,please check if there's other mode opening");
-                    }
-                }
+            Point point = pointService.getById(pointId);
+            if (point == null) {
+                return Result.error(606, "Can't find the point!");
             }
-            return Result.error(707, "kitchen point doesn/t exist");
+            deliveryMode.setPoint(point);
+            if (deliveryMode.start() > 0) {
+                RosGlobal.startClock();
+                return Result.success(200);
+            }
+            return Result.error(404, "Can't open the mode,please check if there's other mode opening");
         } else if (type == 4) {
             if (RosGlobal.modes.get(type).start() > 0) {
                 return Result.success(200);
@@ -91,6 +79,11 @@ public class RosController {
 
     @PostMapping("/endMode")
     public Result end() {
+        if (RosGlobal.nowMode instanceof MappingMode) {
+            Map map = mapService.getById(nowMapId);
+            map.setUrl(RosGlobal.mapUrl);
+            mapService.updateById(map);
+        }
         if (RosGlobal.nowMode.end() < 0) {
             return Result.error(404, "already ending all modes!");
         }
@@ -99,7 +92,7 @@ public class RosController {
 
     @PostMapping("/confirmEat")
     public Result confirmEat() {
-        if (!(RosGlobal.nowMode instanceof WelcomeMode)) {
+        if (!(RosGlobal.nowMode instanceof WelcomeMode) || !RosGlobal.launch_success) {
             return Result.error(404, "now is not welcome mode!");
         }
         if (!RosGlobal.arrive_welcome) {
@@ -168,7 +161,7 @@ public class RosController {
         for (boolean state : status) {
             if (!state) {
                 // 有异常返回500，并得到相应异常类型，也可能存在多个异常。
-                return Result.success(500,status);
+                return Result.success(500, status);
             }
         }
         return Result.success(100);

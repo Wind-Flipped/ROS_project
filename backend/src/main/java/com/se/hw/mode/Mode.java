@@ -20,16 +20,23 @@ public abstract class Mode {
     private final RosBridge rosBridge;
     protected static final String END_TOPIC = "/disable";
 
+    protected static final String SETMAP_TOPIC = "/setmap";
+
     protected String mapName;
 
     public Mode(RosBridge rosBridge) {
         publishers = new HashMap<>();
         this.rosBridge = rosBridge;
         publishers.put(END_TOPIC, new Publisher(END_TOPIC, MsgGlobal.msgString, rosBridge));
+        publishers.put(SETMAP_TOPIC, new Publisher(SETMAP_TOPIC, MsgGlobal.msgString, rosBridge));
         mapName = "map";
     }
 
     public void setMapName(String mapName) {
+        for (int i = 1; i <= 3; i++) {
+            publishers.get(SETMAP_TOPIC).publish(mapName);
+            //多发几次保证ros端接收到地图名称
+        }
         this.mapName = mapName;
     }
 
@@ -81,6 +88,7 @@ public abstract class Mode {
         }
         getPublisher(END_TOPIC).publish("End the mode!");
         RosGlobal.nowMode = null;
+        RosGlobal.launch_success = false;
         return 1;
     }
 }

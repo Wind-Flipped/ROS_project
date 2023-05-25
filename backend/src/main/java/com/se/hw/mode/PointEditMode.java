@@ -24,8 +24,19 @@ public class PointEditMode extends Mode {
             return -1;
         }
         RosGlobal.nowMode = this;
-        getPublisher(START_POINTEDIT_TOPIC).publish("launch the point-editing!");
-        return 1;
+        int i;
+        for (i = 0; i < 10; i++) {
+            getPublisher(START_POINTEDIT_TOPIC).publish("launch the point_edit!");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                return 1;
+            }
+        }
+        return -1;
     }
 
     public Point getPoint() {

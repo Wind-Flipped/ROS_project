@@ -32,8 +32,22 @@ public class DeliveryMode extends Mode {
             return -1;
         }
         RosGlobal.nowMode = this;
-        getPublisher(START_DELIVERY_TOPIC).publish(kitchen_point);
-        return 1;
+        /*
+          这只是一个思路，还需修改完善
+         */
+        int i;
+        for (i = 0; i < 5; i++) {
+            getPublisher(START_DELIVERY_TOPIC).publish("launch the delivery!");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                return 1;
+            }
+        }
+        return -1;
     }
 
     public void startSend(Point point) {
