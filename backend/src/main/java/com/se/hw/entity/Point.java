@@ -44,4 +44,6 @@ public class Point implements Serializable {
     private Float oriW;
 
 
+    public Point(int i, String point2, float v, float v1, float v2, int mapId, float v3, float v4, float v5, float v6, float v7) {
+    }
 }
