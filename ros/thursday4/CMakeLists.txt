@@ -212,11 +212,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_executable(pgm2png src/pgm2png.cpp)
-target_link_libraries(pgm2png ${catkin_LIBRARIES})
-
-add_executable(png2base64 src/png2base64.cpp)
-target_link_libraries(png2base64 ${catkin_LIBRARIES})
 
 add_executable(pgm2base64 src/pgm2base64.cpp)
 target_link_libraries(pgm2base64 ${catkin_LIBRARIES})
