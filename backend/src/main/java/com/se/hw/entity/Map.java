@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * <p>
@@ -16,6 +17,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class Map implements Serializable {
 
     private static final long serialVersionUID = 1L;

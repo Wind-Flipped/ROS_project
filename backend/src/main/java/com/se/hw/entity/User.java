@@ -1,6 +1,8 @@
 package com.se.hw.entity;
 
 import java.io.Serializable;
+
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -22,6 +24,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +32,7 @@ public class User implements Serializable {
     /**
      * open_id
      */
-    @TableId(value = "open_id",type = IdType.INPUT)
+    @TableId(value = "open_id", type = IdType.INPUT)
     private String openId;
 
     /**
