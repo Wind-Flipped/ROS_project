@@ -27,5 +27,4 @@ public class Wxlogin implements Serializable {
 
     private String openid;
 
-
 }

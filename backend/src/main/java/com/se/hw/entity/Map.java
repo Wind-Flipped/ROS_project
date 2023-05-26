@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * <p>
@@ -12,10 +13,11 @@ import lombok.Setter;
  * </p>
  *
  * @author SE2304
- * @since 2023-04-27
+ * @since 2023-05-25
  */
 @Getter
 @Setter
+@ToString
 public class Map implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,9 +27,11 @@ public class Map implements Serializable {
 
     private String name;
 
-    private String path;
+    private String url;
 
     private String welcome;
+
+    private String rosname;
 
 
 }

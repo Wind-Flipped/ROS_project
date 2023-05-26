@@ -14,18 +14,22 @@ public class Result {
     private Object data;
 
     public static Result success(int code) {
+        TestUtil.log("success!");
         return new Result(code, null, null);
     }
 
     public static Result success(int code, Object data) {
+        TestUtil.log(data.toString());
         return new Result(code, null, data);
     }
 
     public static Result error(int code) {
+        TestUtil.log("error!");
         return new Result(code, null, null);
     }
 
     public static Result error(int code, String msg) {
+        TestUtil.log(msg);
         return new Result(code, msg, null);
     }
 

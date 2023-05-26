@@ -23,14 +23,24 @@ public class MappingMode extends Mode {
 
     @Override
     public int start() {
-        Publisher startMapping = getPublisher(START_MAPPING_TOPIC);
         // begin mapping mood
         if (RosGlobal.nowMode != null) {
             return -1;
         }
-        RosGlobal.nowMode = this;
-        startMapping.publish(mapName);
-        return 1;
+        for (int i = 0; i < 5; i++) {
+            getPublisher(START_MAPPING_TOPIC).publish(mapName);
+            getPublisher(START_MAPPING_TOPIC).publish(mapName);
+            try {
+                Thread.sleep(WAIT_TIME);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                RosGlobal.nowMode = this;
+                return 1;
+            }
+        }
+        return -2;
     }
 
 }

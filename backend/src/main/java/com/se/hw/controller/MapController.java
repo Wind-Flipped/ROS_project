@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.se.hw.Ros.RosGlobal;
 import com.se.hw.common.Result;
+import com.se.hw.common.TestUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,7 +20,7 @@ import com.se.hw.entity.Map;
  * </p>
  *
  * @author SE2304
- * @since 2023-04-27
+ * @since 2023-05-24
  */
 @RestController
 @RequestMapping("/map")
@@ -32,7 +33,6 @@ public class MapController {
     public Result save(@RequestParam String mapName) {
         Map map = new Map();
         map.setName(mapName);
-        map.setPath(mapName);
         map.setWelcome("Welcome to our restaurant!");
         QueryWrapper<Map> mapQueryWrapper = new QueryWrapper<>();
         mapQueryWrapper.eq("name", mapName);
@@ -40,6 +40,7 @@ public class MapController {
         if (maps != null && maps.size() != 0) {
             return Result.error(400, "naming repetition!");
         }
+        mapService.save(map);
         return Result.success(200);
     }
 
@@ -48,9 +49,7 @@ public class MapController {
         if (mapService.getById(map.getId()) == null) {
             return Result.error(404, "map doesn't exist");
         }
-        String oldName = mapService.getById(map.getId()).getName();
         mapService.saveOrUpdate(map);
-        RosGlobal.pub_mapNameUpdate.publish(oldName + " " + map.getName());
         return Result.success(200);
     }
 
@@ -82,5 +81,8 @@ public class MapController {
         return Result.success(200, mapService.page(new Page<>(pageNum, pageSize)));
     }
 
+    @GetMapping("/getPicture")
+    public Result getPicture() {
+        return Result.success(200, RosGlobal.mapUrl);
+    }
 }
-

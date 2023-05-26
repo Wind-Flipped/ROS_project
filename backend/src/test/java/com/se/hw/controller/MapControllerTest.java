@@ -2,24 +2,15 @@ package com.se.hw.controller;
 
 import com.se.hw.common.Result;
 import com.se.hw.entity.Map;
-import com.se.hw.entity.User;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 /** 
 * MapController Tester. 
@@ -32,31 +23,37 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 public class MapControllerTest {
 
+    @Autowired
     private MapController mapController;
 
     private Map map1;
     private Map map4;
+    private int mapId;
 
 @Before
 public void before() throws Exception {
-    mapController = new MapController();
+    // mapController = new MapController(mapService);
     map1 = new Map();
     map4 = new Map();
-    map1.setWelcome("welcome!!!");
-    map1.setPath("maps/map1lalala");
-    map1.setName("map1");
-    map1.setId(1);
-    map4.setWelcome("welcome");
-    map4.setPath("maps/map4");
-    map4.setName("map4");
+
     mapController.save("map1");
     mapController.save("map2");
     mapController.save("map3");
+    List<Map> maps = (List<Map>) mapController.findAll().getData();
+    mapId = maps.get(0).getId();
+    map1.setWelcome("welcome!!!");
+    map1.setRosname("maps/map1lalala");
+    map1.setName("map1");
+    map1.setId(mapId);
+    map4.setWelcome("welcome");
+    map4.setRosname("maps/map4");
+    map4.setName("map4");
+    map4.setId(10000);
 }
 
 @After
 public void after() throws Exception {
-    for (int i = 1; i <= 5; i++) {
+    for (int i = 1; i <= 1000; i++) {
         mapController.delete(i);
     }
 } 
@@ -87,7 +84,7 @@ public void testUpdate() throws Exception {
     assert result.getCode() == 200;
     Result result2 = mapController.findOne(map1.getId());
     assert result2.getCode() == 200;
-    assert ((Map) result2.getData()).getName().equals("map1") && ((Map) result2.getData()).getPath().equals("maps/map1lalala")
+    assert ((Map) result2.getData()).getName().equals("map1") && ((Map) result2.getData()).getRosname().equals("maps/map1lalala")
             && ((Map) result2.getData()).getWelcome().equals("welcome!!!");
     Result result1 = mapController.update(map4);
     assert result1.getCode() == 404 && result1.getMsg().equals("map doesn't exist");
@@ -101,7 +98,7 @@ public void testUpdate() throws Exception {
 @Test
 public void testDelete() throws Exception { 
 //TODO: Test goes here...
-    Result result = mapController.delete(1);
+    Result result = mapController.delete(mapId);
     assert result.getCode() == 200;
     Result result1 = mapController.delete(10000);
     assert result1.getCode() == 404 && result1.getMsg().equals("can't find the map");

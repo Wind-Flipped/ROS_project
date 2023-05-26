@@ -12,18 +12,12 @@ public class DeliveryMode extends Mode {
 
     private static final String START_RECEIVE = "/delivery_confirm";
 
-    private Point kitchen_point;
 
     public DeliveryMode(RosBridge rosBridge) {
         super(rosBridge);
-        kitchen_point = new Point();
         addPublisher(START_DELIVERY_TOPIC, MsgGlobal.msgFloatArray);
         addPublisher(START_SEND, MsgGlobal.msgFloatArray);
         addPublisher(START_RECEIVE, MsgGlobal.msgString);
-    }
-
-    public void setPoint(Point point) {
-        this.kitchen_point = point;
     }
 
     @Override
@@ -31,21 +25,29 @@ public class DeliveryMode extends Mode {
         if (RosGlobal.nowMode != null) {
             return -1;
         }
-        RosGlobal.nowMode = this;
-        getPublisher(START_DELIVERY_TOPIC).publish(kitchen_point);
-        return 1;
+        /*
+          这只是一个思路，还需修改完善
+         */
+        int i;
+        for (i = 0; i < 5; i++) {
+            getPublisher(START_DELIVERY_TOPIC).publish(point2arr(point));
+            getPublisher(START_DELIVERY_TOPIC).publish(point2arr(point));
+            try {
+                Thread.sleep(WAIT_TIME);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                RosGlobal.nowMode = this;
+                RosGlobal.arrive_kitchen = true;
+                return 1;
+            }
+        }
+        return -2;
     }
 
     public void startSend(Point point) {
-        Float[] floats = new Float[10];
-        floats[0] = point.getXAxis().floatValue();
-        floats[1] = point.getYAxis().floatValue();
-        floats[2] = point.getZAxis().floatValue();
-        floats[3] = point.getOriX().floatValue();
-        floats[4] = point.getOriY().floatValue();
-        floats[5] = point.getOriZ().floatValue();
-        floats[6] = point.getOriW().floatValue();
-        getPublisher(START_SEND).publish(point);
+        getPublisher(START_SEND).publish(point2arr(point));
     }
 
     public void startReceive() {

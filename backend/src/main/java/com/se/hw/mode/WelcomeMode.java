@@ -9,16 +9,12 @@ import ros.msgs.geometry_msgs.Vector3;
 import ros.msgs.std_msgs.PrimitiveMsg;
 
 public class WelcomeMode extends Mode {
-
-    private Point welcome_point;
     private static final String START_WELCOME_TOPIC = "/enable_welcome";
     private static final String START_GUIDE = "/guidance";
 
 
     public WelcomeMode(RosBridge rosBridge) {
         super(rosBridge);
-        // default value
-        welcome_point = new Point();
         addPublisher(START_WELCOME_TOPIC, MsgGlobal.msgString);
         addPublisher(START_GUIDE, MsgGlobal.msgFloatArray);
     }
@@ -28,28 +24,24 @@ public class WelcomeMode extends Mode {
         if (RosGlobal.nowMode != null) {
             return -1;
         }
-        RosGlobal.nowMode = this;
-        getPublisher(START_WELCOME_TOPIC).publish(welcome_point);
-        return 1;
-    }
-
-    public Point getPoint() {
-        return welcome_point;
-    }
-
-    public void setPoint(Point point) {
-        this.welcome_point = point;
+        for (int i = 0; i < 5; i++) {
+            getPublisher(START_WELCOME_TOPIC).publish(point2arr(point));
+            getPublisher(START_WELCOME_TOPIC).publish(point2arr(point));
+            try {
+                Thread.sleep(WAIT_TIME);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (RosGlobal.launch_success) {
+                RosGlobal.nowMode = this;
+                RosGlobal.arrive_welcome = true;
+                return 1;
+            }
+        }
+        return -2;
     }
 
     public void startGuide(Point point) {
-        Float[] floats = new Float[10];
-        floats[0] = point.getXAxis().floatValue();
-        floats[1] = point.getYAxis().floatValue();
-        floats[2] = point.getZAxis().floatValue();
-        floats[3] = point.getOriX().floatValue();
-        floats[4] = point.getOriY().floatValue();
-        floats[5] = point.getOriZ().floatValue();
-        floats[6] = point.getOriW().floatValue();
-        getPublisher(START_GUIDE).publish(floats);
+        getPublisher(START_GUIDE).publish(point2arr(point));
     }
 }

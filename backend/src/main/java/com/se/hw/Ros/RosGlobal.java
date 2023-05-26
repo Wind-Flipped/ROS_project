@@ -3,6 +3,7 @@ package com.se.hw.Ros;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.se.hw.common.UploadImgUtil;
 import com.se.hw.entity.Point;
 import com.se.hw.exception.ExceptionRecv;
 import com.se.hw.mode.*;
@@ -20,26 +21,29 @@ import java.util.List;
 public class RosGlobal {
 
     public static RosBridge rosBridge;
+
     /**
      * MappingMood, WelcomeMood, DeliveryMood, PointEditMood
      */
     public static HashMap<Integer, Mode> modes;
 
     public static Mode nowMode;
+
     public static Point point;
     public static double rad = 0;
     public static double power = 0;
-    public static Publisher pub_mapNameUpdate;
+    public static boolean launch_success = false;
 
-    public static boolean arrive_kitchen = false;
     public static boolean arrive_welcome = false;
+    public static boolean arrive_kitchen = false;
+
+    public static String mapUrl = "https://img1.imgtp.com/2023/05/25/7Gu6ool3.jpg";
 
     public static void init(String url) {
         nowMode = null;
         rosBridge = new RosBridge();
         point = new Point();
         rosBridge.connect(url, true);
-
         modes = new HashMap<>();
         modes.put(1, new MappingMode(rosBridge));
         modes.put(2, new WelcomeMode(rosBridge));
@@ -47,7 +51,6 @@ public class RosGlobal {
         modes.put(4, new PointEditMode(rosBridge));
 
         ExceptionRecv.run(rosBridge);
-
         /*
           init subscriber
          */
@@ -60,47 +63,24 @@ public class RosGlobal {
                     public void receive(JsonNode data, String stringRep) {
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray array = json.getJSONObject("msg").getJSONArray("data");
-                        point.setXAxis(array.getDoubleValue(0));
-                        point.setYAxis(array.getDoubleValue(1));
-                        point.setZAxis(array.getDoubleValue(2));
-                        point.setOriX(array.getDoubleValue(3));
-                        point.setOriY(array.getDoubleValue(4));
-                        point.setOriZ(array.getDoubleValue(5));
-                        point.setOriW(array.getDoubleValue(6));
-
+                        Float[] floats = array.toArray(new Float[array.size()]);
+                        point = ros2front(floats);
                     }
                 }
         );
-        /*
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/gesture_detect")
-                        .setType("std_msgs/Float64")
+        rosBridge.subscribe(SubscriptionRequestMsg.generate("/enable_confirm")
+                        .setType("std_msgs/String")
                         .setThrottleRate(1)
                         .setQueueLength(1),
                 new RosListenDelegate() {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        MessageUnpacker<PrimitiveMsg<Double>> unpacker = new MessageUnpacker<PrimitiveMsg<Double>>(PrimitiveMsg.class);
-                        PrimitiveMsg<Double> msg = unpacker.unpackRosMessage(data);
-                        rad = msg.data;
+                        launch_success = true;
+                        endClock();
                     }
                 }
         );
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/power_detect")
-                        .setType("std_msgs/Float64")
-                        .setThrottleRate(1)
-                        .setQueueLength(1),
-                new RosListenDelegate() {
-                    @Override
-                    public void receive(JsonNode data, String stringRep) {
-                        MessageUnpacker<PrimitiveMsg<Double>> unpacker = new MessageUnpacker<PrimitiveMsg<Double>>(PrimitiveMsg.class);
-                        PrimitiveMsg<Double> msg = unpacker.unpackRosMessage(data);
-                        power = msg.data;
-                    }
-                }
-        );
-
-         */
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/arrive_kitchen")
+        rosBridge.subscribe(SubscriptionRequestMsg.generate("/delivery_completed")
                         .setType("std_msgs/String")
                         .setThrottleRate(1)
                         .setQueueLength(1),
@@ -112,7 +92,7 @@ public class RosGlobal {
                     }
                 }
         );
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/arrive_welcome")
+        rosBridge.subscribe(SubscriptionRequestMsg.generate("/guidance_completed")
                         .setType("std_msgs/String")
                         .setThrottleRate(1)
                         .setQueueLength(1),
@@ -124,11 +104,24 @@ public class RosGlobal {
                     }
                 }
         );
-        pub_mapNameUpdate = new Publisher("/rename_map", MsgGlobal.msgString, rosBridge);
+        rosBridge.subscribe(SubscriptionRequestMsg.generate("/base64_pub")
+                        .setType("std_msgs/String")
+                        .setThrottleRate(1)
+                        .setQueueLength(1),
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
+                        PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
+                        mapUrl = UploadImgUtil.post(msg.data);
+                    }
+                }
+        );
     }
 
     /**
      * 前端在init之后不停调用该接口，以获取当前是否存在异常，若无任何异常，则所有布尔值都为 TRUE ；反之，相对应布尔值为 FALSE
+     *
      * @return An array of length 3, represents exception status;
      * state[0] represents gesture, state[1] represents power, state[2] represents timeout
      */
@@ -155,6 +148,46 @@ public class RosGlobal {
         ExceptionRecv.setStartTime();
     }
 
+    /**
+     * 公有方法，前端和ros端坐标转换，地图大小默认400像素x400像素，对应实际大小20mx20m
+     * 前端以左上角为坐标原点，单位是像素，ros端以图片中心为坐标原点，单位是m
+     * e.g.
+     * 前端(0,0) --- ros(-10,10) 左上角
+     * 前端(200,200) --- ros(0,0) 中心
+     * 前端(0,200) --- ros(-10,-10) 左下角
+     */
+    public static Float[] front2ros(Point point) {
+        Float[] floats = new Float[7];
+        Float x, y;
+        x = point.getXAxis() / 20 - 10;
+        y = -point.getYAxis() / 20 + 10;
+        floats[0] = x;
+        floats[1] = y;
+        floats[2] = point.getZAxis();
+        floats[3] = point.getOriX();
+        floats[4] = point.getOriY();
+        floats[5] = point.getOriZ();
+        floats[6] = point.getOriW();
+        return floats;
+    }
+
+    /**
+     * 公有方法，上面方法的逆运算
+     */
+    public static Point ros2front(Float[] floats) {
+        Float x = floats[0], y = floats[1];
+        Point point = new Point();
+        point.setName("CURRENT_POSITION");
+        point.setXAxis(20 * (x + 10));
+        point.setYAxis(-20 * (y - 10));
+        point.setZAxis(floats[2]);
+        point.setOriX(floats[3]);
+        point.setOriY(floats[4]);
+        point.setOriZ(floats[5]);
+        point.setOriW(floats[6]);
+        return point;
+    }
+
 
     /*
     public static void test() {
@@ -170,8 +203,8 @@ public class RosGlobal {
                         //  System.out.println(data);
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray axis = json.getJSONObject("msg").getJSONArray("data");
-                        double xAxis = axis.getDoubleValue(0);
-                        double yAxis = axis.getDoubleValue(1);
+                        double xAxis = axis.get(0);
+                        double yAxis = axis.get(1);
                         // System.out.println(data);
                     }
                 }
@@ -187,8 +220,8 @@ public class RosGlobal {
                         //  System.out.println(data);
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray axis = json.getJSONObject("msg").getJSONArray("data");
-                        double xAxis2 = axis.getDoubleValue(0);
-                        double yAxis2 = axis.getDoubleValue(1);
+                        double xAxis2 = axis.get(0);
+                        double yAxis2 = axis.get(1);
                         // System.out.println(data);
                     }
                 }

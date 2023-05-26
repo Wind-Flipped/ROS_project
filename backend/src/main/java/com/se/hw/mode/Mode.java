@@ -2,6 +2,7 @@ package com.se.hw.mode;
 
 import com.se.hw.Ros.MsgGlobal;
 import com.se.hw.Ros.RosGlobal;
+import com.se.hw.entity.Point;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -20,21 +21,33 @@ public abstract class Mode {
     private final RosBridge rosBridge;
     protected static final String END_TOPIC = "/disable";
 
+    protected static final String SETMAP_TOPIC = "/setmap";
+
+    protected static final Integer WAIT_TIME = 5000;
+
     protected String mapName;
+    protected Point point;
 
     public Mode(RosBridge rosBridge) {
         publishers = new HashMap<>();
         this.rosBridge = rosBridge;
         publishers.put(END_TOPIC, new Publisher(END_TOPIC, MsgGlobal.msgString, rosBridge));
+        publishers.put(SETMAP_TOPIC, new Publisher(SETMAP_TOPIC, MsgGlobal.msgString, rosBridge));
         mapName = "map";
+        point = new Point();
     }
 
     public void setMapName(String mapName) {
+        publishers.get(SETMAP_TOPIC).publish(mapName);
         this.mapName = mapName;
     }
 
-    public String getMapName() {
-        return mapName;
+    public void setPoint(Point point) {
+        this.point = point;
+    }
+
+    protected Float[] point2arr(Point point) {
+        return RosGlobal.front2ros(point);
     }
 
     /**
@@ -64,23 +77,30 @@ public abstract class Mode {
     }
 
     /**
-     * Start the current mood
+     * Start the current mode
      *
-     * @return status code, return 0 if success, else return -1
+     * @return status code, return 1 if success, return -1 if now is other mode, return -2 if connection error
      */
     public abstract int start();
 
     /**
-     * End the current mood
+     * End the current mode
      *
-     * @return status code, return 0 if success, else return -1
+     * @return status code, return 1 if success, else return -1
      */
     public int end() {
         if (RosGlobal.nowMode == null) {
             return -1;
         }
         getPublisher(END_TOPIC).publish("End the mode!");
+        try {
+            Thread.sleep(WAIT_TIME);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        getPublisher(END_TOPIC).publish("End the mode!");
         RosGlobal.nowMode = null;
+        RosGlobal.launch_success = false;
         return 1;
     }
 }
