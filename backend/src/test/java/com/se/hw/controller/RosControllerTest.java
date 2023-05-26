@@ -54,8 +54,8 @@ public void before() throws Exception {
     mapController.save("map");
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
-    point = new Point(1,"point",1.0f,1.0f,0f,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
-    point2 = new Point(2,"point2",2.0f,2.0f,0f,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
+    point = new Point(1,"point",1.0f,1.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
+    point2 = new Point(2,"point2",2.0f,2.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
     pointController.save(point);
     rosBridge = RosGlobal.rosBridge;
 } 

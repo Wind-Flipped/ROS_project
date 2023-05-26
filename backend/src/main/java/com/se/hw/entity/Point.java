@@ -2,13 +2,17 @@ package com.se.hw.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author SE2304
@@ -16,6 +20,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Point implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,7 +49,4 @@ public class Point implements Serializable {
 
     private Float oriW;
 
-
-    public Point(int i, String point2, float v, float v1, float v2, int mapId, float v3, float v4, float v5, float v6, float v7) {
-    }
 }
