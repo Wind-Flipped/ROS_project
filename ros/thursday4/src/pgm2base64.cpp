@@ -69,6 +69,26 @@ std::string convertPNGtoBase64(const std::string& pngFile) {
     return base64;
 }
 
+void cropImage(const std::string& inputImagePath, const std::string& outputImagePath)
+{
+    cv::Mat image = cv::imread(inputImagePath);
+
+    int width = image.cols;
+    int height = image.rows;
+    int newWidth = width / 10;
+    int newHeight = height / 10;
+
+    int left = (width - newWidth) / 2;
+    int top = (height - newHeight) / 2;
+    int right = left + newWidth;
+    int bottom = top + newHeight;
+
+    cv::Rect roi(left, top, newWidth, newHeight);
+    cv::Mat croppedImage = image(roi);
+
+    cv::imwrite(outputImagePath, croppedImage);
+}
+
 int main(int argc, char **argv) {
     ros::init(argc, argv, "pgm2base64");
 
@@ -77,30 +97,37 @@ int main(int argc, char **argv) {
     std::string pgmFile = mapDir + pgmName + ".pgm";  // 输入的PGM文件名
     std::string pngFile = mapDir + pgmName + ".png";  // 输出的PNG文件名
 
-    cv::Mat image = cv::imread(pgmFile, cv::IMREAD_UNCHANGED);
-
-    if (image.empty()) {
-        std::cout << "无法打开输入文件: " << pgmFile << std::endl;
-        return -1;
-    }
-
-    cv::imwrite(pngFile, image);
-
-    std::cout << "转换完成！" << std::endl;
-
-    std::string base64 = convertPNGtoBase64(pngFile);
-    //std::cout << base64;
-
     ros::NodeHandle nh;
     ros::Publisher pub = nh.advertise<std_msgs::String>("/base64_pub",1000);
-    ros::Duration(1.0).sleep();
 
-    std_msgs::String msg;
-    msg.data = base64;
-    pub.publish(msg);
-    ros::spinOnce();
+    ros::Rate loop_rate(2);
+    while (ros::ok())
+    {
+        cv::Mat image = cv::imread(pgmFile, cv::IMREAD_UNCHANGED);
 
-    while(ros::ok());
+        if (image.empty()) {
+            std::cout << "无法打开输入文件: " << pgmFile << std::endl;
+            continue;
+        }
+
+        cv::imwrite(pngFile, image);
+
+        //缩放图片
+        cropImage(pngFile,pngFile);
+
+        std::cout << "转换完成！" << std::endl;
+
+        std::string base64 = convertPNGtoBase64(pngFile);
+        //std::cout << base64;
+        //ros::Duration(1.0).sleep();
+
+        std_msgs::String msg;
+        msg.data = base64;
+        pub.publish(msg);
+        ros::spinOnce();   
+        loop_rate.sleep();
+    }
+
     // std::string txtname = mapDir + pgmName + ".txt";  // 输出的文件名
 
     // std::ofstream file(txtname);
@@ -112,6 +139,8 @@ int main(int argc, char **argv) {
     // file << base64;  // 将字符串写入文件
 
     // file.close();
+
+    //while(ros::ok());
     //ros::Duration(10.0).sleep();
 
     return 0;

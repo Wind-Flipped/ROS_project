@@ -37,7 +37,7 @@
   <!-- Gmapping -->
   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
     <param name="base_frame" value="base_footprint"/>
-    <param name="delta" value="0.04"/>
+    <param name="delta" value="0.05"/>
   </node>
 
   <!-- Rviz -->
@@ -58,5 +58,5 @@
   <arg name="map_name" default="map"/>
   <arg name="file_name" value="$(find thursday4)/maps/$(arg map_name)"/>
   <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(arg file_name)" respawn="true" respawn_delay="5"/>
-
+  <node name="pgm2base64" pkg="thursday4" type="pgm2base64" args=" $(arg map_name)" respawn="true" respawn_delay="5" output="screen"/>
 </launch>
