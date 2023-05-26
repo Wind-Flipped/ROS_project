@@ -24,13 +24,11 @@ public class WelcomeMode extends Mode {
         if (RosGlobal.nowMode != null) {
             return -1;
         }
-
-
-        int i;
-        for (i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
+            getPublisher(START_WELCOME_TOPIC).publish(point2arr(point));
             getPublisher(START_WELCOME_TOPIC).publish(point2arr(point));
             try {
-                Thread.sleep(2000);
+                Thread.sleep(WAIT_TIME);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

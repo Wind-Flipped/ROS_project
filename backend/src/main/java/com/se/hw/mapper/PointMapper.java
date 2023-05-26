@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author SE2304
- * @since 2023-05-11
+ * @since 2023-05-26
  */
 @Mapper
 public interface PointMapper extends BaseMapper<Point> {

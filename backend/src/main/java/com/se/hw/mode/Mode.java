@@ -23,6 +23,8 @@ public abstract class Mode {
 
     protected static final String SETMAP_TOPIC = "/setmap";
 
+    protected static final Integer WAIT_TIME = 5000;
+
     protected String mapName;
     protected Point point;
 
@@ -45,15 +47,7 @@ public abstract class Mode {
     }
 
     protected Float[] point2arr(Point point) {
-        Float[] floats = new Float[10];
-        floats[0] = point.getXAxis().floatValue();
-        floats[1] = point.getYAxis().floatValue();
-        floats[2] = point.getZAxis().floatValue();
-        floats[3] = point.getOriX().floatValue();
-        floats[4] = point.getOriY().floatValue();
-        floats[5] = point.getOriZ().floatValue();
-        floats[6] = point.getOriW().floatValue();
-        return floats;
+        return RosGlobal.front2ros(point);
     }
 
     /**
@@ -97,6 +91,12 @@ public abstract class Mode {
     public int end() {
         if (RosGlobal.nowMode == null) {
             return -1;
+        }
+        getPublisher(END_TOPIC).publish("End the mode!");
+        try {
+            Thread.sleep(WAIT_TIME);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         getPublisher(END_TOPIC).publish("End the mode!");
         RosGlobal.nowMode = null;

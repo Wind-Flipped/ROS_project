@@ -86,7 +86,6 @@ public class UserController {
         String skey = UUID.randomUUID().toString();
         if (user == null) {
             // 用户信息入库
-
             user = new User();
             user.setOpenId(openid);
             user.setSkey(skey);
@@ -96,7 +95,6 @@ public class UserController {
             user.setAvatar("https://img1.imgtp.com/2023/05/24/htYQx4n7.png");
             user.setGender(1);
             user.setName("蔡徐坤");
-
             userService.save(user);
         } else {
             // 已存在，更新用户登录时间

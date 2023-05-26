@@ -31,8 +31,9 @@ public class DeliveryMode extends Mode {
         int i;
         for (i = 0; i < 5; i++) {
             getPublisher(START_DELIVERY_TOPIC).publish(point2arr(point));
+            getPublisher(START_DELIVERY_TOPIC).publish(point2arr(point));
             try {
-                Thread.sleep(2000);
+                Thread.sleep(WAIT_TIME);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

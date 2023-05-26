@@ -172,7 +172,7 @@ public class RosController {
 
     @GetMapping("/getLocation")
     public Result getLocation() {
-        HashMap<String, Double> axis = new HashMap<>();
+        HashMap<String, Float> axis = new HashMap<>();
         axis.put("xAxis", RosGlobal.point.getXAxis());
         axis.put("yAxis", RosGlobal.point.getXAxis());
         return Result.success(100, axis);

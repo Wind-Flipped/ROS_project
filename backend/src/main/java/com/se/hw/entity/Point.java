@@ -2,26 +2,20 @@ package com.se.hw.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-
 import java.io.Serializable;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author SE2304
- * @since 2023-05-11
+ * @since 2023-05-26
  */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Point implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,23 +23,25 @@ public class Point implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String name;//Table Welcome Kitchen
+    private String name;
 
-    private Double xAxis;
+    private Float xAxis;
 
-    private Double yAxis;
+    private Float yAxis;
 
-    private Integer status;// 0 is free ; 1 is full
+    private Integer status;
 
     private Integer mapId;
 
-    private Double zAxis;
+    private Float zAxis;
 
-    private Double oriX;
+    private Float oriX;
 
-    private Double oriY;
+    private Float oriY;
 
-    private Double oriZ;
+    private Float oriZ;
 
-    private Double oriW;
+    private Float oriW;
+
+
 }

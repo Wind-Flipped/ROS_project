@@ -28,6 +28,7 @@ public class RosGlobal {
     public static HashMap<Integer, Mode> modes;
 
     public static Mode nowMode;
+
     public static Point point;
     public static double rad = 0;
     public static double power = 0;
@@ -62,14 +63,8 @@ public class RosGlobal {
                     public void receive(JsonNode data, String stringRep) {
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray array = json.getJSONObject("msg").getJSONArray("data");
-                        point.setXAxis(array.getDoubleValue(0));
-                        point.setYAxis(array.getDoubleValue(1));
-                        point.setZAxis(array.getDoubleValue(2));
-                        point.setOriX(array.getDoubleValue(3));
-                        point.setOriY(array.getDoubleValue(4));
-                        point.setOriZ(array.getDoubleValue(5));
-                        point.setOriW(array.getDoubleValue(6));
-
+                        Float[] floats = array.toArray(new Float[array.size()]);
+                        point = ros2front(floats);
                     }
                 }
         );
@@ -153,6 +148,45 @@ public class RosGlobal {
         ExceptionRecv.setStartTime();
     }
 
+    /**
+     * 公有方法，前端和ros端坐标转换，地图大小默认400像素x400像素，对应实际大小20mx20m
+     * 前端以左上角为坐标原点，单位是像素，ros端以图片中心为坐标原点，单位是m
+     * e.g.
+     * 前端(0,0) --- ros(-10,10) 左上角
+     * 前端(200,200) --- ros(0,0) 中心
+     * 前端(0,200) --- ros(-10,-10) 左下角
+     */
+    public static Float[] front2ros(Point point) {
+        Float[] floats = new Float[7];
+        Float x, y;
+        x = point.getXAxis() / 20 - 10;
+        y = -point.getYAxis() / 20 + 10;
+        floats[0] = x;
+        floats[1] = y;
+        floats[2] = point.getZAxis();
+        floats[3] = point.getOriX();
+        floats[4] = point.getOriY();
+        floats[5] = point.getOriZ();
+        floats[6] = point.getOriW();
+        return floats;
+    }
+
+    /**
+     * 公有方法，上面方法的逆运算
+     */
+    public static Point ros2front(Float[] floats) {
+        Float x = floats[0], y = floats[1];
+        Point point = new Point();
+        point.setName("CURRENT_POSITION");
+        point.setXAxis(20 * (x + 10));
+        point.setYAxis(-20 * (y - 10));
+        point.setZAxis(floats[2]);
+        point.setOriX(floats[3]);
+        point.setOriY(floats[4]);
+        point.setOriZ(floats[5]);
+        point.setOriW(floats[6]);
+        return point;
+    }
 
 
     /*
@@ -169,8 +203,8 @@ public class RosGlobal {
                         //  System.out.println(data);
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray axis = json.getJSONObject("msg").getJSONArray("data");
-                        double xAxis = axis.getDoubleValue(0);
-                        double yAxis = axis.getDoubleValue(1);
+                        double xAxis = axis.get(0);
+                        double yAxis = axis.get(1);
                         // System.out.println(data);
                     }
                 }
@@ -186,8 +220,8 @@ public class RosGlobal {
                         //  System.out.println(data);
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray axis = json.getJSONObject("msg").getJSONArray("data");
-                        double xAxis2 = axis.getDoubleValue(0);
-                        double yAxis2 = axis.getDoubleValue(1);
+                        double xAxis2 = axis.get(0);
+                        double yAxis2 = axis.get(1);
                         // System.out.println(data);
                     }
                 }

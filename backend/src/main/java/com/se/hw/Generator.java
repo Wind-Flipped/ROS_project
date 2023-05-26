@@ -39,7 +39,7 @@ public class Generator {
 //                            .addInclude("user")
 //                            .addInclude("wxlogin")
 //                            .addTablePrefix("t_"); // 设置过滤表前缀
-                    builder.addInclude("map").addTablePrefix("t_");
+                    builder.addInclude("point").addTablePrefix("t_");
                 })
 //                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .execute();
