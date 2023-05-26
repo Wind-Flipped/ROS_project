@@ -1,32 +1,16 @@
 package com.se.hw.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.se.hw.common.Result;
 import com.se.hw.entity.Map;
-import com.se.hw.entity.User;
-import com.se.hw.service.IMapService;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 /** 
 * MapController Tester. 
@@ -58,11 +42,11 @@ public void before() throws Exception {
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
     map1.setWelcome("welcome!!!");
-    map1.setPath("maps/map1lalala");
+    map1.setRosname("maps/map1lalala");
     map1.setName("map1");
     map1.setId(mapId);
     map4.setWelcome("welcome");
-    map4.setPath("maps/map4");
+    map4.setRosname("maps/map4");
     map4.setName("map4");
     map4.setId(10000);
 }
@@ -100,7 +84,7 @@ public void testUpdate() throws Exception {
     assert result.getCode() == 200;
     Result result2 = mapController.findOne(map1.getId());
     assert result2.getCode() == 200;
-    assert ((Map) result2.getData()).getName().equals("map1") && ((Map) result2.getData()).getPath().equals("maps/map1lalala")
+    assert ((Map) result2.getData()).getName().equals("map1") && ((Map) result2.getData()).getRosname().equals("maps/map1lalala")
             && ((Map) result2.getData()).getWelcome().equals("welcome!!!");
     Result result1 = mapController.update(map4);
     assert result1.getCode() == 404 && result1.getMsg().equals("map doesn't exist");

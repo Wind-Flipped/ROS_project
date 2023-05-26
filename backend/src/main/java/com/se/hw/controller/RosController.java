@@ -8,6 +8,7 @@ import com.se.hw.entity.Map;
 import com.se.hw.entity.Point;
 import com.se.hw.mode.DeliveryMode;
 import com.se.hw.mode.MappingMode;
+import com.se.hw.mode.Mode;
 import com.se.hw.mode.WelcomeMode;
 import com.se.hw.service.IMapService;
 import com.se.hw.service.IPointService;
@@ -27,54 +28,55 @@ public class RosController {
     @Resource
     private IPointService pointService;
 
-    private Integer nowMapId;
+    private static Integer nowMapId;
 
+    /**
+     * 切换模式，在切换模式前一定要注意先关闭当前模式，否则后端返回错误状态码，ROS端不执行模式切换
+     * @param type 模式类型，由前端确保值在 1--4 之间, 从1到4分别为建图，迎宾，送餐，航点编辑模式
+     * @param mapId 已有的地图 id ，前端需先新建场景后再开启建图模式
+     * @param pointId 已有的航点 id ，由前端确保该航点对应的地图与传入的地图参数对应
+     * @return code=200，
+     * 则启动成功；
+     * code=405，
+     * 则找不到所给的地图；
+     * code=404，
+     * 则说明未退出当前模式，无法切换其他模式；
+     * code=500，
+     * 则说明与 ROS 连接出现问题
+     * code=606，
+     * 说明找不到所给的航点
+     */
     @PostMapping("/changeMode")
     public Result change(@RequestParam Integer type, @RequestParam Integer mapId, @RequestParam(value = "0") Integer pointId) {
         Map map = mapService.getById(mapId);
         if (map == null) {
             return Result.error(405, "the map doesn't exist");
         }
-        RosGlobal.modes.get(type).setMapName(map.getRosname());
-        if (type == 1) { // mapping
-            nowMapId = mapId;
-            if (RosGlobal.modes.get(type).start() > 0) {
-                return Result.success(200);
-            } else {
-                return Result.error(404, "Can't open the mode,please check if there's other mode opening");
-            }
-        } else if (type == 2) { //welcome
-            WelcomeMode welcomeMode = (WelcomeMode) RosGlobal.modes.get(type);
-            Point point = pointService.getById(pointId);
-            if (point == null) {
-                return Result.error(606, "Can't find the point!");
-            }
-            welcomeMode.setPoint(point);
-            if (welcomeMode.start() > 0) {
-                RosGlobal.startClock();
-                return Result.success(200);
-            }
-            return Result.error(404, "Can't open the mode,please check if there's other mode opening");
-        } else if (type == 3) { //Delivery
-            DeliveryMode deliveryMode = (DeliveryMode) RosGlobal.modes.get(type);
-            Point point = pointService.getById(pointId);
-            if (point == null) {
-                return Result.error(606, "Can't find the point!");
-            }
-            deliveryMode.setPoint(point);
-            if (deliveryMode.start() > 0) {
-                RosGlobal.startClock();
-                return Result.success(200);
-            }
-            return Result.error(404, "Can't open the mode,please check if there's other mode opening");
-        } else if (type == 4) {
-            if (RosGlobal.modes.get(type).start() > 0) {
-                return Result.success(200);
-            } else {
-                return Result.error(404, "Can't open the mode,please check if there's other mode opening");
-            }
+        Mode givenMode = RosGlobal.modes.get(type);
+        givenMode.setMapName(map.getRosname());
+        switch (type) {
+            case 1:// mapping
+                nowMapId = mapId;
+                break;
+            case 2://welcome
+            case 3://Delivery
+                Point point = pointService.getById(pointId);
+                if (point == null) {
+                    return Result.error(606, "Can't find the point!");
+                }
+                givenMode.setPoint(point);
+                break;
+            case 4:// Point Edit
+                break;
         }
-        return Result.error(400, "type error!");
+        int status = givenMode.start();
+        if (status == 1) {
+            return Result.success(200);
+        } else if (status == -1) {
+            return Result.error(404, "Can't open the mode,please check if there's other mode opening");
+        } else { // status == -2
+            return Result.error(500,"Connection to ROS has failed");
+        }
     }
 
     @PostMapping("/endMode")
@@ -146,6 +148,7 @@ public class RosController {
         Point point = RosGlobal.point;
         point.setName(pointName);
         point.setMapId(mapId);
+        point.setStatus(0);
         if (mapService.getById(mapId) == null) {
             return Result.error(404, "map doesn't exist");
         }

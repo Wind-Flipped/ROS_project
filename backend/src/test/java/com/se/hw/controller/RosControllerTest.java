@@ -1,6 +1,10 @@
 package com.se.hw.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.se.hw.Ros.MsgGlobal;
 import com.se.hw.Ros.RosGlobal;
 import com.se.hw.common.Result;
 import com.se.hw.entity.Map;
@@ -14,7 +18,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import ros.Publisher;
+import ros.RosBridge;
+import ros.RosListenDelegate;
+import ros.SubscriptionRequestMsg;
 
+import java.util.HashMap;
 import java.util.List;
 
 /** 
@@ -35,21 +44,20 @@ public class RosControllerTest {
     private PointController pointController;
 
     private Point point;
+    private Point point2;
     private int mapId;
+    private RosBridge rosBridge;
 
 @Before
 public void before() throws Exception {
-//    rosController = new RosController();
-//    mapController = new MapController();
-//    pointController = new PointController();
-
     // RosGlobal.init("http://localhost:8080");
     mapController.save("map");
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
     point = new Point(1,"point",1.0,1.0,0,mapId,1.0,1.0,1.0,1.0,1.0);
+    point2 = new Point(2,"point2",2.0,2.0,0,mapId,1.0,1.0,1.0,1.0,1.0);
     pointController.save(point);
-
+    rosBridge = RosGlobal.rosBridge;
 } 
 
 @After
@@ -68,42 +76,48 @@ public void after() throws Exception {
 @Test
 public void testChange() throws Exception { 
 //TODO: Test goes here...
-    // Type error
-    Result resultType = rosController.change(100,"map");
-    assert resultType.getCode() == 400 && resultType.getMsg().equals("type error!");
-
     // Mapping
-    Result result = rosController.change(1,"map");
-    assert result.getCode() == 406 && result.getMsg().equals("the map already exists");
-    Result result1 = rosController.change(1,"new_map");
+    Result result1 = rosController.change(1,mapId,point.getId());
     assert result1.getCode() == 200;
+    Thread.sleep(1000);
     // Reopen Mapping
-    Result result2 = rosController.change(1,"new_map");
+    Result result2 = rosController.change(1,mapId,point.getId());
     assert result2.getCode() == 404 && result2.getMsg().equals("Can't open the mode,please check if there's other mode opening");
+    Thread.sleep(1000);
     // End mapping
     Result result3 = rosController.end();
     assert result3.getCode() == 200;
+    Thread.sleep(1000);
     // Map not found
-    Result result4 = rosController.change(2,"new_mapmap");
+    Result result4 = rosController.change(2,0x3f3f3f3f,point.getId());
     assert result4.getCode() == 405 && result4.getMsg().equals("the map doesn't exist");
+    Thread.sleep(1000);
 
     // Welcome
-    Result result5 = rosController.change(2,"map");
+    Result result5 = rosController.change(2,mapId,point.getId());
     assert result5.getCode() == 200;
+    Thread.sleep(1000);
     // End welcome
     Result result6 = rosController.end();
     assert result6.getCode() == 200;
+    Thread.sleep(1000);
 
     // Delivery
-    Result result7 = rosController.change(3,"map");
+    Result result7 = rosController.change(3,mapId,point.getId());
     assert result7.getCode() == 200;
+    Thread.sleep(1000);
     // End welcome
     Result result8 = rosController.end();
     assert result8.getCode() == 200;
-
+    Thread.sleep(1000);
     // PointEdit
-    Result result9 = rosController.change(4,"map");
+    Result result9 = rosController.change(4,mapId,point.getId());
     assert result9.getCode() == 200;
+    Thread.sleep(1000);
+
+    // Point not found
+    Result result10 = rosController.change(1,mapId, 0x3f3f3f3f);
+    assert result10.getCode() == 606 && result10.getMsg().equals("Can't find the point!");
 } 
 
 /** 
@@ -114,15 +128,26 @@ public void testChange() throws Exception {
 @Test
 public void testEnd() throws Exception { 
 //TODO: Test goes here...
+    final int[] isEnd = {0};
+    rosBridge.subscribe(SubscriptionRequestMsg.generate("/disable")
+                    .setType(MsgGlobal.msgString)
+                    .setThrottleRate(1)
+                    .setQueueLength(1),
+            (data, stringRep) -> isEnd[0] = 1
+    );
     // Begin mapping
-    Result result1 = rosController.change(1,"new_map");
+    Result result1 = rosController.change(1,mapId, point.getId());
     assert result1.getCode() == 200;
     // End mapping
     Result result3 = rosController.end();
-    assert result3.getCode() == 200;
+    Thread.sleep(1000);
+    assert result3.getCode() == 200 && isEnd[0] == 1;
+
     // ReEnd mapping
+    isEnd[0] = 0;
     Result result2 = rosController.end();
-    assert result2.getCode() == 404 && result2.getMsg().equals("already ending all modes!");
+    Thread.sleep(1000);
+    assert result2.getCode() == 404 && result2.getMsg().equals("already ending all modes!") && isEnd[0] == 0;
 } 
 
 /** 
@@ -133,8 +158,28 @@ public void testEnd() throws Exception {
 @Test
 public void testConfirmEat() throws Exception { 
 //TODO: Test goes here...
+    final int[] isGuide = {0};
+    rosBridge.subscribe(SubscriptionRequestMsg.generate("/guidance")
+                    .setType(MsgGlobal.msgFloatArray)
+                    .setThrottleRate(1)
+                    .setQueueLength(1),
+            (data, stringRep) -> {
+                JSONObject json = JSONObject.parseObject(data.toString());
+                JSONArray array = json.getJSONObject("msg").getJSONArray("data");
+                if (point.getXAxis() == array.getDoubleValue(0)
+                && point.getYAxis() == array.getDoubleValue(1)
+                && point.getZAxis() == array.getDoubleValue(2)
+                && point.getOriX() == array.getDoubleValue(3)
+                && point.getOriY() == array.getDoubleValue(4)
+                && point.getOriZ() == array.getDoubleValue(5)
+                && point.getOriW() == array.getDoubleValue(6)) {
+                    isGuide[0] = 1;
+                }
+
+            }
+    );
     // Begin mapping
-    Result result1 = rosController.change(1,"new_map");
+    Result result1 = rosController.change(1,mapId,point.getId());
     assert result1.getCode() == 200;
 
     Result result2 = rosController.confirmEat();
@@ -143,11 +188,12 @@ public void testConfirmEat() throws Exception {
     Result result3 = rosController.end();
     assert result3.getCode() == 200;
     // Welcome
-    Result result4 = rosController.change(2,"map");
+    Result result4 = rosController.change(2,mapId, point.getId());
     assert result4.getCode() == 200;
 
     Result result5 = rosController.confirmEat();
-    assert result5.getCode() == 200;
+    Thread.sleep(1000);
+    assert result5.getCode() == 200 && isGuide[0] == 1;
 
     Result result7 = rosController.confirmEat();
     assert result7.getCode() == 505 && result7.getMsg().equals("robots is guiding!");
@@ -167,21 +213,42 @@ public void testConfirmEat() throws Exception {
 @Test
 public void testConfirmSend() throws Exception { 
 //TODO: Test goes here...
+    final int[] isGuide = {0};
+    rosBridge.subscribe(SubscriptionRequestMsg.generate("/delivery")
+                    .setType(MsgGlobal.msgFloatArray)
+                    .setThrottleRate(1)
+                    .setQueueLength(1),
+            (data, stringRep) -> {
+                JSONObject json = JSONObject.parseObject(data.toString());
+                JSONArray array = json.getJSONObject("msg").getJSONArray("data");
+                if (point2.getXAxis() == array.getDoubleValue(0)
+                        && point2.getYAxis() == array.getDoubleValue(1)
+                        && point2.getZAxis() == array.getDoubleValue(2)
+                        && point2.getOriX() == array.getDoubleValue(3)
+                        && point2.getOriY() == array.getDoubleValue(4)
+                        && point2.getOriZ() == array.getDoubleValue(5)
+                        && point2.getOriW() == array.getDoubleValue(6)) {
+                    isGuide[0] = 1;
+                }
+
+            }
+    );
     // Begin mapping
-    Result result1 = rosController.change(1,"new_map");
+    Result result1 = rosController.change(1,mapId, point.getId());
     assert result1.getCode() == 200;
 
-    Result result2 = rosController.confirmSend(point);
+    Result result2 = rosController.confirmSend(point2);
     assert result2.getCode() == 404 && result2.getMsg().equals("now is not delivery mode!");
     // End mapping
     Result result3 = rosController.end();
     assert result3.getCode() == 200;
     // Delivery
-    Result result4 = rosController.change(3,"map");
+    Result result4 = rosController.change(3,mapId,point.getId());
     assert result4.getCode() == 200;
-    Result result5 = rosController.confirmSend(point);
-    assert result5.getCode() == 200;
-    Result result6 = rosController.confirmSend(point);
+    Result result5 = rosController.confirmSend(point2);
+    Thread.sleep(1000);
+    assert result5.getCode() == 200 && isGuide[0] == 1;
+    Result result6 = rosController.confirmSend(point2);
     assert result6.getCode() == 505 && result6.getMsg().equals("robots is sending!");
 
     RosGlobal.arrive_kitchen = true;
@@ -198,8 +265,16 @@ public void testConfirmSend() throws Exception {
 @Test
 public void testConfirmReceive() throws Exception { 
 //TODO: Test goes here...
+
+    final int[] isGuide = {0};
+    rosBridge.subscribe(SubscriptionRequestMsg.generate("/delivery_confirm")
+                    .setType(MsgGlobal.msgString)
+                    .setThrottleRate(1)
+                    .setQueueLength(1),
+            (data, stringRep) -> isGuide[0] = 1
+    );
     // Begin mapping
-    Result result1 = rosController.change(1,"new_map");
+    Result result1 = rosController.change(1,mapId,point.getId());
     assert result1.getCode() == 200;
 
     Result result2 = rosController.confirmReceive();
@@ -208,10 +283,11 @@ public void testConfirmReceive() throws Exception {
     Result result3 = rosController.end();
     assert result3.getCode() == 200;
     // Delivery
-    Result result4 = rosController.change(3,"map");
+    Result result4 = rosController.change(3,mapId,point.getId());
     assert result4.getCode() == 200;
     Result result5 = rosController.confirmReceive();
-    assert result5.getCode() == 200;
+    Thread.sleep(1000);
+    assert result5.getCode() == 200 && isGuide[0] == 1;
 
 } 
 
@@ -240,7 +316,9 @@ public void testSavePoint() throws Exception {
 */ 
 @Test
 public void testGetException() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    Result result = rosController.getException();
+    assert result.getCode() == 100;
 } 
 
 /** 
@@ -250,7 +328,11 @@ public void testGetException() throws Exception {
 */ 
 @Test
 public void testGetLocation() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    new Publisher("/get_pos", MsgGlobal.msgFloatArray, rosBridge).publish(new float[] {1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F,1.0F});
+    Result result = rosController.getLocation();
+    HashMap<String,Double> axis = (HashMap<String,Double>) result.getData();
+    assert result.getCode() == 100 && axis.get("xAxis") == 1.0 && axis.get("yAxis") == 1.0;
 } 
 
 /** 
@@ -260,7 +342,11 @@ public void testGetLocation() throws Exception {
 */ 
 @Test
 public void testGetGesture() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+
+    new Publisher("/gesture_detect", MsgGlobal.msgFloat, rosBridge).publish(10);
+    Result result = rosController.getGesture();
+    assert result.getCode() == 100 && (int) result.getData() == 10;
 } 
 
 /** 
@@ -270,7 +356,10 @@ public void testGetGesture() throws Exception {
 */ 
 @Test
 public void testGetPower() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    new Publisher("/power_detect", MsgGlobal.msgFloat, rosBridge).publish(10);
+    Result result = rosController.getPower();
+    assert result.getCode() == 100 && (int) result.getData() == 10;
 } 
 
 

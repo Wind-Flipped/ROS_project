@@ -2,6 +2,7 @@ package com.se.hw.mode;
 
 import com.se.hw.Ros.MsgGlobal;
 import com.se.hw.Ros.RosGlobal;
+import com.se.hw.entity.Point;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -23,6 +24,7 @@ public abstract class Mode {
     protected static final String SETMAP_TOPIC = "/setmap";
 
     protected String mapName;
+    protected Point point;
 
     public Mode(RosBridge rosBridge) {
         publishers = new HashMap<>();
@@ -30,18 +32,28 @@ public abstract class Mode {
         publishers.put(END_TOPIC, new Publisher(END_TOPIC, MsgGlobal.msgString, rosBridge));
         publishers.put(SETMAP_TOPIC, new Publisher(SETMAP_TOPIC, MsgGlobal.msgString, rosBridge));
         mapName = "map";
+        point = new Point();
     }
 
     public void setMapName(String mapName) {
-        for (int i = 1; i <= 3; i++) {
-            publishers.get(SETMAP_TOPIC).publish(mapName);
-            //多发几次保证ros端接收到地图名称
-        }
+        publishers.get(SETMAP_TOPIC).publish(mapName);
         this.mapName = mapName;
     }
 
-    public String getMapName() {
-        return mapName;
+    public void setPoint(Point point) {
+        this.point = point;
+    }
+
+    protected Float[] point2arr(Point point) {
+        Float[] floats = new Float[10];
+        floats[0] = point.getXAxis().floatValue();
+        floats[1] = point.getYAxis().floatValue();
+        floats[2] = point.getZAxis().floatValue();
+        floats[3] = point.getOriX().floatValue();
+        floats[4] = point.getOriY().floatValue();
+        floats[5] = point.getOriZ().floatValue();
+        floats[6] = point.getOriW().floatValue();
+        return floats;
     }
 
     /**
@@ -71,16 +83,16 @@ public abstract class Mode {
     }
 
     /**
-     * Start the current mood
+     * Start the current mode
      *
-     * @return status code, return 0 if success, else return -1
+     * @return status code, return 1 if success, return -1 if now is other mode, return -2 if connection error
      */
     public abstract int start();
 
     /**
-     * End the current mood
+     * End the current mode
      *
-     * @return status code, return 0 if success, else return -1
+     * @return status code, return 1 if success, else return -1
      */
     public int end() {
         if (RosGlobal.nowMode == null) {
