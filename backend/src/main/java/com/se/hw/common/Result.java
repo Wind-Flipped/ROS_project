@@ -19,7 +19,7 @@ public class Result {
     }
 
     public static Result success(int code, Object data) {
-        TestUtil.log(data.toString());
+        TestUtil.log("success! " + data.toString());
         return new Result(code, null, data);
     }
 
@@ -29,8 +29,9 @@ public class Result {
     }
 
     public static Result error(int code, String msg) {
-        TestUtil.log(msg);
-        return new Result(code, msg, null);
+        Result result = new Result(code, msg, null);
+        TestUtil.log("error! " + result);
+        return result;
     }
 
     public Result code(int code) {

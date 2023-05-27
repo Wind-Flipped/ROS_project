@@ -34,6 +34,7 @@ public class MapController {
         Map map = new Map();
         map.setName(mapName);
         map.setWelcome("Welcome to our restaurant!");
+        map.setRosname(mapName);
         QueryWrapper<Map> mapQueryWrapper = new QueryWrapper<>();
         mapQueryWrapper.eq("name", mapName);
         List<Map> maps = mapService.list(mapQueryWrapper);

@@ -3,6 +3,7 @@ package com.se.hw.Ros;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.se.hw.common.TestUtil;
 import com.se.hw.common.UploadImgUtil;
 import com.se.hw.entity.Point;
 import com.se.hw.exception.ExceptionRecv;
@@ -65,6 +66,7 @@ public class RosGlobal {
                         JSONArray array = json.getJSONObject("msg").getJSONArray("data");
                         Float[] floats = array.toArray(new Float[array.size()]);
                         point = ros2front(floats);
+                        TestUtil.log("机器人位置已更新 " + point);
                     }
                 }
         );
@@ -76,6 +78,7 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         launch_success = true;
+                        TestUtil.log("启动成功！！");
                         endClock();
                     }
                 }
@@ -88,6 +91,7 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         arrive_kitchen = true;
+                        TestUtil.log("到达送餐点");
                         endClock();
                     }
                 }
@@ -100,6 +104,7 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         arrive_welcome = true;
+                        TestUtil.log("到达迎宾点");
                         endClock();
                     }
                 }
@@ -114,6 +119,7 @@ public class RosGlobal {
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
                         mapUrl = UploadImgUtil.post(msg.data);
+                        TestUtil.log("地图已更新 " + mapUrl);
                     }
                 }
         );
