@@ -8,6 +8,7 @@ import com.se.hw.common.UploadImgUtil;
 import com.se.hw.entity.Point;
 import com.se.hw.exception.ExceptionRecv;
 import com.se.hw.mode.*;
+import org.junit.Test;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -78,7 +79,9 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         launch_success = true;
-                        TestUtil.log("启动成功！！");
+                        MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
+                        PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
+                        TestUtil.log(msg.data);
                         endClock();
                     }
                 }
@@ -91,7 +94,9 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         arrive_kitchen = true;
-                        TestUtil.log("到达送餐点");
+                        MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
+                        PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
+                        TestUtil.log(msg.data);
                         endClock();
                     }
                 }
@@ -104,7 +109,9 @@ public class RosGlobal {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         arrive_welcome = true;
-                        TestUtil.log("到达迎宾点");
+                        MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
+                        PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
+                        TestUtil.log(msg.data);
                         endClock();
                     }
                 }

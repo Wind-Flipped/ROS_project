@@ -104,7 +104,7 @@ public class RosController {
             return Result.error(505, "robots is guiding!");
         }
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("mapId", nowMapId);
+        queryWrapper.eq("map_id", nowMapId);
         List<Point> points = pointService.list(queryWrapper);
         for (Point point : points) {
             if (point.getStatus() == 0) {
@@ -120,8 +120,9 @@ public class RosController {
     }
 
     @PostMapping("/confirmSend")
-    public Result confirmSend(Point point) {
-        if (pointService.getById(point.getId()) == null) {
+    public Result confirmSend(Integer pointId) {
+        Point point = new Point();
+        if ((point = pointService.getById(pointId)) == null) {
             return Result.error(400, "can't find the point");
         }
         if (!(RosGlobal.nowMode instanceof DeliveryMode)) {

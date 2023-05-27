@@ -51,7 +51,7 @@ public class RosControllerTest {
 @Before
 public void before() throws Exception {
     // RosGlobal.init("http://localhost:8080");
-    mapController.save("map");
+    mapController.save("map","#FFFFFF");
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
     point = new Point(1,"point",1.0f,1.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);

@@ -3,10 +3,12 @@ package com.se.hw.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.se.hw.common.Result;
+import com.se.hw.entity.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 import com.se.hw.service.IPointService;
 import com.se.hw.entity.Point;
@@ -27,8 +29,14 @@ public class PointController {
     @Resource
     private IPointService pointService;
 
-    @PostMapping("/createPoint")
-    public Result save(@RequestBody Point point) {
+    @GetMapping("/createPoint")
+    public Result save(@RequestParam Float x, @RequestParam Float y, @RequestParam String name, @RequestParam Integer mapId) {
+        Point point = new Point();
+       // System.out.println(x+" "+y);
+        point.setXAxis(x);
+        point.setYAxis(y);
+        point.setName(name);
+        point.setMapId(mapId);
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", point.getName());
         List<Point> points = pointService.list(queryWrapper);
@@ -45,8 +53,9 @@ public class PointController {
     }
 
     @PostMapping("/updatePoint")
-    public Result update(@RequestBody Point point) {
-        if (pointService.getById(point.getId()) == null) {
+    public Result update(@RequestBody Map<String, Object> req) {
+        Point point = req2point(req);
+        if (point == null) {
             return Result.error(404, "can't find the point!");
         }
         try {
@@ -55,10 +64,9 @@ public class PointController {
         } catch (Exception e) {
             return Result.error(500, "other error");
         }
-
     }
 
-    @DeleteMapping("/deletePoint")
+    @GetMapping("/deletePoint")
     public Result delete(@RequestParam Integer pointId) {
         Point point = pointService.getById(pointId);
         if (point == null) {
@@ -66,7 +74,6 @@ public class PointController {
         }
         pointService.removeById(pointId);
         return Result.success(100);
-
         // return Result.error(500, "other error!");
     }
 
@@ -87,7 +94,7 @@ public class PointController {
     @GetMapping("/mapToPoints")
     public Result mapToPoints(@RequestParam Integer mapId) {
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("mapId", mapId);
+        queryWrapper.eq("map_id", mapId);
         List<Point> points = pointService.list(queryWrapper);
         return Result.success(100, points);
     }
@@ -97,6 +104,17 @@ public class PointController {
     public Result findPage(@RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         return Result.success(100, pointService.page(new Page<>(pageNum, pageSize)));
+    }
+
+    private Point req2point(Map<String, Object> req) {
+        Map<String, Object> request = (Map<String, Object>) req.get("point");
+        int id = (int) request.get("id");
+        Point point = pointService.getById(id);
+        if (pointService.getById(point.getId()) == null) {
+            return null;
+        }
+        return new Point(id, (String) request.get("name"), (Float) request.get("xAxis"), (Float) request.get("yAxis"), (Integer) request.get("status"), (Integer) request.get("mapId"), (Float) request.get("zAxis"),
+                (Float) request.get("oriX"), (Float) request.get("oriY"), (Float) request.get("oriZ"), (Float) request.get("oriW"));
     }
 
 }
