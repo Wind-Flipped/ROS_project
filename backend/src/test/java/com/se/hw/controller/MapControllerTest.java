@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.List;
 
 /** 
@@ -30,6 +31,7 @@ public class MapControllerTest {
     private Map map4;
     private int mapId;
 
+
 @Before
 public void before() throws Exception {
     // mapController = new MapController(mapService);
@@ -49,12 +51,17 @@ public void before() throws Exception {
     map4.setRosname("maps/map4");
     map4.setName("map4");
     map4.setId(10000);
+    map4.setBg("#DDDDDD");
+    map4.setUrl("http");
 }
 
 @After
 public void after() throws Exception {
-    for (int i = 1; i <= 1000; i++) {
-        mapController.delete(i);
+    List<Map> maps = (List<Map>) mapController.findAll().getData();
+    int size = maps.size();
+
+    for (int i = 0; i < size; i++) {
+        mapController.delete(maps.get(i).getId());
     }
 } 
 

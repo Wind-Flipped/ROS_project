@@ -46,6 +46,8 @@ public class RosControllerTest {
     private Point point;
     private Point point2;
     private int mapId;
+    private int point1Id;
+    private int point2Id;
     private RosBridge rosBridge;
 
 @Before
@@ -54,9 +56,13 @@ public void before() throws Exception {
     mapController.save("map","#FFFFFF");
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
-    point = new Point(1,"point",1.0f,1.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
-    point2 = new Point(2,"point2",2.0f,2.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
-    pointController.save(point);
+    // point = new Point(1,"point",1.0f,1.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
+    // point2 = new Point(2,"point2",2.0f,2.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
+    pointController.save(1.0F,1.0F,"point1",mapId);
+    pointController.save(2.0F,2.0F,"point2",mapId);
+    List<Point> points = (List<Point>) pointController.findAll().getData();
+    point1Id = points.get(0).getId();
+    point2Id = points.get(1).getId();
     rosBridge = RosGlobal.rosBridge;
 } 
 
@@ -237,7 +243,7 @@ public void testConfirmSend() throws Exception {
     Result result1 = rosController.change(1,mapId, point.getId());
     assert result1.getCode() == 200;
 
-    Result result2 = rosController.confirmSend(point2);
+    Result result2 = rosController.confirmSend(point2Id);
     assert result2.getCode() == 404 && result2.getMsg().equals("now is not delivery mode!");
     // End mapping
     Result result3 = rosController.end();
@@ -245,14 +251,14 @@ public void testConfirmSend() throws Exception {
     // Delivery
     Result result4 = rosController.change(3,mapId,point.getId());
     assert result4.getCode() == 200;
-    Result result5 = rosController.confirmSend(point2);
+    Result result5 = rosController.confirmSend(point2Id);
     Thread.sleep(1000);
     assert result5.getCode() == 200 && isGuide[0] == 1;
-    Result result6 = rosController.confirmSend(point2);
+    Result result6 = rosController.confirmSend(point2Id);
     assert result6.getCode() == 505 && result6.getMsg().equals("robots is sending!");
 
     RosGlobal.arrive_kitchen = true;
-    Result result7 = rosController.confirmSend(new Point(1000,"point",1.0f,1.0f,0,1,1.0f,1.0f,1.0f,1.0f,1.0f));
+    Result result7 = rosController.confirmSend(0x3f3f);
     assert result7.getCode() ==  400 && result7.getMsg().equals("can't find the point");
 
 } 

@@ -94,7 +94,7 @@ public class MapController {
         java.util.Map<String, Object> request = (java.util.Map<String, Object>) req.get("map");
         int id = (int) request.get("id");
         Map map = mapService.getById(id);
-        if (mapService.getById(map.getId()) == null) {
+        if (map == null) {
             return null;
         }
         return new Map(id, (String) request.get("name"), (String) request.get("url"), (String) request.get("welcome"),

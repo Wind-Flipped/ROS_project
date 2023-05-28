@@ -7,6 +7,7 @@ import com.se.hw.entity.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -110,12 +111,29 @@ public class PointController {
         Map<String, Object> request = (Map<String, Object>) req.get("point");
         int id = (int) request.get("id");
         Point point = pointService.getById(id);
-        if (pointService.getById(point.getId()) == null) {
+        if (point == null) {
             return null;
         }
         return new Point(id, (String) request.get("name"), (Float) request.get("xAxis"), (Float) request.get("yAxis"), (Integer) request.get("status"), (Integer) request.get("mapId"), (Float) request.get("zAxis"),
                 (Float) request.get("oriX"), (Float) request.get("oriY"), (Float) request.get("oriZ"), (Float) request.get("oriW"));
     }
 
+    public static java.util.Map<String, Object> point2req(Point point) {
+        java.util.Map<String, Object> request = new HashMap<>();
+        request.put("id",point.getId());
+        request.put("name",point.getName());
+        request.put("mapId",point.getMapId());
+        request.put("status",point.getStatus());
+        request.put("xAxis",point.getXAxis());
+        request.put("yAxis",point.getYAxis());
+        request.put("zAxis",point.getZAxis());
+        request.put("oriX",point.getOriX());
+        request.put("oriY",point.getOriY());
+        request.put("oriZ",point.getOriZ());
+        request.put("oriW",point.getOriW());
+        java.util.Map<String, Object> req = new HashMap<>();
+        req.put("point",request);
+        return req;
+    }
 }
 
