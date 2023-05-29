@@ -1,3 +1,4 @@
+const api = require('../../../../utils/api');
 Page({
 
     /**
@@ -10,7 +11,6 @@ Page({
         },
         scenes: [],
         edit: false,
-        idx: -1,
     },
 
     /**
@@ -18,14 +18,12 @@ Page({
      */
     onLoad(options) {
         const data = JSON.parse(decodeURIComponent(options.data));
-        const name = data.name;
+        const scene = data.scene;
         const scenes = data.scenes;
         this.setData({
-            ['scene.name']: name,
+            scene,
             scenes,
-            idx: scenes.findIndex(item => item === name),
         });
-        //  TODO:   网络请求
     },
 
     navback() {
@@ -50,12 +48,10 @@ Page({
      * 保存更改
      */
     save() {
-        const pages = getCurrentPages();
-        this.data.scenes[this.data.idx] = this.data.scene.name;
-        pages[pages.length - 2].setData({
-            scenes: this.data.scenes,
-        });
         //  TODO：网络请求
+        api.request('POST', {map: this.data.scene} ,'/map/updateMap').then(res => {
+            console.log(res);
+        })
         wx.navigateBack();
     },
     editImg() {

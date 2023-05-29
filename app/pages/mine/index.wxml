@@ -11,8 +11,8 @@
                 <image src="{{userInfo.avatar}}" style="width: 100%;height: 100%;border-radius: 50%;" bindtap="editProfile" />
             </view>
             <view class="info-wrap">    
-                <text class="nickname-text">{{userInfo.name}}</text>
-                <text class="signature-text">{{userInfo.signature}}</text>
+                <text class="nickname-text">{{userInfo.userName}}</text>
+                <text class="signature-text">欢迎使用智能送餐系统</text>
             </view>
         </view>
     </view>

@@ -1,16 +1,13 @@
+const app = getApp();
+const api = require('../../utils/api');
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        userInfo: {
-            avatar: 'https://7365-sesj-ui-8gj1qi9v0eda77e8-1309422520.tcb.qcloud.la/Avatar/oiO_P5f8Fgl6C6C90mYpW_uDh5X4.png?sign=2f4aec8f23815ba02cf894e89eed9c77&t=1683967247',
-            name: '蔡徐坤',
-            signature: '欢迎使用智能送餐系统'
-        },
-        menuList: [
-            {
+        userInfo: null,
+        menuList: [{
                 title: '场景',
                 icon: {
                     name: 'control-platform',
@@ -45,13 +42,16 @@ Page({
      */
     onLoad(options) {
         const windowInfo = wx.getWindowInfo();
-        this.setData({windowInfo});
+        this.setData({
+            windowInfo
+        });
     },
 
     editProfile() {
+        let userInfo = encodeURIComponent(JSON.stringify(this.data.userInfo));
         wx.navigateTo({
-          url: '/pages/user-info/index/index',
-        })
+            url: '/pages/user-info/index/index?userInfo=' + userInfo,
+        });
     },
 
     /**
@@ -61,19 +61,14 @@ Page({
         this.getTabBar().setData({
             value: 'mine',
         });
-    },
-
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh() {
-
+        this.setData({
+            userInfo: app.globalData.userInfo,
+        });
     },
 
     goScene() {
         wx.navigateTo({
-          url: '/pages/scenes/index/index',
+            url: '/pages/scenes/index/index',
         })
     },
     opensetting() {
@@ -86,8 +81,8 @@ Page({
                 if (res.confirm) {
                     wx.clearStorage();
                     wx.showToast({
-                      title: '清除完毕',
-                      icon: 'none'
+                        title: '清除完毕',
+                        icon: 'none'
                     });
                 }
             },

@@ -1,15 +1,10 @@
-// index.js
-// 获取应用实例
-const app = getApp()
+const app = getApp();
+const api = require('../../utils/api');
 Page({
     data: {
         //  窗口信息
         windowInfo: {},
-        userInfo: {
-            avatar: 'https://7365-sesj-ui-8gj1qi9v0eda77e8-1309422520.tcb.qcloud.la/Avatar/oiO_P5f8Fgl6C6C90mYpW_uDh5X4.png?sign=2f4aec8f23815ba02cf894e89eed9c77&t=1683967247',
-            name: '蔡徐坤',
-            signature: '大家好，我是练习时长两年半的...'
-        },
+        userInfo: null,
         scenes: [],
         active: 0,
         navOpacity: 1,
@@ -51,32 +46,16 @@ Page({
         this.getTabBar().setData({
             value: 'index',
         });
-        let scenes = [{
-                name: '默认场景',
-                //  壁纸
-                bg: '#F5EAC7',
-                //  地图
-                map: 'https://pic2.zhimg.com/v2-7b66fab15c14f376bb8db20aafefdca9_r.jpg',
-                //  设备
-                device: {
-                    name: '',
-                    addr: '',
-                }
-
-            },
-            {
-                name: '自定sfasdfasdfasdfasfda义场景1',
-                //  壁纸
-                bg: '#ECDADA',
-                //  地图
-                map: undefined,
-                //  设备
-                device: undefined
-            },
-        ];
-        this.setData({
-            scenes
-        });
+        api.request(undefined, {}, '/map/getAllMaps').then(res => {
+            let scenes = res.data;
+            scenes.forEach(item => {
+                item.map = item.url
+            });
+            this.setData({
+                scenes,
+                userInfo: getApp().globalData.userInfo,
+            });
+        })
     },
     tabChange(e) {
         this.setData({
@@ -90,8 +69,8 @@ Page({
     },
     editScene(e) {
         const data = encodeURIComponent(JSON.stringify({
-            scenes: this.data.scenes.map(item => item.name),
-            name: e.currentTarget.dataset.name
+            scenes: this.data.scenes,
+            scene: e.currentTarget.dataset.scene
         }));
 
         wx.navigateTo({
@@ -115,8 +94,10 @@ Page({
         });
     },
     navToFlagEdit(e) {
+        let {scene} = e.currentTarget.dataset;
+        let data = encodeURIComponent(JSON.stringify(scene));
         wx.navigateTo({
-          url: '/pages/flag-edit/index',
+          url: '/pages/flag-edit/index?scene=' + data,
         });
     }
 })

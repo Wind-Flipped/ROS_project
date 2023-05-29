@@ -6,8 +6,8 @@
     <!--场景列表-->
     <t-cell-group>
         <block wx:for="{{scenes}}" wx:key="index">
-            <t-cell title="{{item}}" arrow="{{!edit}}" bordered="{{false}}" bindlongpress="handleEdit" bind:click="editScene" data-name="{{item}}" >
-                <t-icon wx:if="{{index >= 1 && edit}}" name="minus-circle-filled" color="tomato" slot="left-icon" catchtap="delete" data-name="{{item}}" />
+            <t-cell title="{{item.name}}" arrow="{{!edit}}" bordered="{{false}}" bindlongpress="handleEdit" bind:click="editScene" data-scene="{{item}}" >
+                <t-icon wx:if="{{edit}}" name="minus-circle-filled" color="tomato" slot="left-icon" catchtap="delete" data-id="{{item.id}}" />
             </t-cell>
         </block>
     </t-cell-group>

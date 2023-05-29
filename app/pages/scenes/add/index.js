@@ -1,3 +1,4 @@
+const api = require('../../../utils/api');
 Page({
 
     /**
@@ -5,7 +6,7 @@ Page({
      */
     data: {
         scene: {
-            name: '名称',
+            name: '',
             bg: '#F5EAC7'
         },
         scenes: []
@@ -21,7 +22,6 @@ Page({
             ['scene.name']: name,
             scenes: data.scenes
         });
-        //  TODO:   网络请求
     },
     editImg() {
         wx.navigateTo({
@@ -48,11 +48,13 @@ Page({
         })
     },
     add() {
-        if (this.data.scenes.findIndex(item => item===this.data.scene.name) === -1) {
-            const pages = getCurrentPages();
-            this.data.scenes.push(this.data.scene.name);
-            pages[pages.length - 2].setData({
-                scenes: this.data.scenes
+        if (this.data.scenes.findIndex(item => item.name===this.data.scene.name) === -1) {
+            api.request('GET', {mapName: this.data.scene.name, bg: this.data.scene.bg}, '/map/createMap').then(res => {
+                console.log(res);
+            })
+            this.data.scenes.push({
+                name: this.data.scene.name,
+                bg: this.data.scene.bg
             });
             wx.navigateBack();
         } else {

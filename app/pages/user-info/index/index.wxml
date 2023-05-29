@@ -7,7 +7,6 @@
         <t-avatar src="{{userInfo.avatar}}" size="180rpx" image="{{userInfo.avatar}}" bindtap="editInfo" data-type="avatar" />
     </view>
     <t-cell-group>
-        <t-cell title="名字" note="{{userInfo.name}}" hover arrow bind:click="editInfo" data-type="name" />
-        <t-cell title="签名" note="{{userInfo.signature}}" hover arrow bind:click="editInfo" data-type="signature" />
+        <t-cell title="名字" note="{{userInfo.userName}}" hover arrow bind:click="editInfo" data-type="name" />
     </t-cell-group>
 </view>

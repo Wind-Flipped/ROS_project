@@ -4,7 +4,7 @@
         <view class="popup-container">
             <t-cell-group bordered="{{true}}">
                 <block wx:for="{{scenes}}" wx:key="index">
-                    <t-cell hover note="0" bordered="{{false}}" title="{{item.name}}" t-class-title="popup-title" bindclick="editScene" data-name="{{item.name}}" />
+                    <t-cell hover note="0" bordered="{{false}}" title="{{item.name}}" t-class-title="popup-title" bindclick="editScene" data-scene="{{item}}" />
                 </block>
             </t-cell-group>
             <t-cell-group bordered="{{true}}" t-class="margin-top-25">
@@ -14,7 +14,7 @@
         </view>
     </t-popup>
     <view class="navbar">
-        <t-navbar delta="{{0}}" style="--td-navbar-bg-color: transparent;opacity: {{navOpacity}};" title="{{userInfo.name}}" fixed="{{false}}" />
+        <t-navbar delta="{{0}}" style="--td-navbar-bg-color: transparent;opacity: {{navOpacity}};" title="{{userInfo.userName}}" fixed="{{false}}" />
     </view>
     <!--tab导航布局-->
     <view class="tabs-container" style="padding-top: {{windowInfo.statusBarHeight}}px;background: {{sticky ? '#f5f5f5' : 'transparent'}};">
@@ -25,7 +25,7 @@
                 </view>
             </block>
         </scroll-view>
-        <t-button t-class="menu-wrap" shape="round" icon="{{ {name:'view-list',size:'45rpx'} }}" size="small" wx:if="{{!sticky}}" bindtap="showPopup"></t-button>
+        <t-button t-class="menu-wrap" shape="round" icon="{{ {name:'view-list',size:'45rpx'} }}" size="small" wx:if="{{!sticky&&scenes.length > 0}}" bindtap="showPopup" />
     </view>
     <!--内容区块-->
     <view class="swiper-container">
@@ -38,7 +38,7 @@
                         <t-empty wx:if="{{!item.map}}" icon="info-circle" t-class="empty-wrap" />
                         <view class="flex-row width-100vw align-center justify-between">
                             <t-button icon="{{ {prefix:'iconfont icon', name: 'map'} }}" t-class="button" block theme="primary" variant="outline"> {{item.map ? '重新建图' : '创建地图'}}</t-button>
-                            <t-button wx:if="{{item.map}}" icon="edit" t-class="button" block theme="primary" bind:tap="navToFlagEdit">站点编辑</t-button>
+                            <t-button wx:if="{{item.map}}" icon="edit" t-class="button" block theme="primary" bind:tap="navToFlagEdit" data-scene="{{item}}">站点编辑</t-button>
                         </view>
                     </view>
                     <!--设备-->

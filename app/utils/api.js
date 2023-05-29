@@ -1,8 +1,8 @@
-import host from './config';
+import config from './config';
 const request = async (method = 'GET', data={}, url) => {
     return new Promise((resolve, reject) => {
         wx.request({
-          url: host + url,
+          url: config.host + url,
           method,
           data,
           success: res => {
@@ -11,7 +11,7 @@ const request = async (method = 'GET', data={}, url) => {
           fail: err => {
               reject(err);
           }
-        })
+        });
     })
 }
 

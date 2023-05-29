@@ -32,7 +32,7 @@ Component({
         //  地图图片url
         map: {
             type: String,
-            value: 'https://pic2.zhimg.com/v2-7b66fab15c14f376bb8db20aafefdca9_r.jpg'
+            value: '/static/image/map.png'
         },
         //  禁用长按
         disableLongTap: {
@@ -48,7 +48,12 @@ Component({
         disableTouch: {
             type: Boolean,
             value: false
-        }
+        },
+        //  标点簇
+        flags: {
+            type: Array,
+            value: []
+        },
     },
 
     data: {
@@ -66,8 +71,6 @@ Component({
         start: [],
         pageX: null,
         pageY: null,
-        //  标点簇
-        flags: [],
         //  临时锚点
         tmpFlag: null,
     },
@@ -316,8 +319,8 @@ Component({
                 };
 
                 var newPos = {
-                    x: ((pos.x - this.data.imgX) / this.data.imgScale).toFixed(2),
-                    y: ((pos.y - this.data.imgY) / this.data.imgScale).toFixed(2)
+                    x: ((pos.x - this.data.imgX) / this.data.imgScale),
+                    y: ((pos.y - this.data.imgY) / this.data.imgScale)
                 }
                 // 当前距离变小， getDistance 是勾股定理的一个方法
                 let dn = this.getDistance(now[0], now[1]);
