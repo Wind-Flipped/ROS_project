@@ -19,7 +19,7 @@
     <view class="menu-list-container">
         <t-cell-group theme="card">
             <block wx:for="{{menuList}}" wx:key="index">
-                <t-cell bordered="{{false}}" title="{{item.title}}" hover bind:click="{{item.func}}" hover arrow >
+                <t-cell bordered="{{false}}" title="{{item.title}}" hover bind:click="{{item.func}}" data-page="{{item.value}}" data-data="{{item.data}}" hover arrow >
                     <t-icon name="{{item.icon.name}}" color="{{item.icon.color}}" slot="left-icon" />
                 </t-cell>
             </block>

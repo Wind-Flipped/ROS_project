@@ -44,12 +44,12 @@
                     <!--设备-->
                     <view class="device-wrap flex-col align-center">
                         <view class="width-100vw flex-col align-center">
-                            <t-image wx:if="{{item.device}}" src="{{robotImg}}" width="400rpx" mode="widthFix" />
+                            <t-image wx:if="{{device}}" src="{{robotImg}}" width="400rpx" mode="widthFix" />
                             <t-image wx:else src="/static/image/device-empty.png" width="700rpx" height="400rpx" />
                         </view>
                         <view class="flex-row width-100vw align-center justify-between">
-                            <t-button wx:if="{{item.device}}" t-class="button" block theme="primary" icon="dashboard" bindtap="navigate" data-page="robot">开始工作</t-button>
-                            <t-button wx:else t-class="button" block theme="primary" icon="add">添加设备</t-button>
+                            <t-button wx:if="{{device}}" t-class="button" block theme="primary" icon="dashboard" bindtap="navigate" data-page="robot">开始工作</t-button>
+                            <t-button wx:else t-class="button" block theme="primary" icon="add" bindtap="addDevice">添加设备</t-button>
                         </view>
                     </view>
                 </swiper-item>

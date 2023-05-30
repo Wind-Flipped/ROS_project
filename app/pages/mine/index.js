@@ -13,8 +13,19 @@ Page({
                     name: 'control-platform',
                     color: '#333333'
                 },
-                value: 'scene',
-                func: 'goScene'
+                value: 'scenes/index',
+                func: 'navigate',
+                data: ''
+            },
+            {
+                title: '用户测试',
+                icon: {
+                    name: 'tools',
+                    color: '#333333'
+                },
+                value: 'test',
+                func: 'navigate',
+                data: ''
             },
             {
                 title: '设置',
@@ -65,11 +76,10 @@ Page({
             userInfo: app.globalData.userInfo,
         });
     },
-
-    goScene() {
+    navigate(e) {
         wx.navigateTo({
-            url: '/pages/scenes/index/index',
-        })
+          url: '/pages/' + e.currentTarget.dataset.page + '/index?data=' + e.currentTarget.dataset.data,
+        });
     },
     opensetting() {
         wx.openSetting();

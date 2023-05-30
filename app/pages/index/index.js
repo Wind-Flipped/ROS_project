@@ -9,6 +9,7 @@ Page({
         active: 0,
         navOpacity: 1,
         showPopup: false,
+        device: null
     },
     showPopup() {
         this.setData({
@@ -99,5 +100,43 @@ Page({
         wx.navigateTo({
           url: '/pages/flag-edit/index?scene=' + data,
         });
+    },
+    addDevice(e) {
+        wx.showActionSheet({
+          itemList: ['扫描二维码', '手动输入'],
+          success: res => {
+              if (res.tapIndex === 0) {
+                  //    扫码获取ip: 10.193.151.216
+                  wx.scanCode().then(res => {
+                      this.linkDevice(res.result);
+                  }).catch(err => {
+                      console.log(err);
+                  })
+              }
+              //    手动输入
+              else if (res.tapIndex === 1) {
+                  wx.showModal({
+                      editable: true,
+                      placeholderText: '输入机器人ip地址',
+                  }).then(res => {
+                      if (res.confirm && res.content.length > 0) {
+                          console.log(res);
+                      }
+                  }).catch(err => {
+                      console.log(err);
+                  })
+              }
+          },
+          fail: err => {
+              console.log(err);
+          }
+        })
+    },
+    linkDevice(ip) {
+        api.request('GET',{rosIp: ip},'/ros/connect').then(res => {
+            console.log(res);
+        }).catch(err => {
+            console.log(err);
+        })
     }
 })

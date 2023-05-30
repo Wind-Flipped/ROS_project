@@ -1,6 +1,10 @@
 const api = require('./utils/api');
 App({
     onLaunch() {
+        wx.setStorage({
+            key: 'test',
+            data: '测试缓存'
+        });
         wx.login({
             success: res => {
                 api.request(undefined, {

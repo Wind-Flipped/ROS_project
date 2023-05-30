@@ -9,7 +9,9 @@
         "pages/scenes/add/index",
         "pages/user-info/index/index",
         "pages/robot/index",
-        "pages/flag-edit/index"
+        "pages/flag-edit/index",
+        "pages/test/index",
+        "pages/map/index"
     ],
     "window": {
         "backgroundTextStyle": "light",
