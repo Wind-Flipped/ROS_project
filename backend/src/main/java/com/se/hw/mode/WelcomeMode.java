@@ -24,9 +24,9 @@ public class WelcomeMode extends Mode {
         if (RosGlobal.nowMode != null) {
             return -1;
         }
-        for (int i = 0; i < 5; i++) {
-            getPublisher(START_WELCOME_TOPIC).publish(point2arr(point));
-            getPublisher(START_WELCOME_TOPIC).publish(point2arr(point));
+        for (int i = 0; i < 10; i++) {
+            point2arr(point);
+            getPublisher(START_WELCOME_TOPIC).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
             try {
                 Thread.sleep(WAIT_TIME);
             } catch (InterruptedException e) {

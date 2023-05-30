@@ -11,7 +11,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ros?serverTimezone=GMT%2b8
-    username: root
+    username: ros
     password: 123456
   servlet:
     multipart:

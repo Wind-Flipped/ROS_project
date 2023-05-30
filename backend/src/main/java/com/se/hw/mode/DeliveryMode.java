@@ -4,6 +4,7 @@ import com.se.hw.Ros.MsgGlobal;
 import com.se.hw.Ros.RosGlobal;
 import com.se.hw.entity.Point;
 import ros.RosBridge;
+import ros.msgs.std_msgs.PrimitiveMsg;
 
 public class DeliveryMode extends Mode {
 
@@ -30,8 +31,8 @@ public class DeliveryMode extends Mode {
          */
         int i;
         for (i = 0; i < 5; i++) {
-            getPublisher(START_DELIVERY_TOPIC).publish(point2arr(point));
-            getPublisher(START_DELIVERY_TOPIC).publish(point2arr(point));
+            getPublisher(START_DELIVERY_TOPIC).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
+            getPublisher(START_DELIVERY_TOPIC).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
             try {
                 Thread.sleep(WAIT_TIME);
             } catch (InterruptedException e) {
@@ -47,10 +48,10 @@ public class DeliveryMode extends Mode {
     }
 
     public void startSend(Point point) {
-        getPublisher(START_SEND).publish(point2arr(point));
+        getPublisher(START_SEND).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
     }
 
     public void startReceive() {
-        getPublisher(START_RECEIVE).publish("the dishes is already picked up!");
+        getPublisher(START_RECEIVE).publish(new PrimitiveMsg<String>("the dishes is already picked up!"));
     }
 }

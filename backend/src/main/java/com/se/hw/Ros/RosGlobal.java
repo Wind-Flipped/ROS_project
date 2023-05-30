@@ -32,8 +32,6 @@ public class RosGlobal {
     public static Mode nowMode;
 
     public static Point point;
-    public static double rad = 0;
-    public static double power = 0;
     public static boolean launch_success = false;
 
     public static boolean arrive_welcome = false;
@@ -41,7 +39,7 @@ public class RosGlobal {
 
     public static String mapUrl = "https://img1.imgtp.com/2023/05/25/7Gu6ool3.jpg";
 
-    public static void init(String url) {
+    public static Boolean init(String url) {
         nowMode = null;
         rosBridge = new RosBridge();
         point = new Point();
@@ -52,11 +50,15 @@ public class RosGlobal {
         modes.put(3, new DeliveryMode(rosBridge));
         modes.put(4, new PointEditMode(rosBridge));
 
+
+        if (!rosBridge.hasConnected()) {
+            return false;
+        }
         ExceptionRecv.run(rosBridge);
         /*
           init subscriber
          */
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/get_pos")
+        rosBridge.subscribe(SubscriptionRequestMsg.generate("/pos_pub")
                         .setType("std_msgs/Float64MultiArray")
                         .setThrottleRate(1)
                         .setQueueLength(1),
@@ -65,9 +67,12 @@ public class RosGlobal {
                     public void receive(JsonNode data, String stringRep) {
                         JSONObject json = JSONObject.parseObject(data.toString());
                         JSONArray array = json.getJSONObject("msg").getJSONArray("data");
-                        Float[] floats = array.toArray(new Float[array.size()]);
+                        Float[] floats = new Float[7];
+                        for (int i = 0; i < 7; i++) {
+                            floats[i] = array.getFloat(i);
+                        }
                         point = ros2front(floats);
-                        TestUtil.log("机器人位置已更新 " + point);
+                        //TestUtil.log("robot location: " + point);
                     }
                 }
         );
@@ -111,7 +116,7 @@ public class RosGlobal {
                         arrive_welcome = true;
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
-                        TestUtil.log(msg.data);
+                        TestUtil.log("arrive welcome "+msg.data);
                         endClock();
                     }
                 }
@@ -125,11 +130,12 @@ public class RosGlobal {
                     public void receive(JsonNode data, String stringRep) {
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
-                        mapUrl = UploadImgUtil.post(msg.data);
-                        TestUtil.log("地图已更新 " + mapUrl);
+                        //mapUrl = UploadImgUtil.post(msg.data);
+                        //TestUtil.log("地图已更新 " + mapUrl);
                     }
                 }
         );
+        return true;
     }
 
     /**

@@ -4,6 +4,7 @@ import com.se.hw.Ros.MsgGlobal;
 import com.se.hw.Ros.RosGlobal;
 import com.se.hw.entity.Point;
 import ros.RosBridge;
+import ros.msgs.std_msgs.PrimitiveMsg;
 
 public class PointEditMode extends Mode {
 
@@ -24,8 +25,7 @@ public class PointEditMode extends Mode {
             return -1;
         }
         for (int i = 0; i < 5; i++) {
-            getPublisher(START_POINTEDIT_TOPIC).publish("launch the point_edit!");
-            getPublisher(START_POINTEDIT_TOPIC).publish("launch the point_edit!");
+            getPublisher(START_POINTEDIT_TOPIC).publish(new PrimitiveMsg<String>("launch the point_edit!"));
             try {
                 Thread.sleep(WAIT_TIME);
             } catch (InterruptedException e) {

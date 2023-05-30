@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HwApplication {
 
     public static void main(String[] args) {
-       // RosGlobal.init("ws://10.193.124.17:9090");
+        //RosGlobal.init("ws://10.193.124.17:9090");
         SpringApplication.run(HwApplication.class, args);
     }
 

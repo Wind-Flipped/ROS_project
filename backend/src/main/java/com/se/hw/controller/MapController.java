@@ -40,7 +40,8 @@ public class MapController {
         QueryWrapper<Map> mapQueryWrapper = new QueryWrapper<>();
         mapQueryWrapper.eq("name", mapName);
         List<Map> maps = mapService.list(mapQueryWrapper);
-        if (maps != null && maps.size() != 0) {
+        System.out.println(maps);
+        if (maps.size() != 0){
             return Result.error(400, "naming repetition!");
         }
         mapService.save(map);
@@ -103,14 +104,14 @@ public class MapController {
 
     public static java.util.Map<String, Object> map2req(Map map) {
         java.util.Map<String, Object> request = new HashMap<>();
-        request.put("id",map.getId());
-        request.put("name",map.getName());
-        request.put("url",map.getUrl());
-        request.put("welcome",map.getWelcome());
-        request.put("rosname",map.getRosname());
-        request.put("bg",map.getBg());
+        request.put("id", map.getId());
+        request.put("name", map.getName());
+        request.put("url", map.getUrl());
+        request.put("welcome", map.getWelcome());
+        request.put("rosname", map.getRosname());
+        request.put("bg", map.getBg());
         java.util.Map<String, Object> req = new HashMap<>();
-        req.put("map",request);
+        req.put("map", request);
         return req;
     }
 }

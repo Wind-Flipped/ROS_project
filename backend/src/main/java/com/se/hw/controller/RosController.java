@@ -6,6 +6,7 @@ import com.se.hw.common.Result;
 
 import com.se.hw.entity.Map;
 import com.se.hw.entity.Point;
+import com.se.hw.exception.ExceptionRecv;
 import com.se.hw.mode.DeliveryMode;
 import com.se.hw.mode.MappingMode;
 import com.se.hw.mode.Mode;
@@ -30,6 +31,15 @@ public class RosController {
 
     private static Integer nowMapId;
 
+
+    @GetMapping("/connect")
+    public Result connect(@RequestParam String rosIp) {
+        if (!RosGlobal.init("ws://" + rosIp + ":9090")) {
+            return Result.error(505, "Connection refused");
+        }
+        return Result.success(100);
+    }
+
     /**
      * 切换模式，在切换模式前一定要注意先关闭当前模式，否则后端返回错误状态码，ROS端不执行模式切换
      *
@@ -47,7 +57,7 @@ public class RosController {
      * code=606，
      * 说明找不到所给的航点
      */
-    @PostMapping("/changeMode")
+    @GetMapping("/changeMode")
     public Result change(@RequestParam Integer type, @RequestParam Integer mapId, @RequestParam(value = "0") Integer pointId) {
         Map map = mapService.getById(mapId);
         if (map == null) {
@@ -65,8 +75,6 @@ public class RosController {
                 if (point == null) {
                     return Result.error(606, "Can't find the point!");
                 }
-                point.setStatus(1);
-                pointService.save(point);
                 givenMode.setPoint(point);
                 break;
             case 4:// Point Edit
@@ -149,7 +157,7 @@ public class RosController {
         return Result.success(200);
     }
 
-    @PostMapping("/savePoint")
+    @GetMapping("/savePoint")
     public Result savePoint(Integer mapId, String pointName) {
         Point point = RosGlobal.point;
         point.setName(pointName);
@@ -186,12 +194,12 @@ public class RosController {
 
     @GetMapping("/getGesture")
     public Result getGesture() {
-        return Result.success(100, RosGlobal.rad);
+        return Result.success(100, ExceptionRecv.getGesture());
     }
 
     @GetMapping("/getPower")
     public Result getPower() {
-        return Result.success(100, RosGlobal.power);
+        return Result.success(100, ExceptionRecv.getPower());
     }
 
 }
