@@ -25,7 +25,7 @@ public class WelcomeMode extends Mode {
             return -1;
         }
         for (int i = 0; i < 10; i++) {
-            point2arr(point);
+            // point2arr(point);
             getPublisher(START_WELCOME_TOPIC).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
             try {
                 Thread.sleep(WAIT_TIME);
@@ -42,6 +42,6 @@ public class WelcomeMode extends Mode {
     }
 
     public void startGuide(Point point) {
-        getPublisher(START_GUIDE).publish(point2arr(point));
+        getPublisher(START_GUIDE).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
     }
 }

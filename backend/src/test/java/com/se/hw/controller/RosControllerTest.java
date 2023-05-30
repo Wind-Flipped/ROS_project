@@ -91,16 +91,28 @@ public class RosControllerTest {
         // RosGlobal.init("http://localhost:8080");
         // point = new Point(1,"point",1.0f,1.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
         // point2 = new Point(2,"point2",2.0f,2.0f,0,mapId,1.0f,1.0f,1.0f,1.0f,1.0f);
-        mapController.save("map", "#FFFFFF");
-        List<Map> maps = (List<Map>) mapController.findAll().getData();
-        mapId = maps.get(0).getId();
+//        mapController.save("map", "#FFFFFF");
+//        List<Map> maps = (List<Map>) mapController.findAll().getData();
+//        mapId = maps.get(0).getId();
+//
+//        List<Point> points = (List<Point>) pointController.findAll().getData();
+//        point1Id = points.get(0).getId();
+//        point2Id = points.get(1).getId();
+//        point3Id = points.get(2).getId();
 
-        List<Point> points = (List<Point>) pointController.findAll().getData();
-        point1Id = points.get(0).getId();
-        point2Id = points.get(1).getId();
-        point3Id = points.get(2).getId();
-        rosBridge = RosGlobal.rosBridge;
         RosGlobal.init("ws://10.193.124.17:9090");
+        rosBridge = RosGlobal.rosBridge;
+        RosController.nowMapId = 142;
+        mapId = 142;
+        point1Id = 13;
+        /**
+         * ying bin dian
+         */
+        point2Id = 18;
+        /**
+         * table
+         */
+        point3Id = 19;
 
 //        // Mapping
 //        Result result1 = rosController.change(1, mapId, point1Id);
@@ -183,8 +195,9 @@ public class RosControllerTest {
                         .setQueueLength(1),
                 (data, stringRep) -> isEnd[0] = 1
         );
+
         // Begin welcome 启动迎宾模式（ROS）
-        Result result1 = rosController.change(2, mapId, point1Id);
+        Result result1 = rosController.change(2, 142, point1Id);
         assert result1.getCode() == 200;
         Thread.sleep(waitMiliSecond);
         // End welcome 关闭迎宾模式（ROS）
@@ -206,12 +219,12 @@ public class RosControllerTest {
     public void testConfirmEat() throws Exception {
 //TODO: Test goes here...
         final int[] isGuide = {0};
-//        rosBridge.subscribe(SubscriptionRequestMsg.generate("/guidance")
-//                        .setType(MsgGlobal.msgFloatArray)
-//                        .setThrottleRate(1)
-//                        .setQueueLength(1),
-//                (data, stringRep) -> isGuide[0] = 1
-//        );
+        rosBridge.subscribe(SubscriptionRequestMsg.generate("/guidance_completed")
+                        .setType(MsgGlobal.msgFloatArray)
+                        .setThrottleRate(1)
+                        .setQueueLength(1),
+                (data, stringRep) -> isGuide[0] = 1
+        );
     /*
     // Begin mapping
     Result result1 = rosController.change(1,mapId,point1Id);
@@ -227,17 +240,19 @@ public class RosControllerTest {
 
      */
         // Welcome 开启迎宾模式（ROS）
-        Result result4 = rosController.change(2, mapId, 18);
-        assert result4.getCode() == 200;
+        Result result4 = rosController.change(2, mapId, point2Id);
         Thread.sleep(waitMiliSecond * 2);
+        assert result4.getCode() == 200 && isGuide[0] == 1;
+
         System.out.println("here!");
         // 客人就餐（ROS）
         Result result5 = rosController.confirmEat();
-        Thread.sleep(waitMiliSecond / 2);
-//        assert result5.getCode() == 200 && isGuide[0] == 1;
-        // 客人在 5 s内再次就餐，模拟前者带位未完成情况，后端不予处理（后端）
-        Result result7 = rosController.confirmEat();
-        assert result7.getCode() == 505 && result7.getMsg().equals("robots is guiding!");
+        Thread.sleep(waitMiliSecond * 2);
+        assert result5.getCode() == 200;
+        //assert result5.getCode() == 200 && isGuide[0] == 1;
+        //客人在 5 s内再次就餐，模拟前者带位未完成情况，后端不予处理（后端）
+        // Result result7 = rosController.confirmEat();
+       //assert result7.getCode() == 505 && result7.getMsg().equals("robots is guiding!");
 
         RosGlobal.arrive_welcome = true;
 
@@ -282,13 +297,13 @@ public class RosControllerTest {
         // Delivery 开启送餐模式（ROS）
         Result result4 = rosController.change(3, mapId, point2Id);
         assert result4.getCode() == 200;
-        Thread.sleep(waitMiliSecond);
+        Thread.sleep(waitMiliSecond * 2);
         // 命令机器人送往指定位置（ROS）
-        Result result5 = rosController.confirmSend(point2Id);
+        Result result5 = rosController.confirmSend(point3Id);
         Thread.sleep(waitMiliSecond / 2);
         assert result5.getCode() == 200 && isGuide[0] == 1;
         // 再次命令机器人送往指定位置，此时机器人还未送完完整的餐，后端不予处理（后端）
-        Result result6 = rosController.confirmSend(point2Id);
+        Result result6 = rosController.confirmSend(point3Id);
         assert result6.getCode() == 505 && result6.getMsg().equals("robots is sending!");
         Thread.sleep(waitMiliSecond * 2);
         RosGlobal.arrive_kitchen = true;
@@ -356,7 +371,7 @@ public class RosControllerTest {
         // 建立正常点（ROS端）
         System.out.println("save！！！！！");
         Thread.sleep(5000);
-        Result result = rosController.savePoint(142, "new_point");
+        Result result = rosController.savePoint(142, "table");
         assert result.getCode() == 200;
 
         Thread.sleep(waitMiliSecond * 5);

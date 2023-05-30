@@ -29,7 +29,7 @@ public class RosController {
     @Resource
     private IPointService pointService;
 
-    private static Integer nowMapId;
+    public static Integer nowMapId;
 
 
     @GetMapping("/connect")
