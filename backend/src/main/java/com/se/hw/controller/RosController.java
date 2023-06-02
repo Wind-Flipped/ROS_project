@@ -60,6 +60,8 @@ public class RosController {
     @GetMapping("/changeMode")
     public Result change(@RequestParam Integer type, @RequestParam Integer mapId, @RequestParam(value = "0") Integer pointId) {
         Map map = mapService.getById(mapId);
+        nowMapId = mapId;
+        RosGlobal.nowMapName = map.getName();
         if (map == null) {
             return Result.error(405, "the map doesn't exist");
         }
@@ -67,7 +69,6 @@ public class RosController {
         givenMode.setMapName(map.getRosname());
         switch (type) {
             case 1:// mapping
-                nowMapId = mapId;
                 break;
             case 2://welcome
             case 3://Delivery

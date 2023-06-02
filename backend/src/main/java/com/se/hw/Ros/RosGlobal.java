@@ -39,6 +39,8 @@ public class RosGlobal {
 
     public static String mapUrl = "https://img1.imgtp.com/2023/05/25/7Gu6ool3.jpg";
 
+    public static String nowMapName = "map_default";
+
     public static Boolean init(String url) {
         nowMode = null;
         rosBridge = new RosBridge();
@@ -116,7 +118,7 @@ public class RosGlobal {
                         arrive_welcome = true;
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
-                        TestUtil.log("arrive welcome "+msg.data);
+                        TestUtil.log("arrive welcome " + msg.data);
                         endClock();
                     }
                 }
@@ -130,7 +132,7 @@ public class RosGlobal {
                     public void receive(JsonNode data, String stringRep) {
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
-                        //mapUrl = UploadImgUtil.post(msg.data);
+                        UploadImgUtil.save(msg.data, nowMapName);
                         //TestUtil.log("地图已更新 " + mapUrl);
                     }
                 }
@@ -206,45 +208,4 @@ public class RosGlobal {
         point.setOriW(floats[6]);
         return point;
     }
-
-
-    /*
-    public static void test() {
-
-        Publisher pub1 = new Publisher("/javaChatter", "std_msgs/String", rosBridge);
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/pos_pub")
-                        .setType("std_msgs/Float64MultiArray")
-                        .setThrottleRate(1)
-                        .setQueueLength(1),
-                new RosListenDelegate() {
-                    @Override
-                    public void receive(JsonNode data, String stringRep) {
-                        //  System.out.println(data);
-                        JSONObject json = JSONObject.parseObject(data.toString());
-                        JSONArray axis = json.getJSONObject("msg").getJSONArray("data");
-                        double xAxis = axis.get(0);
-                        double yAxis = axis.get(1);
-                        // System.out.println(data);
-                    }
-                }
-        );
-
-        rosBridge.subscribe(SubscriptionRequestMsg.generate("/pos_pub2")
-                        .setType("std_msgs/Float64MultiArray")
-                        .setThrottleRate(1)
-                        .setQueueLength(1),
-                new RosListenDelegate() {
-                    @Override
-                    public void receive(JsonNode data, String stringRep) {
-                        //  System.out.println(data);
-                        JSONObject json = JSONObject.parseObject(data.toString());
-                        JSONArray axis = json.getJSONObject("msg").getJSONArray("data");
-                        double xAxis2 = axis.get(0);
-                        double yAxis2 = axis.get(1);
-                        // System.out.println(data);
-                    }
-                }
-        );
-    }
-     */
 }
