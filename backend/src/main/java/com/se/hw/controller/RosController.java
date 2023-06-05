@@ -73,6 +73,8 @@ public class RosController {
             case 2://welcome
             case 3://Delivery
                 Point point = pointService.getById(pointId);
+                point.setStatus(1);
+                pointService.updateById(point);
                 if (point == null) {
                     return Result.error(606, "Can't find the point!");
                 }
