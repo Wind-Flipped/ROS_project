@@ -30,16 +30,13 @@ public class PointController {
 
     @GetMapping("/createPoint")
     public Result save(@RequestParam Float x, @RequestParam Float y,
-                       @RequestParam String name, @RequestParam Integer mapId,
-                       @RequestParam Integer type) {
+                       @RequestParam String name, @RequestParam Integer mapId) {
         Point point = new Point();
         // System.out.println(x+" "+y);
         point.setXAxis(x);
         point.setYAxis(y);
         point.setName(name);
         point.setMapId(mapId);
-        if (type == 0) point.setStatus(0);
-        else point.setStatus(1);
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", point.getName());
         List<Point> points = pointService.list(queryWrapper);
