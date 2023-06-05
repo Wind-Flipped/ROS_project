@@ -365,7 +365,7 @@ public class RosControllerTest {
     public void testSavePoint() throws Exception {
 //TODO: Test goes here...
         // 开启航点编辑模式（ROS）
-        rosController.change(4, mapId, point1Id);
+        rosController.change(4, mapId);
 
         Thread.sleep(waitMiliSecond * 1);
         // 建立正常点（ROS端）
@@ -392,7 +392,7 @@ public class RosControllerTest {
         Result result = rosController.getException();
         assert result.getCode() == 100;
         // 开启建图模式（ROS）
-        Result result4 = rosController.change(3, mapId, point1Id);
+        Result result4 = rosController.change(3, mapId;
         assert result4.getCode() == 200;
         Thread.sleep(waitMiliSecond);
         // 模拟超时点

@@ -132,9 +132,9 @@ public class RosController {
         queryWrapper.eq("map_id", nowMapId);
         List<Point> points = pointService.list(queryWrapper);
         for (Point point : points) {
-            if (point.getId() != nowPointId) {
+            if (point.getStatus() == 2) {
                 WelcomeMode mode = (WelcomeMode) RosGlobal.nowMode;
-                point.setStatus(1);
+                point.setStatus(3);
                 RosGlobal.arrive_welcome = false;
                 mode.startGuide(point);
                 RosGlobal.startClock();
