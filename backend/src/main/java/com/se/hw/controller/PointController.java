@@ -19,6 +19,7 @@ import com.se.hw.entity.Point;
  * <p>
  * 前端控制器
  * </p>
+ *
  * @author SE2304
  * @since 2023-04-27
  */
@@ -30,19 +31,34 @@ public class PointController {
 
     @GetMapping("/createPoint")
     public Result save(@RequestParam Float x, @RequestParam Float y,
-                       @RequestParam String name, @RequestParam Integer mapId) {
+                       @RequestParam String name, @RequestParam Integer mapId,
+                       @RequestParam Integer type) {
         Point point = new Point();
         // System.out.println(x+" "+y);
         point.setXAxis(x);
         point.setYAxis(y);
         point.setName(name);
         point.setMapId(mapId);
-        QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", point.getName());
+        QueryWrapper<Point> queryWrapper;
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("map_id", mapId);
+        queryWrapper.eq("name", name);
         List<Point> points = pointService.list(queryWrapper);
-        if (points != null && !points.isEmpty()) {
-            return Result.error(400, "naming repetition!");
+        if (points.size() != 0) {
+            return Result.error(400, "name repetition");
         }
+        if (type <= 1) {
+            queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("map_id", mapId);
+            queryWrapper.eq("status", type);
+            List<Point> points1 = pointService.list(queryWrapper);
+            if (points1.size() != 0 && type == 0) {
+                return Result.error(606, "the welcome exists");
+            } else if (points1.size() != 0 && type == 1) {
+                return Result.error(505, "the kitchen exists");
+            }
+        }
+
         try {
             pointService.save(point);
             return Result.success(200);

@@ -30,6 +30,7 @@ public class RosController {
     private IPointService pointService;
 
     public static Integer nowMapId;
+    public static Integer nowPointId;
 
 
     @GetMapping("/connect")
@@ -43,9 +44,8 @@ public class RosController {
     /**
      * 切换模式，在切换模式前一定要注意先关闭当前模式，否则后端返回错误状态码，ROS端不执行模式切换
      *
-     * @param type    模式类型，由前端确保值在 1--4 之间, 从1到4分别为建图，迎宾，送餐，航点编辑模式
-     * @param mapId   已有的地图 id ，前端需先新建场景后再开启建图模式
-     * @param pointId 已有的航点 id ，由前端确保该航点对应的地图与传入的地图参数对应
+     * @param type  模式类型，由前端确保值在 1--4 之间, 从1到4分别为建图，迎宾，送餐，航点编辑模式
+     * @param mapId 已有的地图 id ，前端需先新建场景后再开启建图模式
      * @return code=200，
      * 则启动成功；
      * code=405，
@@ -55,10 +55,12 @@ public class RosController {
      * code=500，
      * 则说明与 ROS 连接出现问题
      * code=606，
-     * 说明找不到所给的航点
+     * 说明找不到迎宾点
+     * code=707，
+     * 说明找不到取餐点
      */
     @GetMapping("/changeMode")
-    public Result change(@RequestParam Integer type, @RequestParam Integer mapId, @RequestParam(value = "0") Integer pointId) {
+    public Result change(@RequestParam Integer type, @RequestParam Integer mapId) {
         Map map = mapService.getById(mapId);
         nowMapId = mapId;
         RosGlobal.nowMapName = map.getName();
@@ -67,18 +69,30 @@ public class RosController {
         }
         Mode givenMode = RosGlobal.modes.get(type);
         givenMode.setMapName(map.getRosname());
+        QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
+        List<Point> points;
         switch (type) {
             case 1:// mapping
                 break;
             case 2://welcome
-            case 3://Delivery
-                Point point = pointService.getById(pointId);
-                point.setStatus(1);
-                pointService.updateById(point);
-                if (point == null) {
-                    return Result.error(606, "Can't find the point!");
+                queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("map_id", mapId);
+                queryWrapper.eq("status", 0);
+                points = pointService.list(queryWrapper);
+                if (points.size() == 0) {
+                    return Result.error(606, "can't find the welcome");
                 }
-                givenMode.setPoint(point);
+                givenMode.setPoint(points.get(0));
+                break;
+            case 3://Delivery
+                queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("map_id", mapId);
+                queryWrapper.eq("status", 1);
+                points = pointService.list(queryWrapper);
+                if (points.size() == 0) {
+                    return Result.error(707, "can't find the kitchen");
+                }
+                givenMode.setPoint(points.get(0));
                 break;
             case 4:// Point Edit
                 break;
@@ -118,7 +132,7 @@ public class RosController {
         queryWrapper.eq("map_id", nowMapId);
         List<Point> points = pointService.list(queryWrapper);
         for (Point point : points) {
-            if (point.getStatus() == 0) {
+            if (point.getId() != nowPointId) {
                 WelcomeMode mode = (WelcomeMode) RosGlobal.nowMode;
                 point.setStatus(1);
                 RosGlobal.arrive_welcome = false;
@@ -165,8 +179,18 @@ public class RosController {
         Point point = RosGlobal.point;
         point.setName(pointName);
         point.setMapId(mapId);
-        if (type == 0) point.setStatus(0);
-        else point.setStatus(1);
+        point.setStatus(type);
+        if (type <= 1) {
+            QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("map_id", mapId);
+            queryWrapper.eq("status", type);
+            List<Point> points1 = pointService.list(queryWrapper);
+            if (points1.size() != 0 && type == 0) {
+                return Result.error(606, "the welcome exists");
+            } else if (points1.size() != 0 && type == 1) {
+                return Result.error(505, "the kitchen exists");
+            }
+        }
         if (mapService.getById(mapId) == null) {
             return Result.error(404, "map doesn't exist");
         }
