@@ -129,7 +129,7 @@ public class RosController {
     }
 
     @PostMapping("/confirmSend")
-    public Result confirmSend(Integer pointId) {
+    public Result confirmSend(@RequestParam Integer pointId) {
         Point point = new Point();
         if ((point = pointService.getById(pointId)) == null) {
             return Result.error(400, "can't find the point");
@@ -159,11 +159,12 @@ public class RosController {
     }
 
     @GetMapping("/savePoint")
-    public Result savePoint(Integer mapId, String pointName) {
+    public Result savePoint(@RequestParam Integer mapId, @RequestParam String pointName, @RequestParam Integer type) {
         Point point = RosGlobal.point;
         point.setName(pointName);
         point.setMapId(mapId);
-        point.setStatus(0);
+        if (type == 0) point.setStatus(0);
+        else point.setStatus(1);
         if (mapService.getById(mapId) == null) {
             return Result.error(404, "map doesn't exist");
         }

@@ -19,25 +19,27 @@ import com.se.hw.entity.Point;
  * <p>
  * 前端控制器
  * </p>
- *
  * @author SE2304
  * @since 2023-04-27
  */
 @RestController
 @RequestMapping("/point")
 public class PointController {
-
     @Resource
     private IPointService pointService;
 
     @GetMapping("/createPoint")
-    public Result save(@RequestParam Float x, @RequestParam Float y, @RequestParam String name, @RequestParam Integer mapId) {
+    public Result save(@RequestParam Float x, @RequestParam Float y,
+                       @RequestParam String name, @RequestParam Integer mapId,
+                       @RequestParam Integer type) {
         Point point = new Point();
-       // System.out.println(x+" "+y);
+        // System.out.println(x+" "+y);
         point.setXAxis(x);
         point.setYAxis(y);
         point.setName(name);
         point.setMapId(mapId);
+        if (type == 0) point.setStatus(0);
+        else point.setStatus(1);
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", point.getName());
         List<Point> points = pointService.list(queryWrapper);
@@ -50,7 +52,6 @@ public class PointController {
         } catch (Exception e) {
             return Result.error(500, "other error!");
         }
-
     }
 
     @PostMapping("/updatePoint")
@@ -120,19 +121,19 @@ public class PointController {
 
     public static java.util.Map<String, Object> point2req(Point point) {
         java.util.Map<String, Object> request = new HashMap<>();
-        request.put("id",point.getId());
-        request.put("name",point.getName());
-        request.put("mapId",point.getMapId());
-        request.put("status",point.getStatus());
-        request.put("xAxis",point.getXAxis());
-        request.put("yAxis",point.getYAxis());
-        request.put("zAxis",point.getZAxis());
-        request.put("oriX",point.getOriX());
-        request.put("oriY",point.getOriY());
-        request.put("oriZ",point.getOriZ());
-        request.put("oriW",point.getOriW());
+        request.put("id", point.getId());
+        request.put("name", point.getName());
+        request.put("mapId", point.getMapId());
+        request.put("status", point.getStatus());
+        request.put("xAxis", point.getXAxis());
+        request.put("yAxis", point.getYAxis());
+        request.put("zAxis", point.getZAxis());
+        request.put("oriX", point.getOriX());
+        request.put("oriY", point.getOriY());
+        request.put("oriZ", point.getOriZ());
+        request.put("oriW", point.getOriW());
         java.util.Map<String, Object> req = new HashMap<>();
-        req.put("point",request);
+        req.put("point", request);
         return req;
     }
 }

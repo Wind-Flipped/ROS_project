@@ -252,7 +252,7 @@ public class RosControllerTest {
         //assert result5.getCode() == 200 && isGuide[0] == 1;
         //客人在 5 s内再次就餐，模拟前者带位未完成情况，后端不予处理（后端）
         // Result result7 = rosController.confirmEat();
-       //assert result7.getCode() == 505 && result7.getMsg().equals("robots is guiding!");
+        //assert result7.getCode() == 505 && result7.getMsg().equals("robots is guiding!");
 
         RosGlobal.arrive_welcome = true;
 
@@ -371,7 +371,7 @@ public class RosControllerTest {
         // 建立正常点（ROS端）
         System.out.println("save！！！！！");
         Thread.sleep(5000);
-        Result result = rosController.savePoint(142, "table");
+        Result result = rosController.savePoint(142, "table", 0);
         assert result.getCode() == 200;
 
         Thread.sleep(waitMiliSecond * 5);
