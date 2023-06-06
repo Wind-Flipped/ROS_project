@@ -29,6 +29,7 @@ import ros.msgs.std_msgs.PrimitiveMsg;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * RosController Tester.
@@ -132,7 +133,7 @@ public class RosControllerTest {
         Result result1 = rosController.change(1, mapId);
         assert result1.getCode() == 200;
         // 60 s
-        Thread.sleep(waitMiliSecond * 6);
+        Thread.sleep(waitMiliSecond * 5);
         Result result12 = rosController.end();
         assert result12.getCode() == 200;
         //Thread.sleep(waitMiliSecond * 3);
@@ -240,13 +241,13 @@ public class RosControllerTest {
      */
         // Welcome 开启迎宾模式（ROS）
         Result result4 = rosController.change(2, mapId);
-        Thread.sleep(waitMiliSecond * 2);
+        Thread.sleep(waitMiliSecond * 3);
         assert result4.getCode() == 200 && isGuide[0] == 1;
 
         System.out.println("here!");
         // 客人就餐（ROS）
         Result result5 = rosController.confirmEat();
-        Thread.sleep(waitMiliSecond * 2);
+        Thread.sleep(waitMiliSecond * 3);
         assert result5.getCode() == 200;
         //assert result5.getCode() == 200 && isGuide[0] == 1;
         //客人在 5 s内再次就餐，模拟前者带位未完成情况，后端不予处理（后端）
@@ -365,13 +366,20 @@ public class RosControllerTest {
 //TODO: Test goes here...
         // 开启航点编辑模式（ROS）
         rosController.change(4, mapId);
-
-
-        System.out.println("save！！！！！");
-        Thread.sleep(waitMiliSecond * 2);
+        System.out.println("save welcome！！！！！");
+        Thread.sleep(waitMiliSecond * 3);
         // 建立正常点（ROS端）
-        Result result = rosController.savePoint(mapId, "welcome", 0);
+        Result result = rosController.savePoint(mapId, "welcome1", 0);
+       // rosController.savePoint(mapId, "kitchen", 1);
         assert result.getCode() == 200;
+//
+
+        System.out.println("save table！！！！！");
+        Thread.sleep(waitMiliSecond * 3);
+        //Thread.sleep(waitMiliSecond * 2);
+        // 建立正常点（ROS端）
+        Result result1 = rosController.savePoint(mapId, "table_test1", 2);
+        assert result1.getCode() == 200;
         rosController.end();
         System.out.println("end the save_point!");
         // 建立异常点（后端）

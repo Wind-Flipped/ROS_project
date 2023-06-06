@@ -73,8 +73,9 @@ public class RosGlobal {
                         for (int i = 0; i < 7; i++) {
                             floats[i] = array.getFloat(i);
                         }
+                        System.out.println("from ros:" + floats[0] + " " + floats[1]);
                         point = ros2front(floats);
-                        //TestUtil.log("robot location: " + point);
+                        TestUtil.log("robot location: " + point);
                     }
                 }
         );
@@ -119,6 +120,7 @@ public class RosGlobal {
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
                         TestUtil.log("arrive welcome " + msg.data);
+                        TestUtil.log(point.toString());
                         endClock();
                     }
                 }
