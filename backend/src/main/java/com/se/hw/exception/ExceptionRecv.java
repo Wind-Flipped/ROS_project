@@ -26,6 +26,8 @@ public class ExceptionRecv {
     private static final HashMap<String, Publisher> publishers = new HashMap<>();
     private static final String GET_GESTURE = "/gesture_detect";
     private static final String GET_POWER = "/power_detect";
+
+    private static final String UNREACH = "/unreach";
     private static RosBridge rosBridge = null;
     private static final double SAFE_RAD = 3.14 / 8;
     private static final Integer SAFE_POWER = 15;
@@ -34,8 +36,11 @@ public class ExceptionRecv {
     private static int power = 100;
     private static long startTime = 0L;
 
+    private static boolean flag = false;
+
     public static int run(RosBridge rosBridge2) {
         rosBridge = rosBridge2;
+        publishers.put(UNREACH, new Publisher(UNREACH, MsgGlobal.msgString, rosBridge));
         // 当ROS端异常出现时，下面的TODO则表明需要向ROS端发送的对应异常处理消息，默认ROS端无反应，建议可以增加一个语音播报异常的话题。
         runGesture();
         runPower();
@@ -130,8 +135,14 @@ public class ExceptionRecv {
      */
     public static boolean isTimeoutN() {
         if (startTime == 0) {
+            flag = false;
             return true;
         } else {
+            if ((System.currentTimeMillis() - startTime) < LONGEST_TIME && !flag) {
+                flag = true;
+                publishers.get(UNREACH).publish(new PrimitiveMsg<String>("alarm"));
+                //pub
+            }
             return (System.currentTimeMillis() - startTime) < LONGEST_TIME;
         }
     }
