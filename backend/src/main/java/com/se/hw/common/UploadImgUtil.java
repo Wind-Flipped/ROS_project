@@ -141,7 +141,7 @@ public class UploadImgUtil {
             outputStream.write(imageBytes);
             outputStream.close();
 
-            System.out.println("PNG image saved successfully.");
+            //System.out.println("PNG image saved successfully.");
         } catch (IOException e) {
             e.printStackTrace();
         }

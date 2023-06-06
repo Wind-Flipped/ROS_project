@@ -68,6 +68,7 @@ public class RosController {
             return Result.error(405, "the map doesn't exist");
         }
         Mode givenMode = RosGlobal.modes.get(type);
+        //RosGlobal.nowMode = givenMode;
         givenMode.setMapName(map.getRosname());
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
         List<Point> points;
@@ -111,12 +112,13 @@ public class RosController {
     public Result end() {
         if (RosGlobal.nowMode instanceof MappingMode) {
             Map map = mapService.getById(nowMapId);
-            map.setUrl(RosGlobal.mapUrl);
+            map.setUrl(RosGlobal.nowMapName);
             mapService.updateById(map);
         }
-        if (RosGlobal.nowMode.end() < 0) {
+        if (RosGlobal.nowMode == null) {
             return Result.error(404, "already ending all modes!");
         }
+        RosGlobal.nowMode.end();
         return Result.success(200);
     }
 
@@ -228,6 +230,14 @@ public class RosController {
     @GetMapping("/getPower")
     public Result getPower() {
         return Result.success(100, ExceptionRecv.getPower());
+    }
+
+    @GetMapping("/getTime")
+    public Result getTime() {
+        if (ExceptionRecv.isTimeoutN()) {
+            return Result.success(100, "no problem");
+        }
+        return Result.error(200, "time out!!!");
     }
 
 }

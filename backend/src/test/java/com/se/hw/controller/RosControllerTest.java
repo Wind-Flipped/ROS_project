@@ -100,7 +100,7 @@ public class RosControllerTest {
 //        point2Id = points.get(1).getId();
 //        point3Id = points.get(2).getId();
 
-        RosGlobal.init("ws://10.193.124.17:9090");
+        RosGlobal.init("ws://10.193.151.216:9090");
         rosBridge = RosGlobal.rosBridge;
         RosController.nowMapId = 142;
         mapId = 142;
@@ -113,15 +113,6 @@ public class RosControllerTest {
          * table
          */
         point3Id = 19;
-
-//        // Mapping
-//        Result result1 = rosController.change(1, mapId, point1Id);
-//        assert result1.getCode() == 200;
-//        // 30 s
-//        Thread.sleep(waitMiliSecond * 6);
-//        Result result12 = rosController.end();
-//        assert result12.getCode() == 200;
-//        Thread.sleep(waitMiliSecond * 3);
     }
 
     @After
@@ -136,7 +127,15 @@ public class RosControllerTest {
     }
 
     @Test
-    public void empty() throws Exception {
+    public void testMapping() throws Exception {
+        // Mapping
+        Result result1 = rosController.change(1, mapId);
+        assert result1.getCode() == 200;
+        // 60 s
+        Thread.sleep(waitMiliSecond * 6);
+        Result result12 = rosController.end();
+        assert result12.getCode() == 200;
+        Thread.sleep(waitMiliSecond * 3);
         return;
     }
 
@@ -147,16 +146,16 @@ public class RosControllerTest {
     public void testChange() throws Exception {
 //TODO: Test goes here...
         // Map not found 测试地图是否存在（后端）
-        Result result4 = rosController.change(2, 0x3f3f3f3f, point1Id);
+        Result result4 = rosController.change(2, 0x3f3f3f3f);
         assert result4.getCode() == 405 && result4.getMsg().equals("the map doesn't exist");
         Thread.sleep(waitMiliSecond);
 
         // Welcome 开启迎宾模式（ROS）
-        Result result5 = rosController.change(2, mapId, point1Id);
+        Result result5 = rosController.change(2, mapId);
         assert result5.getCode() == 200;
         Thread.sleep(waitMiliSecond);
         // Reopen Mapping 再次开启迎宾模式，后端应不予相应（后端）
-        Result result2 = rosController.change(1, mapId, point1Id);
+        Result result2 = rosController.change(1, mapId);
         assert result2.getCode() == 404 && result2.getMsg().equals("Can't open the mode,please check if there's other mode opening");
         Thread.sleep(waitMiliSecond);
         // End welcome 关闭迎宾模式（ROS）
@@ -165,7 +164,7 @@ public class RosControllerTest {
         Thread.sleep(waitMiliSecond);
 
         // Delivery 开启送餐模式（ROS）
-        Result result7 = rosController.change(3, mapId, point1Id);
+        Result result7 = rosController.change(3, mapId);
         assert result7.getCode() == 200;
         Thread.sleep(waitMiliSecond);
         // End delivery 关闭送餐模式（ROS）
@@ -173,12 +172,12 @@ public class RosControllerTest {
         assert result8.getCode() == 200;
         Thread.sleep(waitMiliSecond);
         // PointEdit 开启航点编辑模式（ROS）
-        Result result9 = rosController.change(4, mapId, point1Id);
+        Result result9 = rosController.change(4, mapId);
         assert result9.getCode() == 200;
         Thread.sleep(waitMiliSecond);
 
         // Point not found 测试航点无法找到（后端）
-        Result result10 = rosController.change(1, mapId, 0x3f3f3f3f);
+        Result result10 = rosController.change(1, mapId);
         assert result10.getCode() == 606 && result10.getMsg().equals("Can't find the point!");
     }
 
@@ -197,7 +196,7 @@ public class RosControllerTest {
         );
 
         // Begin welcome 启动迎宾模式（ROS）
-        Result result1 = rosController.change(2, 142, point1Id);
+        Result result1 = rosController.change(2, 142);
         assert result1.getCode() == 200;
         Thread.sleep(waitMiliSecond);
         // End welcome 关闭迎宾模式（ROS）
@@ -240,7 +239,7 @@ public class RosControllerTest {
 
      */
         // Welcome 开启迎宾模式（ROS）
-        Result result4 = rosController.change(2, mapId, point2Id);
+        Result result4 = rosController.change(2, mapId);
         Thread.sleep(waitMiliSecond * 2);
         assert result4.getCode() == 200 && isGuide[0] == 1;
 
@@ -295,7 +294,7 @@ public class RosControllerTest {
 
      */
         // Delivery 开启送餐模式（ROS）
-        Result result4 = rosController.change(3, mapId, point2Id);
+        Result result4 = rosController.change(3, mapId);
         assert result4.getCode() == 200;
         Thread.sleep(waitMiliSecond * 2);
         // 命令机器人送往指定位置（ROS）
@@ -367,14 +366,12 @@ public class RosControllerTest {
         // 开启航点编辑模式（ROS）
         rosController.change(4, mapId);
 
+
+        System.out.println("save！！！！！");
         Thread.sleep(waitMiliSecond * 1);
         // 建立正常点（ROS端）
-        System.out.println("save！！！！！");
-        Thread.sleep(5000);
-        Result result = rosController.savePoint(142, "table", 0);
+        Result result = rosController.savePoint(mapId, "welcome", 0);
         assert result.getCode() == 200;
-
-        Thread.sleep(waitMiliSecond * 5);
         rosController.end();
         System.out.println("end the save_point!");
         // 建立异常点（后端）
@@ -391,12 +388,17 @@ public class RosControllerTest {
 //TODO: Test goes here...
         Result result = rosController.getException();
         assert result.getCode() == 100;
-        // 开启建图模式（ROS）
-        Result result4 = rosController.change(3, mapId;
+        // 开启迎宾模式（ROS）
+        Result result4 = rosController.change(2, mapId);
         assert result4.getCode() == 200;
-        Thread.sleep(waitMiliSecond);
+        Thread.sleep(waitMiliSecond * 4);
+        // 到迎宾点 超时
+        Result result5 = rosController.getException();
+        System.out.println(result5.getCode());
+        assert result5.getCode() == 100;
         // 模拟超时点
-        Result result1 = rosController.confirmSend(point3Id);
+        Result result1 = rosController.confirmEat();
+        assert result1.getCode() == 200;
         Thread.sleep(waitMiliSecond * 4);
         Result result2 = rosController.getException();
         assert result2.getCode() == 500;

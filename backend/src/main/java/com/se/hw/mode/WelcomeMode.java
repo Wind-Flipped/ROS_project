@@ -3,6 +3,7 @@ package com.se.hw.mode;
 import com.se.hw.Ros.MsgGlobal;
 import com.se.hw.Ros.RosGlobal;
 import com.se.hw.entity.Point;
+import com.se.hw.exception.ExceptionRecv;
 import ros.Publisher;
 import ros.RosBridge;
 import ros.msgs.geometry_msgs.Vector3;
@@ -26,6 +27,7 @@ public class WelcomeMode extends Mode {
         }
         for (int i = 0; i < 10; i++) {
             // point2arr(point);
+            System.out.println("welcome: " + point);
             getPublisher(START_WELCOME_TOPIC).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
             try {
                 Thread.sleep(WAIT_TIME);
@@ -34,7 +36,8 @@ public class WelcomeMode extends Mode {
             }
             if (RosGlobal.launch_success) {
                 RosGlobal.nowMode = this;
-                RosGlobal.arrive_welcome = true;
+                RosGlobal.arrive_welcome = false;
+                RosGlobal.startClock();
                 return 1;
             }
         }
@@ -42,6 +45,7 @@ public class WelcomeMode extends Mode {
     }
 
     public void startGuide(Point point) {
+        System.out.println("table: " + point);
         getPublisher(START_GUIDE).publish(new PrimitiveMsg<Float[]>(point2arr(point)));
     }
 }

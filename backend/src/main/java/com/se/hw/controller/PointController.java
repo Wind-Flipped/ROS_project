@@ -60,7 +60,7 @@ public class PointController {
         }
 
         try {
-            pointService.save(point);
+            pointService.saveOrUpdate(point);
             return Result.success(200);
         } catch (Exception e) {
             return Result.error(500, "other error!");
@@ -73,11 +73,30 @@ public class PointController {
         if (point == null) {
             return Result.error(404, "can't find the point!");
         }
+        QueryWrapper<Point> queryWrapper;
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("map_id", point.getMapId());
+        queryWrapper.eq("name", point.getName());
+        List<Point> points = pointService.list(queryWrapper);
+        if (points.size() != 0) {
+            return Result.error(400, "name repetition");
+        }
+        if (point.getStatus() <= 1) {
+            queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("map_id", point.getMapId());
+            queryWrapper.eq("status", point.getStatus());
+            List<Point> points1 = pointService.list(queryWrapper);
+            if (points1.size() != 0 && point.getStatus() == 0) {
+                return Result.error(606, "the welcome exists");
+            } else if (points1.size() != 0 && point.getStatus() == 1) {
+                return Result.error(505, "the kitchen exists");
+            }
+        }
         try {
-            pointService.updateById(point);
-            return Result.success(100);
+            pointService.saveOrUpdate(point);
+            return Result.success(200);
         } catch (Exception e) {
-            return Result.error(500, "other error");
+            return Result.error(500, "other error!");
         }
     }
 

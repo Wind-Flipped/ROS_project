@@ -138,10 +138,9 @@ public class ExceptionRecv {
             flag = false;
             return true;
         } else {
-            if ((System.currentTimeMillis() - startTime) < LONGEST_TIME && !flag) {
+            if ((System.currentTimeMillis() - startTime) > LONGEST_TIME && !flag) {
                 flag = true;
                 publishers.get(UNREACH).publish(new PrimitiveMsg<String>("alarm"));
-                //pub
             }
             return (System.currentTimeMillis() - startTime) < LONGEST_TIME;
         }

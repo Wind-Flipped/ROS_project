@@ -40,7 +40,8 @@ public class DeliveryMode extends Mode {
             }
             if (RosGlobal.launch_success) {
                 RosGlobal.nowMode = this;
-                RosGlobal.arrive_kitchen = true;
+                RosGlobal.arrive_kitchen = false;
+                RosGlobal.startClock();
                 return 1;
             }
         }

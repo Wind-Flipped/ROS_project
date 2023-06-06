@@ -47,8 +47,8 @@ public void before() throws Exception {
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
 
-    pointController.save(1.0F,1.0F,"point1",mapId);
-    pointController.save(2.0F,2.0F,"point2",mapId);
+    pointController.save(1.0F,1.0F,"point1",mapId,2);
+    pointController.save(2.0F,2.0F,"point2",mapId,2);
     List<Point> points = (List<Point>) pointController.findAll().getData();
     point1Id = points.get(0).getId();
     point2Id = points.get(1).getId();
@@ -155,11 +155,11 @@ public void after() throws Exception {
 @Test
 public void testSave() throws Exception { 
 //TODO: Test goes here...
-    Result result1 = pointController.save(1.0F,1.0F,"point1",mapId);
+    Result result1 = pointController.save(1.0F,1.0F,"point1",mapId,2);
     assert result1.getCode() == 400 && result1.getMsg().equals("naming repetition!");
-    Result result2 = pointController.save(1.0F,1.0F,"point4",mapId);
+    Result result2 = pointController.save(1.0F,1.0F,"point4",mapId,2);
     assert result2.getCode() == 200;
-    Result result3 = pointController.save(1.0F,1.0F,"point5",0x3f3f3f3f);
+    Result result3 = pointController.save(1.0F,1.0F,"point5",0x3f3f3f3f,2);
     assert result3.getCode() == 500 && result3.getMsg().equals("other error!");
 
 }
