@@ -135,7 +135,7 @@ public class RosControllerTest {
         Thread.sleep(waitMiliSecond * 6);
         Result result12 = rosController.end();
         assert result12.getCode() == 200;
-        Thread.sleep(waitMiliSecond * 3);
+        //Thread.sleep(waitMiliSecond * 3);
         return;
     }
 
@@ -368,7 +368,7 @@ public class RosControllerTest {
 
 
         System.out.println("save！！！！！");
-        Thread.sleep(waitMiliSecond * 1);
+        Thread.sleep(waitMiliSecond * 2);
         // 建立正常点（ROS端）
         Result result = rosController.savePoint(mapId, "welcome", 0);
         assert result.getCode() == 200;
