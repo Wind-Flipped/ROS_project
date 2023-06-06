@@ -8,6 +8,7 @@ import com.se.hw.common.UploadImgUtil;
 import com.se.hw.entity.Point;
 import com.se.hw.exception.ExceptionRecv;
 import com.se.hw.mode.*;
+import javafx.scene.chart.ScatterChart;
 import org.junit.Test;
 import ros.Publisher;
 import ros.RosBridge;
@@ -45,7 +46,9 @@ public class RosGlobal {
         nowMode = null;
         rosBridge = new RosBridge();
         point = new Point();
+
         rosBridge.connect(url, true);
+
         modes = new HashMap<>();
         modes.put(1, new MappingMode(rosBridge));
         modes.put(2, new WelcomeMode(rosBridge));
@@ -53,9 +56,6 @@ public class RosGlobal {
         modes.put(4, new PointEditMode(rosBridge));
 
 
-        if (!rosBridge.hasConnected()) {
-            return false;
-        }
         ExceptionRecv.run(rosBridge);
         /*
           init subscriber
@@ -75,7 +75,7 @@ public class RosGlobal {
                         }
                         //System.out.println("from ros:" + floats[0] + " " + floats[1]);
                         point = ros2front(floats);
-                       // TestUtil.log("robot location: " + point);
+                        // TestUtil.log("robot location: " + point);
                     }
                 }
         );

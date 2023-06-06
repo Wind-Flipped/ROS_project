@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.se.hw.Ros.RosGlobal;
 import com.se.hw.common.Result;
 
+import com.se.hw.common.TestUtil;
 import com.se.hw.entity.Map;
 import com.se.hw.entity.Point;
 import com.se.hw.exception.ExceptionRecv;
@@ -72,7 +73,7 @@ public class RosController {
         givenMode.setMapName(map.getRosname());
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
         List<Point> points;
-        System.out.println(type+" "+mapId);
+        TestUtil.log("change: " + type + " " + mapId);
         switch (type) {
             case 1:// mapping
                 break;
@@ -183,14 +184,22 @@ public class RosController {
         point.setName(pointName);
         point.setMapId(mapId);
         point.setStatus(type);
-        if (type <= 1) {
-            QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("map_id", mapId);
-            queryWrapper.eq("status", type);
+        QueryWrapper<Point> queryWrapper;
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("map_id", point.getMapId());
+        queryWrapper.eq("name", point.getName());
+        List<Point> points = pointService.list(queryWrapper);
+        if (points.size() != 0) {
+            return Result.error(400, "name repetition");
+        }
+        if (point.getStatus() <= 1) {
+            queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("map_id", point.getMapId());
+            queryWrapper.eq("status", point.getStatus());
             List<Point> points1 = pointService.list(queryWrapper);
-            if (points1.size() != 0 && type == 0) {
+            if (points1.size() != 0 && point.getStatus() == 0) {
                 return Result.error(606, "the welcome exists");
-            } else if (points1.size() != 0 && type == 1) {
+            } else if (points1.size() != 0 && point.getStatus() == 1) {
                 return Result.error(505, "the kitchen exists");
             }
         }
