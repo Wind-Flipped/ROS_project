@@ -1,0 +1,11 @@
+<launch>
+  <master auto="start"/>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+    <arg name="port" value="9090"/>
+  </include>
+  <node name="excute" pkg="thursday4" type="excute" output="screen" />
+  <node name="power_detect" pkg="thursday4" type="power_detect"/>
+  <node name="imu_listener" pkg="thursday4" type="imu_listener"/>
+  <node name="pos_listener" pkg="thursday4" type="pos_listener"/>
+</launch>
