@@ -58,7 +58,6 @@ public class PointController {
                 return Result.error(505, "the kitchen exists");
             }
         }
-
         try {
             pointService.saveOrUpdate(point);
             return Result.success(200);
@@ -140,15 +139,15 @@ public class PointController {
         return Result.success(100, pointService.page(new Page<>(pageNum, pageSize)));
     }
 
-    private Point req2point(Map<String, Object> req) {
-        Map<String, Object> request = (Map<String, Object>) req.get("point");
+    private Point req2point(Map<String, Object> request) {
+        //Map<String, Object> request = (Map<String, Object>) req.get("point");
         int id = (int) request.get("id");
         Point point = pointService.getById(id);
         if (point == null) {
             return null;
         }
-        return new Point(id, (String) request.get("name"), (Float) request.get("xAxis"), (Float) request.get("yAxis"), (Integer) request.get("status"), (Integer) request.get("mapId"), (Float) request.get("zAxis"),
-                (Float) request.get("oriX"), (Float) request.get("oriY"), (Float) request.get("oriZ"), (Float) request.get("oriW"));
+        return new Point(id, (String) request.get("name"), (Float) request.get("xAxis"), (Float) request.get("yAxis"), (Integer) request.get("status"), (Integer) request.get("mapId"), new Float(0.0),
+                new Float(0.0), new Float(0.0), new Float(0.0), new Float(0.0));
     }
 
     public static java.util.Map<String, Object> point2req(Point point) {

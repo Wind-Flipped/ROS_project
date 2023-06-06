@@ -37,11 +37,12 @@ public class MapController {
         map.setName(mapName);
         map.setBg(bg);
         map.setRosname(mapName);
+        map.setUrl(mapName + ".png");
         QueryWrapper<Map> mapQueryWrapper = new QueryWrapper<>();
         mapQueryWrapper.eq("name", mapName);
         List<Map> maps = mapService.list(mapQueryWrapper);
         System.out.println(maps);
-        if (maps.size() != 0){
+        if (maps.size() != 0) {
             return Result.error(400, "naming repetition!");
         }
         mapService.save(map);

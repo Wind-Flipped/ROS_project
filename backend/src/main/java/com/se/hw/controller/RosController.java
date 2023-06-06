@@ -72,6 +72,7 @@ public class RosController {
         givenMode.setMapName(map.getRosname());
         QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
         List<Point> points;
+        System.out.println(type+" "+mapId);
         switch (type) {
             case 1:// mapping
                 break;
@@ -112,7 +113,7 @@ public class RosController {
     public Result end() {
         if (RosGlobal.nowMode instanceof MappingMode) {
             Map map = mapService.getById(nowMapId);
-            map.setUrl(RosGlobal.nowMapName);
+            map.setUrl(map.getName() + ".png");
             mapService.updateById(map);
         }
         if (RosGlobal.nowMode == null) {
@@ -238,6 +239,11 @@ public class RosController {
             return Result.success(100, "no problem");
         }
         return Result.error(200, "time out!!!");
+    }
+
+    @GetMapping("/getPicture")
+    public Result getPicture() {
+        return Result.success(100, RosGlobal.nowMapName);
     }
 
 }

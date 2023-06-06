@@ -73,9 +73,9 @@ public class RosGlobal {
                         for (int i = 0; i < 7; i++) {
                             floats[i] = array.getFloat(i);
                         }
-                        System.out.println("from ros:" + floats[0] + " " + floats[1]);
+                        //System.out.println("from ros:" + floats[0] + " " + floats[1]);
                         point = ros2front(floats);
-                        TestUtil.log("robot location: " + point);
+                       // TestUtil.log("robot location: " + point);
                     }
                 }
         );

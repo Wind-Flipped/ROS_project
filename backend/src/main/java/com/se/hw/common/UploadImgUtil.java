@@ -22,7 +22,7 @@ import java.util.UUID;
 public class UploadImgUtil {
 
     /**
-      当前static文件绝对路径
+     * 当前static文件绝对路径
      */
     public static final String STATIC_PATH = "D:\\A_SE\\team04-project\\backend\\src\\main\\resources\\static\\";
 
@@ -63,6 +63,8 @@ public class UploadImgUtil {
      * %s => 文件的路径(path)
      */
     public static final String API_CREATE_POST = "https://gitee.com/api/v5/repos/%s/%s/contents/%s";
+
+    public static final String host = "http://192.168.60.251:9090/";
 
 
     /**
@@ -129,9 +131,10 @@ public class UploadImgUtil {
         return String.valueOf(content.getObj("download_url"));
     }
 
-    public static void save(String base64String, String mapName) {
+    public static String save(String base64String, String mapName) {
         String outputImagePath = STATIC_PATH
                 + mapName + ".png"; // 替换为输出的PNG图片路径
+        String url = host + mapName + ".png";
         try {
             // 解码Base64字符串
             byte[] imageBytes = java.util.Base64.getDecoder().decode(base64String);
@@ -145,5 +148,6 @@ public class UploadImgUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return url;
     }
 }
