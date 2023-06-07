@@ -34,6 +34,14 @@ public class RosController {
     public static Integer nowPointId;
 
 
+    @GetMapping("/isConnect")
+    public Result isConnect() {
+        if (RosGlobal.rosBridge == null || !RosGlobal.rosBridge.hasConnected()) {
+            return Result.error(404, "not connecting!!");
+        }
+        return Result.success(100, "connecting!!!");
+    }
+
     @GetMapping("/connect")
     public Result connect(@RequestParam String rosIp) {
         if (!RosGlobal.init("ws://" + rosIp + ":9090")) {
@@ -44,6 +52,7 @@ public class RosController {
 
     /**
      * 切换模式，在切换模式前一定要注意先关闭当前模式，否则后端返回错误状态码，ROS端不执行模式切换
+     *
      * @param type  模式类型，由前端确保值在 1--4 之间, 从1到4分别为建图，迎宾，送餐，航点编辑模式
      * @param mapId 已有的地图 id ，前端需先新建场景后再开启建图模式
      * @return code=200，
@@ -227,7 +236,7 @@ public class RosController {
     public Result getLocation() {
         HashMap<String, Float> axis = new HashMap<>();
         axis.put("xAxis", RosGlobal.point.getXAxis());
-        axis.put("yAxis", RosGlobal.point.getXAxis());
+        axis.put("yAxis", RosGlobal.point.getYAxis());
         return Result.success(100, axis);
     }
 

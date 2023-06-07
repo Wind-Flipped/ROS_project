@@ -39,7 +39,7 @@ public class RosGlobal {
     public static boolean arrive_welcome = false;
     public static boolean arrive_kitchen = false;
 
-    public static String mapUrl = "https://img1.imgtp.com/2023/05/25/7Gu6ool3.jpg";
+    public static String mapUrl = null;
 
     public static String nowMapName = "map_default";
 
@@ -139,6 +139,7 @@ public class RosGlobal {
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
                         UploadImgUtil.save(msg.data, nowMapName);
+                        mapUrl = nowMapName + ".png";
                         //TestUtil.log("地图已更新 " + mapUrl);
                     }
                 }
@@ -148,10 +149,8 @@ public class RosGlobal {
 
 
     /**
-     *
-     * @param url
-     * 对ros端连接的方法进行封装，
-     * 如果3秒钟连接不上则直接退出方法
+     * @param url 对ros端连接的方法进行封装，
+     *            如果3秒钟连接不上则直接退出方法
      */
     public static void connect(String url) {
         ExecutorService executor = Executors.newSingleThreadExecutor();

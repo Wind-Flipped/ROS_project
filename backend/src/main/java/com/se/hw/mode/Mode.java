@@ -25,7 +25,7 @@ public abstract class Mode {
 
     protected static final String SETMAP_TOPIC = "/setmap";
 
-    protected static final Integer WAIT_TIME = 15000;
+    protected static final Integer WAIT_TIME = 3000;
 
     protected String mapName;
 
@@ -97,7 +97,7 @@ public abstract class Mode {
         }
         getPublisher(END_TOPIC).publish("End the mode!");
         try {
-            Thread.sleep(WAIT_TIME);
+            Thread.sleep(WAIT_TIME / 2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -133,6 +133,7 @@ public class PointController {
 
     private Point req2point(Map<String, Object> request) {
         //Map<String, Object> request = (Map<String, Object>) req.get("point");
+        System.out.println(request);
         int id = (int) request.get("id");
         Point point = pointService.getById(id);
         if (point == null) {
