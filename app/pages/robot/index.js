@@ -10,16 +10,19 @@ Page({
         working: false,
         battery: 98,
         flags: ['1号标记','2号标记'],
-        welcomeAddr: '1号标记',
-        from: '1号标记',
-        to: '2号标记'
+        to: '2号标记',
+        robot: {}
     },
 
-    /**
-     * 生命周期函数--监听页面加载
-     */
     onLoad(options) {
-
+        const app = getApp();
+        for (let val in app.globalData.work) {
+            this.setData({
+                [val]: app.globalData.work[val],
+            })
+        }
+        setInterval(function() {
+        }, 1000);
     },
     switchMode() {
         if (this.data.working) {
@@ -44,5 +47,12 @@ Page({
         this.setData({
             working,
         })
+    },
+    onUnload() {
+        for (let attr in this.data) {
+            if (attr !== '__webviewId__') {
+                getApp().globalData.work[attr] = this.data[attr];
+            }
+        }
     }
 })

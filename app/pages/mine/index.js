@@ -18,16 +18,6 @@ Page({
                 data: ''
             },
             {
-                title: '用户测试',
-                icon: {
-                    name: 'tools',
-                    color: '#333333'
-                },
-                value: 'test',
-                func: 'navigate',
-                data: ''
-            },
-            {
                 title: '设置',
                 icon: {
                     name: 'setting',

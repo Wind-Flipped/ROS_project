@@ -10,6 +10,7 @@ App({
                 api.request(undefined, {
                     code: res.code
                 }, '/user/login').then(res => {
+                    console.log(res);
                     this.globalData.userInfo = res.data;
                 }).catch(err => {
                     console.log(err);

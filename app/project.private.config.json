@@ -10,7 +10,14 @@
             "list": [
                 {
                     "name": "",
-                    "pathName": "pages/flag-edit/index",
+                    "pathName": "pages/map/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/robot/index",
                     "query": "",
                     "launchMode": "default",
                     "scene": null

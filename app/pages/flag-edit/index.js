@@ -8,7 +8,8 @@ Page({
         //  当前点击项
         cur: null,
         //  站点簇
-        list: []
+        list: [],
+        types: ['迎宾点', '侯餐点', '餐桌点','餐桌点']
     },
 
     /**
@@ -24,7 +25,24 @@ Page({
                     imgY: item.yaxis,
                     img: '/static/image/normal.png',
                     scale: 0.125,
-                    id: item.id
+                    id: item.id,
+                    type: item.status,
+                }
+            }),scene});
+        });
+    },
+    setList() {
+        let scene = this.data.scene;
+        api.request('GET', {mapId: scene.id}, '/point/mapToPoints').then(res => {
+            this.setData({list: res.data.map(item => {
+                return {
+                    name: item.name,
+                    imgX: item.xaxis,
+                    imgY: item.yaxis,
+                    img: '/static/image/normal.png',
+                    scale: 0.125,
+                    id: item.id,
+                    type: item.status,
                 }
             }),scene});
         });
@@ -74,9 +92,10 @@ Page({
             if (res.confirm && this.checkName(res.content)) {
                 this.data.cur.data.name = res.content;
                 this.data.cur.data.img = null;
+                this.data.cur.data.type = 2;
                 this.data.list.push(this.data.cur.data);
-                api.request('GET', {x: this.data.cur.data.imgX, y: this.data.cur.data.imgY, name: this.data.cur.data.name, mapId: this.data.scene.id}, '/point/createPoint').then(res => {
-                    console.log(res);
+                api.request('GET', {x: this.data.cur.data.imgX, y: this.data.cur.data.imgY, name: this.data.cur.data.name, mapId: this.data.scene.id, type: 2}, '/point/createPoint').then(res => {
+                    this.setList();
                 })
                 this.selectComponent('#map').updateFlags(this.data.list);
                 this.setData({
@@ -116,11 +135,40 @@ Page({
             }
         }).catch(err => {})
     },
+
+    /**
+     * 关闭菜单
+    */
     closeMenu() {
         this.setData({cur:null});
         let map = this.selectComponent('#map');
         map.data.tmpFlag = null;
         map.resetScale();
         map.drawMap();
+    },
+    editFlag() {
+        wx.showActionSheet({
+          itemList: ['修改名称', '修改类型'],
+          success: res => {
+              if (res.tapIndex === 0) {
+
+              }
+              else if (res.tapIndex === 1) {
+                  wx.showActionSheet({
+                    itemList: ['迎宾点', '侯餐点', '餐桌点',], 
+                    success: res => {
+                        api.request('POST', {
+                            axisx:this.data.cur.data.imgX,
+                            axisy: this.data.cur.data.imgY,
+                            name: this.data.cur.data.name,
+                            id: this.data.cur.id,
+                            status: res.tapIndex,
+                            mapId: this.data.scene.id
+                        }, '/point/updatePoint',);
+                    }
+                  })
+              }
+          }
+        })
     }
 })

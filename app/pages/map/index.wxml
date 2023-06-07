@@ -1,2 +1,3 @@
 <view class="page-container">
+    <image src="{{map}}" style="width: 100%;" mode="widthFix" />
 </view>

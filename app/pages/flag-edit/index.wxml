@@ -4,7 +4,7 @@
         <!--操作面板-->
         <view class="width-100vw board-wrap flex-col">
             <view class="board-title flex-row align-center justify-between">
-                <text class="borad-title-text">{{cur.data.name}}</text>
+                <text class="borad-title-text">{{cur.data.name}}:{{types[cur.data.type]}}</text>
                 <t-icon name="close" color="#999" size="45rpx" bindclick="closeMenu" />
             </view>
             <view class="board-content-wrap flex-row align-center">
@@ -13,7 +13,7 @@
         </view>
         <view class="width-100vw flex-row align-center" >
             <t-button wx:if="{{cur.tmp}}" block theme="primary" t-class="button-wrap" bind:tap="addFlag">新增站点</t-button>
-            <t-button wx:if="{{!cur.tmp}}" block theme="primary" t-class="button-wrap">编辑站点</t-button>
+            <t-button wx:if="{{!cur.tmp}}" block theme="primary" t-class="button-wrap" bindtap="editFlag">编辑站点</t-button>
             <t-button wx:if="{{!cur.tmp}}" block theme="danger" t-class="button-wrap" bind:tap="deleteFlag">删除站点</t-button>
         </view>
     </view>

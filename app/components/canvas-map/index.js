@@ -54,6 +54,32 @@ Component({
             type: Array,
             value: []
         },
+        //  机器人位置
+        robotPos: {
+            type: Object,
+            value: undefined
+        }
+    },
+    observers: {
+        //  监听机器人位置变化
+        'robotPos': function (pos) {
+            this.setData({
+                robot: {
+                    //  标点名
+                    name: '',
+                    //  标点图片
+                    img: '/static/image/robotPosition.png',
+                    //  标点坐标
+                    imgX: pos.x,
+                    imgY: pos.y,
+                    scale: 0.2,
+                }
+            });
+            if (!this.data.ctx || !this.data.canvas) {
+                return;
+            }
+            this.drawMap();
+        }
     },
 
     data: {
@@ -73,6 +99,7 @@ Component({
         pageY: null,
         //  临时锚点
         tmpFlag: null,
+        robot: undefined
     },
 
 
@@ -95,6 +122,9 @@ Component({
             })
             if (this.data.tmpFlag) {
                 this.drawFlag(this.data.tmpFlag);
+            }
+            if (this.data.robot) {
+                this.drawFlag(this.data.robot);
             }
         },
         // 缩放 勾股定理方法-求两点之间的距离

@@ -1,5 +1,7 @@
 const app = getApp();
 const api = require('../../utils/api');
+import config from '../../utils/config';
+const robotIp = '192.168.43.229';
 Page({
     data: {
         //  窗口信息
@@ -50,13 +52,13 @@ Page({
         api.request(undefined, {}, '/map/getAllMaps').then(res => {
             let scenes = res.data;
             scenes.forEach(item => {
-                item.map = item.url
+                item.map = [config.host, item.url].join('/');
             });
             this.setData({
                 scenes,
                 userInfo: getApp().globalData.userInfo,
             });
-        })
+        });
     },
     tabChange(e) {
         this.setData({
@@ -120,7 +122,7 @@ Page({
                       placeholderText: '输入机器人ip地址',
                   }).then(res => {
                       if (res.confirm && res.content.length > 0) {
-                          console.log(res);
+                          this.linkDevice(res.content);
                       }
                   }).catch(err => {
                       console.log(err);
@@ -134,7 +136,9 @@ Page({
     },
     linkDevice(ip) {
         api.request('GET',{rosIp: ip},'/ros/connect').then(res => {
-            console.log(res);
+            this.setData({
+                device: 1
+            })
         }).catch(err => {
             console.log(err);
         })
