@@ -20,6 +20,7 @@ import ros.tools.MessageUnpacker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class RosGlobal {
 
@@ -47,7 +48,10 @@ public class RosGlobal {
         rosBridge = new RosBridge();
         point = new Point();
 
-        rosBridge.connect(url, true);
+        connect(url);
+        if (!rosBridge.hasConnected()) {
+            return false;
+        }
 
         modes = new HashMap<>();
         modes.put(1, new MappingMode(rosBridge));
@@ -140,6 +144,32 @@ public class RosGlobal {
                 }
         );
         return true;
+    }
+
+
+    /**
+     *
+     * @param url
+     * 对ros端连接的方法进行封装，
+     * 如果3秒钟连接不上则直接退出方法
+     */
+    public static void connect(String url) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        Callable<Void> task = () -> {
+            rosBridge.connect(url, true);
+            return null;
+        };
+
+        Future<Void> future = executor.submit(task);
+        try {
+            // 如果在3秒内没有返回值，则取消任务
+            future.get(3, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            // 如果超时或者出现异常，则取消任务
+            future.cancel(true);
+        }
+        executor.shutdown();
     }
 
     /**

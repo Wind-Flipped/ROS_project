@@ -72,16 +72,8 @@ public class PointController {
         if (point == null) {
             return Result.error(404, "can't find the point!");
         }
-        QueryWrapper<Point> queryWrapper;
-        queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("map_id", point.getMapId());
-        queryWrapper.eq("name", point.getName());
-        List<Point> points = pointService.list(queryWrapper);
-        if (points.size() != 0) {
-            return Result.error(400, "name repetition");
-        }
         if (point.getStatus() <= 1) {
-            queryWrapper = new QueryWrapper<>();
+            QueryWrapper<Point> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("map_id", point.getMapId());
             queryWrapper.eq("status", point.getStatus());
             List<Point> points1 = pointService.list(queryWrapper);
@@ -146,8 +138,8 @@ public class PointController {
         if (point == null) {
             return null;
         }
-        return new Point(id, (String) request.get("name"), (Float) request.get("xAxis"), (Float) request.get("yAxis"), (Integer) request.get("status"), (Integer) request.get("mapId"), new Float(0.0),
-                new Float(0.0), new Float(0.0), new Float(0.0), new Float(0.0));
+        return new Point(id, (String) request.get("name"),Float.valueOf(request.get("xAxis").toString()),Float.valueOf(request.get("yAxis").toString()), (Integer) request.get("status"), (Integer) request.get("mapId"), 0.0F,
+                0.0F, 0.0F, 0.0F, 0.0F);
     }
 
     public static java.util.Map<String, Object> point2req(Point point) {
