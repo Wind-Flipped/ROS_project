@@ -35,6 +35,15 @@ Page({
                 value: 'delCache',
                 func: 'delCache'
             },
+            {
+                title: '关闭所有模式',
+                icon: {
+                    name: 'close-circle',
+                    color: '#333333'
+                },
+                value: 'closeMode',
+                func: 'closeMode'
+            },
         ]
     },
 
@@ -87,6 +96,17 @@ Page({
                 }
             },
             fail: err => console.log,
+        });
+    },
+    closeMode() {
+        //  页面卸载，关闭当前模式
+        api.request('POST', {}, '/ros/endMode').then(res => {
+            console.log(res);
+            if (res.code === 200) {
+                wx.showToast({
+                  title: '关闭成功',
+                })
+            }
         });
     }
 })

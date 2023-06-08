@@ -1,3 +1,9 @@
 <view class="page-container">
-    <image src="{{map}}" style="width: 100%;" mode="widthFix" />
+    <view class="map-container {{!saving && 'anima'}}">
+        <image src="{{map}}" style="width: 100%;" mode="widthFix" />
+    </view>
+    <view class="padding-hor-25 button-container flex-col align-center justify-center margin-top-30">
+        <t-button theme="primary" block bindtap="begin" disabled="{{saving|| mapping}}">开始建图</t-button>
+        <t-button theme="light" block bindtap="save" loading="{{saving}}" disabled="{{saving}}" t-class="margin-top-30">结束建图</t-button>
+    </view>
 </view>

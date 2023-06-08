@@ -47,3 +47,8 @@ page {
     margin-top: 25rpx;
 }
 
+.padding-hor-25 {
+    padding-left: 25rpx;
+    padding-right: 25rpx;
+}
+

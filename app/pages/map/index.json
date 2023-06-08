@@ -1,6 +1,5 @@
 {
     "usingComponents": {
-        "canvas-map": "/components/canvas-map/index"
     },
     "navigationBarTitleText": "构建地图"
 }

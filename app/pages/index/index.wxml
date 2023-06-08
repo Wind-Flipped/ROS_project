@@ -37,7 +37,7 @@
                         <t-image wx:if="{{item.map}}" src="{{item.map}}" mode="center" width="700rpx" height="400rpx" />
                         <t-empty wx:if="{{!item.map}}" icon="info-circle" t-class="empty-wrap" />
                         <view class="flex-row width-100vw align-center justify-between">
-                            <t-button icon="{{ {prefix:'iconfont icon', name: 'map'} }}" t-class="button" block theme="primary" variant="outline"> {{item.map ? '重新建图' : '创建地图'}}</t-button>
+                            <t-button icon="{{ {prefix:'iconfont icon', name: 'map'} }}" t-class="button" block theme="primary" variant="outline" bindtap="toMap" data-id="{{item.id}}"> {{item.map ? '重新建图' : '创建地图'}}</t-button>
                             <t-button wx:if="{{item.map}}" icon="edit" t-class="button" block theme="primary" bind:tap="navToFlagEdit" data-scene="{{item}}">站点编辑</t-button>
                         </view>
                     </view>
@@ -48,7 +48,7 @@
                             <t-image wx:else src="/static/image/device-empty.png" width="700rpx" height="400rpx" />
                         </view>
                         <view class="flex-row width-100vw align-center justify-between">
-                            <t-button wx:if="{{device}}" t-class="button" block theme="primary" icon="dashboard" bindtap="navigate" data-page="robot">开始工作</t-button>
+                            <t-button wx:if="{{device}}" t-class="button" block theme="primary" icon="dashboard" bindtap="navToWork" data-scene="{{item}}">开始工作</t-button>
                             <t-button wx:else t-class="button" block theme="primary" icon="add" bindtap="addDevice">添加设备</t-button>
                         </view>
                     </view>

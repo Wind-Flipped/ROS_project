@@ -1,7 +1,6 @@
 const app = getApp();
 const api = require('../../utils/api');
 import config from '../../utils/config';
-const robotIp = '192.168.43.229';
 Page({
     data: {
         //  窗口信息
@@ -59,6 +58,16 @@ Page({
                 userInfo: getApp().globalData.userInfo,
             });
         });
+        api.request('GET', {}, '/ros/isConnect').then(res => {
+            console.log(res);
+            if (res.code === 100) {
+                this.setData({
+                    device: 1
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+        })
     },
     tabChange(e) {
         this.setData({
@@ -97,50 +106,71 @@ Page({
         });
     },
     navToFlagEdit(e) {
-        let {scene} = e.currentTarget.dataset;
+        let {
+            scene
+        } = e.currentTarget.dataset;
         let data = encodeURIComponent(JSON.stringify(scene));
         wx.navigateTo({
-          url: '/pages/flag-edit/index?scene=' + data,
+            url: '/pages/flag-edit/index?scene=' + data,
         });
     },
     addDevice(e) {
         wx.showActionSheet({
-          itemList: ['扫描二维码', '手动输入'],
-          success: res => {
-              if (res.tapIndex === 0) {
-                  //    扫码获取ip: 10.193.151.216
-                  wx.scanCode().then(res => {
-                      this.linkDevice(res.result);
-                  }).catch(err => {
-                      console.log(err);
-                  })
-              }
-              //    手动输入
-              else if (res.tapIndex === 1) {
-                  wx.showModal({
-                      editable: true,
-                      placeholderText: '输入机器人ip地址',
-                  }).then(res => {
-                      if (res.confirm && res.content.length > 0) {
-                          this.linkDevice(res.content);
-                      }
-                  }).catch(err => {
-                      console.log(err);
-                  })
-              }
-          },
-          fail: err => {
-              console.log(err);
-          }
+            itemList: ['扫描二维码', '手动输入'],
+            success: res => {
+                if (res.tapIndex === 0) {
+                    //    扫码获取ip: 10.193.151.216
+                    wx.scanCode().then(res => {
+                        this.linkDevice(res.result);
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }
+                //    手动输入
+                else if (res.tapIndex === 1) {
+                    wx.showModal({
+                        editable: true,
+                        placeholderText: '输入机器人ip地址',
+                    }).then(res => {
+                        if (res.confirm && res.content.length > 0) {
+                            this.linkDevice(res.content);
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                }
+            },
+            fail: err => {
+                console.log(err);
+            }
         })
     },
     linkDevice(ip) {
-        api.request('GET',{rosIp: ip},'/ros/connect').then(res => {
-            this.setData({
-                device: 1
-            })
+        api.request('GET', {
+            rosIp: ip
+        }, '/ros/connect').then(res => {
+            if (res.code === 100) {
+                this.setData({
+                    device: 1
+                });
+            }
         }).catch(err => {
             console.log(err);
         })
+    },
+    toMap(e) {
+        const id = e.currentTarget.dataset.id;
+        wx.navigateTo({
+            url: '/pages/map/index?id=' + id,
+        });
+    },
+    navToWork(e) {
+        let {
+            scene
+        } = e.currentTarget.dataset;
+        let data = encodeURIComponent(JSON.stringify(scene));
+        wx.navigateTo({
+            url: '/pages/robot/index?scene=' + data,
+        });
     }
 })

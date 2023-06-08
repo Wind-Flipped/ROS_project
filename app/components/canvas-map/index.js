@@ -1,9 +1,9 @@
 //  最小缩放
 const MINIMUM_SCALE = 0.2;
 //  最大缩放
-const MAXIMUM_SCALE = 1.5;
+const MAXIMUM_SCALE = 3;
 //  缩放速度
-const DELTA = 0.003;
+const DELTA = 0.006;
 //  缩放补偿量
 const COMPENSATION = 1;
 //  普通锚点
@@ -266,6 +266,7 @@ Component({
             } else {
                 //  触摸空白
                 this.triggerEvent('touch-empty', item);
+                this.resetScale();
             }
         },
         /**

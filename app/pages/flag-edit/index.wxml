@@ -1,5 +1,8 @@
 <view class="page-container">
-    <canvas-map wx:if="{{scene}}" id="map" bind:touch-flag="touchFlag" bind:create-tmp="createTmp" bind:touch-empty="touchEmpty" map="{{scene.map}}" flags="{{list}}" />
+    <canvas-map wx:if="{{scene}}" id="map" bind:touch-flag="touchFlag" bind:create-tmp="createTmp" bind:touch-empty="touchEmpty" map="{{scene.map}}" flags="{{list}}" robotPos="{{robot}}" />
+    <view class="margin-top-30 padding-hor-25">
+        <t-button block theme="primary" bindtap="useCurPos" >使用当前位置创建</t-button>
+    </view>
     <view class="bottom-menu-wrap width-100vw flex-col" wx:if="{{cur}}">
         <!--操作面板-->
         <view class="width-100vw board-wrap flex-col">
