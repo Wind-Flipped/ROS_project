@@ -1,0 +1,23 @@
+<view class="page-container">
+    <canvas-map wx:if="{{scene}}" id="map" bind:touch-flag="touchFlag" bind:create-tmp="createTmp" bind:touch-empty="touchEmpty" map="{{scene.map}}" flags="{{list}}" robotPos="{{robot}}" />
+    <view class="margin-top-30 padding-hor-25">
+        <t-button block theme="primary" bindtap="useCurPos" >使用当前位置创建</t-button>
+    </view>
+    <view class="bottom-menu-wrap width-100vw flex-col" wx:if="{{cur}}">
+        <!--操作面板-->
+        <view class="width-100vw board-wrap flex-col">
+            <view class="board-title flex-row align-center justify-between">
+                <text class="borad-title-text">{{cur.data.name}}:{{types[cur.data.type]}}</text>
+                <t-icon name="close" color="#999" size="45rpx" bindclick="closeMenu" />
+            </view>
+            <view class="board-content-wrap flex-row align-center">
+                <text>x = {{cur.data.imgX}}, y = {{cur.data.imgY}}</text>
+            </view>
+        </view>
+        <view class="width-100vw flex-row align-center" >
+            <t-button wx:if="{{cur.tmp}}" block theme="primary" t-class="button-wrap" bind:tap="addFlag">新增站点</t-button>
+            <t-button wx:if="{{!cur.tmp}}" block theme="primary" t-class="button-wrap" bindtap="editFlag">编辑站点</t-button>
+            <t-button wx:if="{{!cur.tmp}}" block theme="danger" t-class="button-wrap" bind:tap="deleteFlag">删除站点</t-button>
+        </view>
+    </view>
+</view>

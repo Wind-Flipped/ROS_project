@@ -1,0 +1,707 @@
+{
+  "meta": {
+    "caseId": "702257c8-1add-4c2b-ba65-af1176a0e82b",
+    "caseName": "minitest-2",
+    "remarks": "",
+    "version": "0.0.1",
+    "startTime": 1684308468875,
+    "endTime": 1684308501607,
+    "appid": "wx14a95473b3afe32f",
+    "casePath": "",
+    "caseType": "normal",
+    "commonParams": [
+      {
+        "key": "1684308501616",
+        "name": "",
+        "value": ""
+      }
+    ]
+  },
+  "env": {
+    "wxapplibVersion": "2.31.1",
+    "devtoolsVersion": "1.06.2303220",
+    "openid": "o6zAJs3x-G7pPiExdMQ1rONYL_u4",
+    "entry": {
+      "path": "pages/index/index",
+      "query": "",
+      "scene": 1001
+    },
+    "mock": [
+      "none"
+    ],
+    "maxWaitFor": 10000,
+    "ignoreSelectors": [],
+    "mockAPIs": [],
+    "cleanCache": [
+      "none"
+    ],
+    "groupTouch": false,
+    "replaySetting": {
+      "screenshot": "none"
+    },
+    "simulatorType": "wechat",
+    "device": "iPhone 5",
+    "recordAPIs": []
+  },
+  "commands": [
+    {
+      "layer": "tool",
+      "commandType": "operate",
+      "command": "startRecord",
+      "waitfor": 0,
+      "timeStamp": 1684308468875,
+      "desc": ""
+    },
+    {
+      "tagName": "button",
+      "command": "touchstart",
+      "target": "/view/view[3]/swiper/swiper-item[1]/view[1]/view/button[2]",
+      "value": null,
+      "path": "pages/index/index",
+      "text": "站点编辑",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 213.46873474121094,
+            "clientY": 327.71875,
+            "force": 1,
+            "pageX": 213.46873474121094,
+            "pageY": 327.71875,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 205.95703125,
+            "screenY": 455.6796875
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 213.46873474121094,
+            "clientY": 327.71875,
+            "force": 1,
+            "pageX": 213.46873474121094,
+            "pageY": 327.71875,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 205.95703125,
+            "screenY": 455.6796875
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/view[3]/swiper/swiper-item[1]/view[1]/view/button[2]"
+      ],
+      "timeStamp": 1534,
+      "waitfor": 1534,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "touchend",
+      "target": "/view/view[3]/swiper/swiper-item[1]/view[1]/view/button[2]",
+      "value": null,
+      "path": "pages/index/index",
+      "text": "站点编辑",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 213.46873474121094,
+            "clientY": 327.71875,
+            "pageX": 213.46873474121094,
+            "pageY": 327.71875,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 205.95703125,
+            "screenY": 455.6796875
+          }
+        ],
+        "touches": []
+      },
+      "targetCandidates": [
+        "/view/view[3]/swiper/swiper-item[1]/view[1]/view/button[2]"
+      ],
+      "timeStamp": 1550,
+      "waitfor": 16,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "tap",
+      "target": "/view/view[3]/swiper/swiper-item[1]/view[1]/view/button[2]",
+      "value": null,
+      "path": "pages/index/index",
+      "text": "站点编辑",
+      "eventData": {
+        "detail": {
+          "x": 213.46873474121094,
+          "y": 327.71875
+        },
+        "changedTouches": [
+          {
+            "clientX": 213.46873474121094,
+            "clientY": 327.71875,
+            "force": 1,
+            "pageX": 213.46873474121094,
+            "pageY": 327.71875,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 205.95703125,
+            "screenY": 455.6796875
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 213.46873474121094,
+            "clientY": 327.71875,
+            "force": 1,
+            "pageX": 213.46873474121094,
+            "pageY": 327.71875,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 205.95703125,
+            "screenY": 455.6796875
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/view[3]/swiper/swiper-item[1]/view[1]/view/button[2]"
+      ],
+      "timeStamp": 1550,
+      "waitfor": 0,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "canvas",
+      "command": "touchstart",
+      "target": "/view/canvas-map/view/canvas",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "绘图区域",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 170.20310974121094,
+            "clientY": 207.09376525878906,
+            "force": 1,
+            "pageX": 170.20310974121094,
+            "pageY": 207.09376525878906,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 169.18359375,
+            "screenY": 407.546875
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 170.20310974121094,
+            "clientY": 207.09376525878906,
+            "force": 1,
+            "pageX": 170.20310974121094,
+            "pageY": 207.09376525878906,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 169.18359375,
+            "screenY": 407.546875
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/canvas-map/view/canvas"
+      ],
+      "timeStamp": 5049,
+      "waitfor": 3499,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "canvas",
+      "command": "longpress",
+      "target": "/view/canvas-map/view/canvas",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "绘图区域",
+      "eventData": {
+        "detail": {
+          "x": 170.20310974121094,
+          "y": 207.09376525878906
+        },
+        "changedTouches": [
+          {
+            "clientX": 170.20310974121094,
+            "clientY": 207.09376525878906,
+            "force": 1,
+            "pageX": 170.20310974121094,
+            "pageY": 207.09376525878906,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 169.18359375,
+            "screenY": 407.546875
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 170.20310974121094,
+            "clientY": 207.09376525878906,
+            "force": 1,
+            "pageX": 170.20310974121094,
+            "pageY": 207.09376525878906,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 169.18359375,
+            "screenY": 407.546875
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/canvas-map/view/canvas"
+      ],
+      "timeStamp": 5401,
+      "waitfor": 352,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "canvas",
+      "command": "touchend",
+      "target": "/view/canvas-map/view/canvas",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "绘图区域",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 170.20310974121094,
+            "clientY": 207.09376525878906,
+            "pageX": 170.20310974121094,
+            "pageY": 207.09376525878906,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 169.18359375,
+            "screenY": 407.546875
+          }
+        ],
+        "touches": []
+      },
+      "targetCandidates": [
+        "/view/canvas-map/view/canvas"
+      ],
+      "timeStamp": 5732,
+      "waitfor": 331,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "touchstart",
+      "target": "/view/view/view[2]/button",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "新增站点",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 184.71873474121094,
+            "clientY": 485.40625,
+            "force": 1,
+            "pageX": 184.71873474121094,
+            "pageY": 485.40625,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 181.515625,
+            "screenY": 644.109375
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 184.71873474121094,
+            "clientY": 485.40625,
+            "force": 1,
+            "pageX": 184.71873474121094,
+            "pageY": 485.40625,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 181.515625,
+            "screenY": 644.109375
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/view/view[2]/button"
+      ],
+      "timeStamp": 8716,
+      "waitfor": 2984,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "touchend",
+      "target": "/view/view/view[2]/button",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "新增站点",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 184.71873474121094,
+            "clientY": 485.40625,
+            "pageX": 184.71873474121094,
+            "pageY": 485.40625,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 181.515625,
+            "screenY": 644.109375
+          }
+        ],
+        "touches": []
+      },
+      "targetCandidates": [
+        "/view/view/view[2]/button"
+      ],
+      "timeStamp": 8716,
+      "waitfor": 0,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "tap",
+      "target": "/view/view/view[2]/button",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "新增站点",
+      "eventData": {
+        "detail": {
+          "x": 184.71873474121094,
+          "y": 485.40625
+        },
+        "changedTouches": [
+          {
+            "clientX": 184.71873474121094,
+            "clientY": 485.40625,
+            "force": 1,
+            "pageX": 184.71873474121094,
+            "pageY": 485.40625,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 181.515625,
+            "screenY": 644.109375
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 184.71873474121094,
+            "clientY": 485.40625,
+            "force": 1,
+            "pageX": 184.71873474121094,
+            "pageY": 485.40625,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 181.515625,
+            "screenY": 644.109375
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/view/view[2]/button"
+      ],
+      "timeStamp": 8717,
+      "waitfor": 1,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "timeStamp": 16666,
+      "waitfor": 7949,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "native",
+      "command": "confirmModal",
+      "text": "确定"
+    },
+    {
+      "tagName": "canvas",
+      "command": "touchstart",
+      "target": "/view/canvas-map/view/canvas",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "绘图区域",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 173.70310974121094,
+            "clientY": 200.2343292236328,
+            "force": 1,
+            "pageX": 173.70310974121094,
+            "pageY": 200.2343292236328,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 172.16015625,
+            "screenY": 401.7109375
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 173.70310974121094,
+            "clientY": 200.2343292236328,
+            "force": 1,
+            "pageX": 173.70310974121094,
+            "pageY": 200.2343292236328,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 172.16015625,
+            "screenY": 401.7109375
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/canvas-map/view/canvas"
+      ],
+      "timeStamp": 21915,
+      "waitfor": 5249,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "canvas",
+      "command": "touchend",
+      "target": "/view/canvas-map/view/canvas",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "绘图区域",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 173.70310974121094,
+            "clientY": 200.2343292236328,
+            "pageX": 173.70310974121094,
+            "pageY": 200.2343292236328,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 172.16015625,
+            "screenY": 401.7109375
+          }
+        ],
+        "touches": []
+      },
+      "targetCandidates": [
+        "/view/canvas-map/view/canvas"
+      ],
+      "timeStamp": 22016,
+      "waitfor": 101,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "canvas",
+      "command": "tap",
+      "target": "/view/canvas-map/view/canvas",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "绘图区域",
+      "eventData": {
+        "detail": {
+          "x": 173.70310974121094,
+          "y": 200.2343292236328
+        },
+        "changedTouches": [
+          {
+            "clientX": 173.70310974121094,
+            "clientY": 200.2343292236328,
+            "force": 1,
+            "pageX": 173.70310974121094,
+            "pageY": 200.2343292236328,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 172.16015625,
+            "screenY": 401.7109375
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 173.70310974121094,
+            "clientY": 200.2343292236328,
+            "force": 1,
+            "pageX": 173.70310974121094,
+            "pageY": 200.2343292236328,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 172.16015625,
+            "screenY": 401.7109375
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/canvas-map/view/canvas"
+      ],
+      "timeStamp": 22016,
+      "waitfor": 0,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "touchstart",
+      "target": "/view/view/view[2]/button[2]",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "删除站点",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 203.39060974121094,
+            "clientY": 486.03125,
+            "force": 1,
+            "pageX": 203.39060974121094,
+            "pageY": 486.03125,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 197.39453125,
+            "screenY": 644.6484375
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 203.39060974121094,
+            "clientY": 486.03125,
+            "force": 1,
+            "pageX": 203.39060974121094,
+            "pageY": 486.03125,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 197.39453125,
+            "screenY": 644.6484375
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/view/view[2]/button[2]"
+      ],
+      "timeStamp": 28749,
+      "waitfor": 6733,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "touchend",
+      "target": "/view/view/view[2]/button[2]",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "删除站点",
+      "eventData": {
+        "detail": {},
+        "changedTouches": [
+          {
+            "clientX": 203.39060974121094,
+            "clientY": 486.03125,
+            "pageX": 203.39060974121094,
+            "pageY": 486.03125,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 197.39453125,
+            "screenY": 644.6484375
+          }
+        ],
+        "touches": []
+      },
+      "targetCandidates": [
+        "/view/view/view[2]/button[2]"
+      ],
+      "timeStamp": 28749,
+      "waitfor": 0,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "tagName": "button",
+      "command": "tap",
+      "target": "/view/view/view[2]/button[2]",
+      "value": null,
+      "path": "pages/flag-edit/index",
+      "text": "删除站点",
+      "eventData": {
+        "detail": {
+          "x": 203.39060974121094,
+          "y": 486.03125
+        },
+        "changedTouches": [
+          {
+            "clientX": 203.39060974121094,
+            "clientY": 486.03125,
+            "force": 1,
+            "pageX": 203.39060974121094,
+            "pageY": 486.03125,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 197.39453125,
+            "screenY": 644.6484375
+          }
+        ],
+        "touches": [
+          {
+            "clientX": 203.39060974121094,
+            "clientY": 486.03125,
+            "force": 1,
+            "pageX": 203.39060974121094,
+            "pageY": 486.03125,
+            "radiusX": 11.5,
+            "radiusY": 11.5,
+            "screenX": 197.39453125,
+            "screenY": 644.6484375
+          }
+        ]
+      },
+      "targetCandidates": [
+        "/view/view/view[2]/button[2]"
+      ],
+      "timeStamp": 28750,
+      "waitfor": 1,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "pageframe"
+    },
+    {
+      "timeStamp": 30348,
+      "waitfor": 1598,
+      "desc": "",
+      "commandType": "operate",
+      "layer": "native",
+      "command": "confirmModal",
+      "text": "确定"
+    },
+    {
+      "timeStamp": 32732,
+      "waitfor": 2384,
+      "desc": "",
+      "layer": "tool",
+      "commandType": "operate",
+      "command": "stopRecord"
+    }
+  ]
+}

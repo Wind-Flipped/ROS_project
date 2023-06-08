@@ -1,0 +1,17 @@
+<view class="page-container">
+        <canvas-map map="{{scene.map}}" disable-long-tap="{{true}}" robotPos="{{ robot }}" flags="{{list}}" disable-touch="{{mode==='迎宾'}}" bind:touch-flag="chooseTar"  />
+        <!--功能状态展示-->
+        <view class="width-100vw" >
+            <t-cell-group>
+                <t-cell title="剩余电量" hover="{{!working}}" note="{{battery}}%" >
+                </t-cell>
+                <t-cell title="工作模式" note="{{mode}}" hover="{{!working}}" arrow="{{!working}}" bind:click="switchMode" ></t-cell>
+                <t-cell wx:if="{{mode==='送餐'}}" title="送餐终点" note="{{to? to.name : '请选择送餐终点'}}"></t-cell>
+            </t-cell-group>
+        </view>
+        <view class="flex-col align-center bottom-container">
+            <t-button theme="{{working ? 'danger' : 'primary'}}" t-class="button-wrap" block bindtap="{{working?'stop': 'working'}}" >{{working ? '停止工作' : '开始工作'}}</t-button>
+            <t-button theme="light" wx:if="{{mode==='迎宾'}}" t-class="margin-top-30" block bindtap="confirmEating" disabled="{{!working}}" >确认就餐</t-button>
+            <t-button theme="light" wx:if="{{mode==='送餐'}}" t-class="margin-top-30" block bindtap="{{transforming ? 'confirmSend' : 'confirmRecieve'}}" disabled="{{!working}}" >{{transforming?'确认送餐' : '确认送达'}}</t-button>
+        </view>
+</view>
