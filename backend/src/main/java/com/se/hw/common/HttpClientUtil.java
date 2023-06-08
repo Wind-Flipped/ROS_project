@@ -96,7 +96,6 @@ public class HttpClientUtil {
                 e.printStackTrace();
             }
         }
-
         return resultString;
     }
 

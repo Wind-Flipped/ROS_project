@@ -3,9 +3,8 @@ package com.se.hw.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+
+import lombok.*;
 
 /**
  * <p>
@@ -13,11 +12,13 @@ import lombok.ToString;
  * </p>
  *
  * @author SE2304
- * @since 2023-05-25
+ * @since 2023-05-27
  */
 @Getter
 @Setter
-@ToString
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Map implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,5 +34,6 @@ public class Map implements Serializable {
 
     private String rosname;
 
+    private String bg;
 
 }

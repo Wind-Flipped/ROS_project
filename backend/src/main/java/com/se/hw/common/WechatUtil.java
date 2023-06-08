@@ -4,10 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.codec.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.security.AlgorithmParameters;
 import java.security.Security;
 import java.util.Arrays;
@@ -22,6 +28,9 @@ import java.util.Map;
  * @Version 1.0
  */
 public class WechatUtil {
+
+    public static String ACCESS_TOKEN = "";
+
     public static JSONObject getSessionKeyOrOpenId(String code) {
         String requestUrl = "https://api.weixin.qq.com/sns/jscode2session";
         Map<String, String> requestUrlParam = new HashMap<>();
@@ -37,6 +46,31 @@ public class WechatUtil {
         //发送post请求读取调用微信接口获取openid用户唯一标识
         JSONObject jsonObject = JSON.parseObject(HttpClientUtil.doPost(requestUrl, requestUrlParam));
         return jsonObject;
+    }
+
+    public static String getAccessToken() {
+        String requestUrl = "https://api.weixin.qq.com/cgi-bin/token";
+        Map<String, String> requestUrlParam = new HashMap<>();
+        //小程序appId
+        requestUrlParam.put("appid", "wx14a95473b3afe32f");
+        //小程序secret
+        requestUrlParam.put("secret", "0e4dcbc736c56929d840cbd25e382ce3");
+        //默认参数
+        requestUrlParam.put("grant_type", "client_credential");
+        //发送post请求读取调用微信接口获取openid用户唯一标识
+        JSONObject jsonObject = JSON.parseObject(HttpClientUtil.doGet(requestUrl, requestUrlParam));
+        ACCESS_TOKEN = jsonObject.getString("access_token");
+        return jsonObject.getString("access_token");
+    }
+
+    public static String postImg(Integer mapId) {
+        String requestUrl = "https://api.weixin.qq.com/tcb/uploadfile?access_token=" + ACCESS_TOKEN;
+        Map<String, String> requestUrlParam = new HashMap<>();
+        requestUrlParam.put("env", "ros-demo-5gh71204c4c44013");
+        requestUrlParam.put("path", "map/map.png");
+        //发送post请求读取调用微信接口获取openid用户唯一标识
+        JSONObject jsonObject = JSON.parseObject(HttpClientUtil.doPost(requestUrl, requestUrlParam));
+        return jsonObject.getString("file_id");
     }
 
     public static JSONObject getUserInfo(String encryptedData, String sessionKey, String iv) {

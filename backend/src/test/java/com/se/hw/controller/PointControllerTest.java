@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.List;
 
 /** 
@@ -30,6 +31,8 @@ public class PointControllerTest {
     private Point point5;
     private Point point6;
     private int mapId;
+    private int point1Id;
+    private int point2Id;
 
     @Autowired
     private PointController pointController;
@@ -40,9 +43,16 @@ public class PointControllerTest {
 public void before() throws Exception {
     // pointController = new PointController();
 
-    mapController.save("map3");
+    mapController.save("map3","#FFFFFF");
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
+
+    pointController.save(1.0F,1.0F,"point1",mapId,2);
+    pointController.save(2.0F,2.0F,"point2",mapId,2);
+    List<Point> points = (List<Point>) pointController.findAll().getData();
+    point1Id = points.get(0).getId();
+    point2Id = points.get(1).getId();
+
     point1 = new Point();
     point2 = new Point();
     point3 = new Point();
@@ -75,7 +85,7 @@ public void before() throws Exception {
 
     // 构造无对应外键 航点
     point3.setName("error_point3");
-    point3.setId(3);
+    point3.setId(0x3f3f3f);
     point3.setMapId(10000);
     point3.setStatus(2);
     point3.setOriW(30.0f);
@@ -101,7 +111,7 @@ public void before() throws Exception {
 
     // 构造重复id 航点
     point5.setName("duplicate_point5");
-    point5.setId(1);
+    point5.setId(point1Id);
     point5.setMapId(mapId);
     point5.setStatus(3);
     point5.setOriW(40.0f);
@@ -114,7 +124,7 @@ public void before() throws Exception {
 
     // 构造重复id错误外键 航点
     point6.setName("duplicate_error_point5");
-    point6.setId(1);
+    point6.setId(point1Id);
     point6.setMapId(10000);
     point6.setStatus(3);
     point6.setOriW(40.0f);
@@ -125,34 +135,49 @@ public void before() throws Exception {
     point6.setYAxis(4.0f);
     point6.setZAxis(4.0f);
 
-    pointController.save(point1);
-    pointController.save(point2);
 } 
 
 @After
 public void after() throws Exception {
-    for (int i = 1; i < 5; i++) {
-        pointController.delete(i);
+    List<Point> points = (List<Point>) pointController.findAll().getData();
+    int size = points.size();
+    for (int i = 0; i < size; i++) {
+        pointController.delete(points.get(i).getId());
     }
     mapController.delete(mapId);
 } 
 
 /** 
 * 
-* Method: save(@RequestBody Point point) 
+* Method: save(@RequestBody Point)
 * 
 */ 
 @Test
 public void testSave() throws Exception { 
 //TODO: Test goes here...
-    Result result1 = pointController.save(point1);
+    Result result1 = pointController.save(1.0F,1.0F,"point1",mapId,2);
     assert result1.getCode() == 400 && result1.getMsg().equals("naming repetition!");
-    Result result2 = pointController.save(point4);
+    Result result2 = pointController.save(1.0F,1.0F,"point4",mapId,2);
     assert result2.getCode() == 200;
-    Result result3 = pointController.save(point3);
+    Result result3 = pointController.save(1.0F,1.0F,"point5",0x3f3f3f3f,2);
     assert result3.getCode() == 500 && result3.getMsg().equals("other error!");
 
-} 
+}
+
+    /**
+     *
+     * Method: mapToPoints(@RequestBody Integer mapId)
+     *
+     */
+    @Test
+public void testMapToPoints() throws Exception {
+    Result result = pointController.mapToPoints(mapId);
+    List<Point> points = (List<Point>) result.getData();
+    assert result.getCode() == 100 &&
+            points.size() == 2 &&
+            points.get(0).getId() == point1Id &&
+            points.get(1).getId() == point2Id;
+}
 
 /** 
 * 
@@ -162,15 +187,15 @@ public void testSave() throws Exception {
 @Test
 public void testUpdate() throws Exception { 
 //TODO: Test goes here...
-    Result result1 = pointController.update(point5);
+    Result result1 = pointController.update(PointController.point2req(point5));
     assert result1.getCode() == 100;
     Result result2 = pointController.findOne(point5.getId());
     assert result2.getCode() == 100 && ((Point) result2.getData()).getName().equals("duplicate_point5");
 
-    Result result3 = pointController.update(point3);
+    Result result3 = pointController.update(PointController.point2req(point3));
     assert result3.getCode() == 404 && result3.getMsg().equals("can't find the point!");
 
-    Result result4 = pointController.update(point6);
+    Result result4 = pointController.update(PointController.point2req(point6));
     assert result4.getCode() == 500 && result4.getMsg().equals("other error");
 } 
 
@@ -183,12 +208,12 @@ public void testUpdate() throws Exception {
 public void testDelete() throws Exception { 
 //TODO: Test goes here...
 
-    Result result1 = pointController.delete(point1.getId());
+    Result result1 = pointController.delete(point1Id);
     assert result1.getCode() == 100;
-    Result result2 = pointController.findOne(point1.getId());
+    Result result2 = pointController.findOne(point1Id);
     assert result2.getCode() == 404 && result2.getMsg().equals("can't find the point!");
 
-    Result result3 = pointController.delete(point3.getId());
+    Result result3 = pointController.delete(0x3f3f);
     assert result3.getCode() == 404 && result3.getMsg().equals("can't find the point!");
 } 
 
@@ -204,8 +229,8 @@ public void testFindAll() throws Exception {
     List<Point> points = (List<Point>) result.getData();
     assert result.getCode() == 100 &&
             points.size() == 2 &&
-            points.get(0).getId() == point1.getId() &&
-            points.get(1).getId() == point2.getId();
+            points.get(0).getId() == point1Id &&
+            points.get(1).getId() == point2Id;
 } 
 
 /** 
@@ -216,9 +241,9 @@ public void testFindAll() throws Exception {
 @Test
 public void testFindOne() throws Exception { 
 //TODO: Test goes here...
-    Result result1 = pointController.findOne(point1.getId());
+    Result result1 = pointController.findOne(point1Id);
     Point point = (Point) result1.getData();
-    assert result1.getCode() == 100 && point.getId() == point1.getId();
+    assert result1.getCode() == 100 && point.getId() == point1Id;
     Result result2 = pointController.findOne(10000);
     assert result2.getCode() == 404 && result2.getMsg().equals("can't find the point!");
 } 

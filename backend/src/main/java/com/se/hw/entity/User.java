@@ -2,7 +2,7 @@ package com.se.hw.entity;
 
 import java.io.Serializable;
 
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -10,8 +10,6 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Getter;
-import lombok.Setter;
 
 
 /**
@@ -25,6 +23,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,7 +73,8 @@ public class User implements Serializable {
     /**
      * 网名
      */
-    private String name;
+    private String userName;
 
 
 }
+

@@ -6,6 +6,8 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -18,6 +20,11 @@ import java.util.UUID;
  * @Description 上传Gitee图床工具类
  */
 public class UploadImgUtil {
+
+    /**
+     * 当前static文件绝对路径
+     */
+    public static final String STATIC_PATH = "D:\\A_SE\\team04-project\\backend\\src\\main\\resources\\static\\";
 
     /**
      * 码云私人令牌
@@ -56,6 +63,8 @@ public class UploadImgUtil {
      * %s => 文件的路径(path)
      */
     public static final String API_CREATE_POST = "https://gitee.com/api/v5/repos/%s/%s/contents/%s";
+
+    public static final String host = "http://192.168.60.251:9090/";
 
 
     /**
@@ -122,4 +131,23 @@ public class UploadImgUtil {
         return String.valueOf(content.getObj("download_url"));
     }
 
+    public static String save(String base64String, String mapName) {
+        String outputImagePath = STATIC_PATH
+                + mapName + ".png"; // 替换为输出的PNG图片路径
+        String url = host + mapName + ".png";
+        try {
+            // 解码Base64字符串
+            byte[] imageBytes = java.util.Base64.getDecoder().decode(base64String);
+
+            // 将字节数组保存为PNG图像
+            FileOutputStream outputStream = new FileOutputStream(outputImagePath);
+            outputStream.write(imageBytes);
+            outputStream.close();
+
+            //System.out.println("PNG image saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
 }

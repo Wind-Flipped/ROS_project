@@ -7,8 +7,10 @@ import ros.Publisher;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
+import ros.msgs.std_msgs.PrimitiveMsg;
 
 import java.util.HashMap;
+import java.util.PrimitiveIterator;
 
 /**
  * Abstract class Mode
@@ -23,9 +25,10 @@ public abstract class Mode {
 
     protected static final String SETMAP_TOPIC = "/setmap";
 
-    protected static final Integer WAIT_TIME = 5000;
+    protected static final Integer WAIT_TIME = 3000;
 
     protected String mapName;
+
     protected Point point;
 
     public Mode(RosBridge rosBridge) {
@@ -38,7 +41,7 @@ public abstract class Mode {
     }
 
     public void setMapName(String mapName) {
-        publishers.get(SETMAP_TOPIC).publish(mapName);
+        publishers.get(SETMAP_TOPIC).publish(new PrimitiveMsg<String>(mapName));
         this.mapName = mapName;
     }
 
@@ -94,11 +97,11 @@ public abstract class Mode {
         }
         getPublisher(END_TOPIC).publish("End the mode!");
         try {
-            Thread.sleep(WAIT_TIME);
+            Thread.sleep(WAIT_TIME / 2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        getPublisher(END_TOPIC).publish("End the mode!");
+        getPublisher(END_TOPIC).publish(new PrimitiveMsg<String>("End the mode!"));
         RosGlobal.nowMode = null;
         RosGlobal.launch_success = false;
         return 1;

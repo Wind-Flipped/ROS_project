@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.List;
 
 /** 
@@ -30,15 +31,16 @@ public class MapControllerTest {
     private Map map4;
     private int mapId;
 
+
 @Before
 public void before() throws Exception {
     // mapController = new MapController(mapService);
     map1 = new Map();
     map4 = new Map();
 
-    mapController.save("map1");
-    mapController.save("map2");
-    mapController.save("map3");
+    mapController.save("map1","#FFFFFF");
+    mapController.save("map2","#FFFFFF");
+    mapController.save("map3","#FFFFFF");
     List<Map> maps = (List<Map>) mapController.findAll().getData();
     mapId = maps.get(0).getId();
     map1.setWelcome("welcome!!!");
@@ -49,12 +51,17 @@ public void before() throws Exception {
     map4.setRosname("maps/map4");
     map4.setName("map4");
     map4.setId(10000);
+    map4.setBg("#DDDDDD");
+    map4.setUrl("http");
 }
 
 @After
 public void after() throws Exception {
-    for (int i = 1; i <= 1000; i++) {
-        mapController.delete(i);
+    List<Map> maps = (List<Map>) mapController.findAll().getData();
+    int size = maps.size();
+
+    for (int i = 0; i < size; i++) {
+        mapController.delete(maps.get(i).getId());
     }
 } 
 
@@ -66,9 +73,9 @@ public void after() throws Exception {
 @Test
 public void testSave() throws Exception { 
 //TODO: Test goes here...
-    Result result = mapController.save("new_map");
+    Result result = mapController.save("new_map","#FFFFFF");
     assert result.getCode() == 200;
-    Result result1 = mapController.save("new_map");
+    Result result1 = mapController.save("new_map","#FFFFFF");
     assert result1.getCode() == 400 && result1.getMsg().equals("naming repetition!");
 } 
 
@@ -80,13 +87,13 @@ public void testSave() throws Exception {
 @Test
 public void testUpdate() throws Exception { 
 //TODO: Test goes here...
-    Result result = mapController.update(map1);
+    Result result = mapController.update(MapController.map2req(map1));
     assert result.getCode() == 200;
     Result result2 = mapController.findOne(map1.getId());
     assert result2.getCode() == 200;
     assert ((Map) result2.getData()).getName().equals("map1") && ((Map) result2.getData()).getRosname().equals("maps/map1lalala")
             && ((Map) result2.getData()).getWelcome().equals("welcome!!!");
-    Result result1 = mapController.update(map4);
+    Result result1 = mapController.update(MapController.map2req(map4));
     assert result1.getCode() == 404 && result1.getMsg().equals("map doesn't exist");
 } 
 
