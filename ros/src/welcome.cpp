@@ -9,6 +9,8 @@ sound_play::SoundRequest sp;
 MoveBaseActionClient *acp;
 move_base_msgs::MoveBaseGoal goal;
 
+int flag = 0;
+
 std::vector<double> spot_array;
 
 int main(int argc, char** argv) {
@@ -66,8 +68,14 @@ void move(std::vector<double> array) {
     if (acp->getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         ROS_INFO("Arrived!");
         guidance_completed();
+        if (flag == -1) {
+            flag = 1;
+        }
     } else {
         ROS_INFO("Error!");
+        if (flag == -1) {
+            flag = 0;
+        }
     }
 }
 
@@ -104,6 +112,9 @@ void check() {
     cm.linear.y = -0.2;
     cm_pub.publish(cm);
     ros::Duration(2.5).sleep();
+
+    cm.linear.y = 0;
+    cm_pub.publish(cm);
 }
 
 //core function 1: face detect
@@ -138,10 +149,15 @@ void guidance(const std_msgs::Float64MultiArray& array) {
     sp.arg = "I will lead you to the destination table.";
     sr_pub.publish(sp);
 
+    flag = -1;
+
     move(array.data);
 
-    sp.arg = "This is your table.";
-    sr_pub.publish(sp);
+    if (flag == 1) {
+        sp.arg = "This is your table.";
+        sr_pub.publish(sp);
+        flag = 0;
+    }
 
     move(spot_array);
 

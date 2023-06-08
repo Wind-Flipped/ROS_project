@@ -8,6 +8,8 @@ sound_play::SoundRequest sp;
 MoveBaseActionClient *acp;
 move_base_msgs::MoveBaseGoal goal;
 
+int flag = 0;
+
 std::vector<double> spot_array;
 
 int main(int argc, char** argv) {
@@ -63,8 +65,14 @@ void move(std::vector<double> array) {
     if (acp->getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
         ROS_INFO("Arrived!");
         delivery_completed();
+        if (flag == -1) {
+                flag = 1;
+        }
     } else {
         ROS_INFO("Error!");
+        if (flag == -1) {
+            flag = 0;
+        }
     }
 }
 
@@ -101,14 +109,22 @@ void check() {
     cm.linear.y = -0.2;
     cm_pub.publish(cm);
     ros::Duration(3.0).sleep();
+
+    cm.linear.y = 0;
+    cm_pub.publish(cm);
 }
 
 //core function 1: delivery
 void delivery (const std_msgs::Float64MultiArray& array) {
+    flag = -1;
+
     move(array.data);
 
-    sp.arg = "Hello, this is your meal!";
-    pub.publish(sp);
+    if (flag == 1) {
+        sp.arg = "Hello, this is your meal!";
+        pub.publish(sp);
+        flag = 0;
+    }
 
     //return to spin()
 }
