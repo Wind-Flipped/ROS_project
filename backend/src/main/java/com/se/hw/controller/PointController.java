@@ -140,7 +140,7 @@ public class PointController {
             return null;
         }
         return new Point(id, (String) request.get("name"),Float.valueOf(request.get("xAxis").toString()),Float.valueOf(request.get("yAxis").toString()), (Integer) request.get("status"), (Integer) request.get("mapId"), 0.0F,
-                0.0F, 0.0F, 0.0F, 0.0F);
+                0.0F, 0.0F, 0.0F, 0.99F);
     }
 
     public static java.util.Map<String, Object> point2req(Point point) {

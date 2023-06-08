@@ -142,6 +142,7 @@ public class ExceptionRecv {
                 flag = true;
                 publishers.get(UNREACH).publish(new PrimitiveMsg<String>("alarm"));
             }
+            flag = false;
             return (System.currentTimeMillis() - startTime) < LONGEST_TIME;
         }
     }

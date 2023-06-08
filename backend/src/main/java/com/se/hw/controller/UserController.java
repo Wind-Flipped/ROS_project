@@ -85,7 +85,7 @@ public class UserController {
             user = new User();
             user.setOpenId(openid);
             user.setSkey(skey);
-            user.setUserName("蔡徐坤");
+            user.setUserName("ikun");
             user.setAvatar("https://gitee.com/hd20373463/pictures/raw/master/default.png");
             user.setGender(1);
             user.setCreateTime(new Date());

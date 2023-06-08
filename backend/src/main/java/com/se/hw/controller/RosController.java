@@ -156,7 +156,7 @@ public class RosController {
         return Result.error(606, "full!");
     }
 
-    @PostMapping("/confirmSend")
+    @GetMapping("/confirmSend")
     public Result confirmSend(@RequestParam Integer pointId) {
         Point point = new Point();
         if ((point = pointService.getById(pointId)) == null) {
@@ -181,6 +181,7 @@ public class RosController {
             return Result.error(404, "now is not delivery mode!");
         }
         DeliveryMode deliveryMode = (DeliveryMode) RosGlobal.nowMode;
+        RosGlobal.arrive_kitchen = false;
         deliveryMode.startReceive();
         RosGlobal.startClock();
         return Result.success(200);
