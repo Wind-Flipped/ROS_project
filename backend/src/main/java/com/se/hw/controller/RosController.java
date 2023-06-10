@@ -14,6 +14,9 @@ import com.se.hw.mode.Mode;
 import com.se.hw.mode.WelcomeMode;
 import com.se.hw.service.IMapService;
 import com.se.hw.service.IPointService;
+import javafx.util.Pair;
+import org.apache.shiro.crypto.hash.Hash;
+import org.apache.velocity.runtime.parser.node.ASTIntegerRange;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +35,28 @@ public class RosController {
 
     public static Integer nowMapId;
     public static Integer nowPointId;
+
+    @GetMapping("/getMode")
+    public Result getMode() {
+        //System.out.println(RosGlobal.nowMode);
+        HashMap<String, Integer> h = new HashMap<>();
+        h.put("mapId", nowMapId);
+        if (RosGlobal.nowMode == null) {
+            h.put("status", 0);
+            h.remove("mapId");
+            return Result.success(100, h);
+        } else if (RosGlobal.nowMode instanceof MappingMode) {
+            h.put("status", 1);
+            return Result.success(100, h);
+        } else if (RosGlobal.nowMode instanceof WelcomeMode) {
+            h.put("status", 2);
+            return Result.success(100, h);
+        } else if (RosGlobal.nowMode instanceof DeliveryMode) {
+            h.put("status", 3);
+            return Result.success(100, h);
+        }
+        return Result.success(100, 4);
+    }
 
 
     @GetMapping("/isConnect")
