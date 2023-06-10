@@ -6,6 +6,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -149,5 +150,21 @@ public class UploadImgUtil {
             e.printStackTrace();
         }
         return url;
+    }
+
+    public static boolean deleteFile(String fileName) {
+        File file = new File(STATIC_PATH + fileName);
+        // 如果文件路径只有单个文件
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                return true;
+            } else {
+                //  System.out.println("删除文件" + fileName + "失败！");
+                return false;
+            }
+        } else {
+            //System.out.println(fileName + "不存在！");
+            return false;
+        }
     }
 }

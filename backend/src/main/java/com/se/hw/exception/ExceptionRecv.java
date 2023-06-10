@@ -30,7 +30,7 @@ public class ExceptionRecv {
     private static final String UNREACH = "/unreach";
     private static RosBridge rosBridge = null;
     private static final double SAFE_RAD = 3.14 / 8;
-    private static final Integer SAFE_POWER = 15;
+    private static final Integer SAFE_POWER = 5;
     private static final long LONGEST_TIME = 30 * 1000;
     private static double rad = 0.0;
     private static int power = 100;

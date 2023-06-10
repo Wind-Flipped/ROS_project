@@ -147,7 +147,7 @@ public class RosController {
     public Result end() {
         if (RosGlobal.nowMode instanceof MappingMode) {
             Map map = mapService.getById(nowMapId);
-            map.setUrl(map.getName() + ".png");
+            map.setUrl(RosGlobal.mapUrl);
             mapService.updateById(map);
         }
         if (RosGlobal.nowMode == null) {
@@ -248,6 +248,9 @@ public class RosController {
 
     @GetMapping("/getException")
     public Result getException() {
+        if (!RosGlobal.rosBridge.hasConnected()) {
+            return Result.success(100);
+        }
         boolean[] status = RosGlobal.getException();
         for (boolean state : status) {
             if (!state) {
@@ -286,7 +289,7 @@ public class RosController {
 
     @GetMapping("/getPicture")
     public Result getPicture() {
-        return Result.success(100, RosGlobal.nowMapName);
+        return Result.success(100, RosGlobal.mapUrl);
     }
 
 }

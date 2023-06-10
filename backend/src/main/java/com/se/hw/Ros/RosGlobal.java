@@ -24,14 +24,14 @@ import java.util.concurrent.*;
 
 public class RosGlobal {
 
-    public static RosBridge rosBridge;
+    public static RosBridge rosBridge = new RosBridge();
 
     /**
      * MappingMood, WelcomeMood, DeliveryMood, PointEditMood
      */
     public static HashMap<Integer, Mode> modes;
 
-    public static Mode nowMode;
+    public static Mode nowMode = null;
 
     public static Point point;
     public static boolean launch_success = false;
@@ -39,13 +39,13 @@ public class RosGlobal {
     public static boolean arrive_welcome = false;
     public static boolean arrive_kitchen = false;
 
-    public static String mapUrl = null;
+    public static int cnt = 0;
+    public static String mapUrl = "map_default.png";
 
     public static String nowMapName = "map_default";
 
     public static Boolean init(String url) {
         nowMode = null;
-        rosBridge = new RosBridge();
         point = new Point();
 
         connect(url);
@@ -138,8 +138,10 @@ public class RosGlobal {
                     public void receive(JsonNode data, String stringRep) {
                         MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<PrimitiveMsg<String>>(PrimitiveMsg.class);
                         PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
-                        UploadImgUtil.save(msg.data, nowMapName);
-                        mapUrl = nowMapName + ".png";
+                        //UploadImgUtil.deleteFile(nowMapName + cnt + ".png");
+                        cnt++;
+                        UploadImgUtil.save(msg.data, nowMapName + cnt);
+                        mapUrl = nowMapName + cnt + ".png";
                         //TestUtil.log("地图已更新 " + mapUrl);
                     }
                 }

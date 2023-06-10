@@ -25,7 +25,7 @@ public abstract class Mode {
 
     protected static final String SETMAP_TOPIC = "/setmap";
 
-    protected static final Integer WAIT_TIME = 3000;
+    protected static final Integer WAIT_TIME = 8000;
 
     protected String mapName;
 
