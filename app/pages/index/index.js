@@ -172,5 +172,10 @@ Page({
         wx.navigateTo({
             url: '/pages/robot/index?scene=' + data,
         });
+    },
+    imgError(e) {
+        this.setData({
+            ['scenes[' + e.target.dataset.idx + '].map']: null
+        })
     }
 })

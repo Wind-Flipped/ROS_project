@@ -22,12 +22,6 @@ Page({
             scene
         });
         this.setList();
-        const app = getApp();
-        for (let val in app.globalData.work) {
-            this.setData({
-                [val]: app.globalData.work[val],
-            })
-        }
         this.setPower();
         setInterval(function () {
             this.setPower();
@@ -170,7 +164,7 @@ Page({
             });
         }).catch(err => {
             console.log(err);
-        })
+        });
     },
     chooseTar(e) {
         const flag = e.detail.data;
@@ -181,7 +175,7 @@ Page({
                   this.setData({to: flag});
               }
           }
-        })
+        });
     },
     confirmRecieve() {
         api.request('POST', {}, '/ros/confirmReceive').then(res => {
