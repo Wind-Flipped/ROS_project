@@ -1,0 +1,15 @@
+<scroll-view class="page-container" scroll-y enhanced show-scrollbar="{{false}}">
+    <!--导航栏-->
+    <t-navbar title="{{navTitle}}" left-arrow="{{!edit}}" delta="{{1}}" >
+        <t-icon wx:if="{{edit}}" name="check" slot="left" bindclick="handleCloseEdit" />
+    </t-navbar>
+    <!--场景列表-->
+    <t-cell-group>
+        <block wx:for="{{scenes}}" wx:key="index">
+            <t-cell title="{{item.name}}" arrow="{{!edit}}" bordered="{{false}}" bindlongpress="handleEdit" bind:click="editScene" data-scene="{{item}}" >
+                <t-icon wx:if="{{edit}}" name="minus-circle-filled" color="tomato" slot="left-icon" catchtap="delete" data-id="{{item.id}}" />
+            </t-cell>
+        </block>
+    </t-cell-group>
+    <t-fab icon="add" bind:click="addScene" aria-label="增加"></t-fab>
+</scroll-view>

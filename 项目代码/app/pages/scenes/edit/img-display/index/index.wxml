@@ -1,0 +1,8 @@
+<view class="page-container">
+    <t-navbar title="场景壁纸" left-arrow delta="{{1}}" />
+    <scroll-view scroll-x enhanced show-scrollbar="{{false}}" class="item-container" >
+        <block wx:for="{{bgs}}" wx:key="index">
+            <view class="item" style="height: {{itemHeight}}rpx;width: {{itemWidth}}rpx;background: linear-gradient(to bottom, {{item}}, #f5f5f5);" bindtap="goApply" data-idx="{{index}}" />
+        </block>
+    </scroll-view>
+</view>

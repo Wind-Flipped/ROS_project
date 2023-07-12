@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "t-fab": "/miniprogram_npm/tdesign-miniprogram/fab/fab"
+    },
+    "navigationBarTitleText": "场景管理",
+    "navigationStyle": "custom"
+}

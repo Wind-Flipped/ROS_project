@@ -1,0 +1,12 @@
+<view class="page-container">
+    <!--导航栏-->
+    <t-navbar left-arrow title="编辑资料">
+    </t-navbar>
+    <!--头像栏-->
+    <view class="width-100vw flex-row align-center justify-center white-bg" style="height: 320rpx;">
+        <t-avatar src="{{userInfo.avatar}}" size="180rpx" image="{{userInfo.avatar}}" bindtap="editInfo" data-type="avatar" />
+    </view>
+    <t-cell-group>
+        <t-cell title="名字" note="{{userInfo.userName}}" hover arrow bind:click="editInfo" data-type="name" />
+    </t-cell-group>
+</view>

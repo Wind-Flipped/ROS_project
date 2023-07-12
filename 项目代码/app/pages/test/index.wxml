@@ -1,0 +1,4 @@
+<view class="page-container">
+    <view class="width-100vw flex-row align-center justify-center margin-top-30"><t-button block theme="primary" size="large">确认就餐</t-button></view>
+    <view class="width-100vw flex-row align-center justify-center margin-top-30"><t-button block theme="primary" size="large">确认送餐</t-button></view>
+</view>
